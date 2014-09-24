@@ -1,6 +1,7 @@
 package com.andraft.blacklist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -170,19 +171,19 @@ public class DataBase extends SQLiteOpenHelper {
 		return sms;
 	}
 
-	public int updateNumber(NumberModel number) {
+	public int updateNumber(NumberModel number,int bool) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 
 		values.put(NUM, number.getNum());
-		values.put(BOOL, number.getBool());
+		values.put(BOOL,bool);
 		values.put(NAME, number.getName());
 		values.put(COUNT_BLACK, number.getCount_black());
 
 		// updating row
-		return db.update(TABLE_NUMBERS, values, KEY_ID + " = ?",
-				new String[] { String.valueOf(number.getId()) });
+		return db.update(TABLE_NUMBERS, values, NUM + " = ?",
+				new String[] { String.valueOf(number.getNum()) });
 	}
 
 	public int updateSms(SmsModel sms) {
@@ -220,5 +221,45 @@ public class DataBase extends SQLiteOpenHelper {
 		db.execSQL("delete from "+TABLE_SMS);
 		
 	}
+
+	public List<NumberModel> getWhereNumber(int bool) {
+		List<NumberModel> numbers = new ArrayList<NumberModel>();
+		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS+" WHERE "+BOOL+"="+bool+ " ORDER BY "+NAME+" ASC";
+
+		Log.e(LOG, selectQuery);
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (c.moveToFirst()) {
+			do {
+				NumberModel number = new NumberModel();
+				number.setNum(c.getString(c.getColumnIndex(NUM)));
+				number.setBool(c.getInt(c.getColumnIndex(BOOL)));
+				number.setName(c.getString(c.getColumnIndex(NAME)));
+				number.setCount_black(c.getInt(c.getColumnIndex(COUNT_BLACK)));
+
+				// adding to todo list
+				numbers.add(number);
+			} while (c.moveToNext());
+		}
+
+		return numbers;
+	}
+	
+	public boolean TableNumberIsEmpty(){
+		String countQuery = "SELECT  * FROM " + TABLE_NUMBERS;
+	    SQLiteDatabase db = this.getReadableDatabase();
+	    Cursor cursor = db.rawQuery(countQuery, null);
+	    int cnt = cursor.getCount();
+	    cursor.close();
+	   if(cnt>0)
+		return false;
+	   else
+		   return true;
+		
+	}
+
 
 }

@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
-import com.andraft.adapter.Phone;
-import com.andraft.adapter.Sms;
 import com.andraft.models.NumberModel;
-import com.andraft.models.SmsModel;
 import com.andraft.utils.CallLogUtils;
 import com.andraft.utils.SmsLogUtils;
 
@@ -17,14 +16,17 @@ public class Checking {
 
 	private DataBase db;
 	private Context context;
-    private CallLogUtils calllog;
-    private SmsLogUtils smslog;
+	private CallLogUtils calllog;
+	private SmsLogUtils smslog;
 	private static volatile Checking instance;
-	private Phone[] phones;
 	private int count = 0;
-	private HashMap<String,String> minus_number,newka,newsms,minus_sms,contacts;
+	private HashMap<String, String> minus_number, newka, newsms, minus_sms,
+			contacts;
 	private List<NumberModel> list;
-	private Sms[] sms;
+	private static final String NUM = "num";
+	private static final String BOOL = "bool";
+	private static final String NAME = "name";
+	private static final String COUNT_BLACK = "count_black";
 
 	public static Checking getInstance(Context context) {
 		Checking localInstance = instance;
@@ -44,8 +46,27 @@ public class Checking {
 		db = new DataBase(context);
 		calllog = new CallLogUtils(context);
 		this.smslog = new SmsLogUtils(context);
+		init();
 	}
 
+	private void init() {
+		if (db.TableNumberIsEmpty()) {
+			SQLiteDatabase db1 = db.getWritableDatabase();
+			String TABLE_NUMBERS = "numbers";
+			contacts = calllog.readAllContacts();
+			for (Entry<String, String> e : contacts.entrySet()) {
+				ContentValues values = new ContentValues();
+				values.put(NUM, e.getKey());
+				values.put(BOOL, 2);
+				values.put(NAME, e.getValue());
+				values.put(COUNT_BLACK, 0);
+
+				// insert row
+				db1.insert(TABLE_NUMBERS, null, values);
+			}
+
+		}
+	}
 
 	public CallLogUtils getCalllog() {
 		return calllog;
@@ -54,80 +75,55 @@ public class Checking {
 	public DataBase getDb() {
 		return db;
 	}
-	
-	public Phone[] getAdapterPhone(){
-		phones = new Phone[db.getAllNumbers().size()];
-		for(NumberModel numbers:db.getAllNumbers()){
-			phones[count] = new Phone(numbers.getName(),numbers.getNum(),numbers.getBool());
-			count++;
-		
-		}
-		count=0;
-		return phones;	
-	}
-	
-	public HashMap<String,String> list_minus_phone(){
+
+	public HashMap<String, String> list_minus_phone() {
 		minus_number = calllog.readAll();
 		list = db.getAllNumbers();
-		for(NumberModel num:list){
-			if(minus_number.containsKey(num.getNum()))
+		for (NumberModel num : list) {
+			if (minus_number.containsKey(num.getNum()))
 				minus_number.remove(num.getNum());
 		}
-		if(newka!=null){
-		for(Entry<String,String> n:getNewka().entrySet())
+		if (newka != null) {
+			for (Entry<String, String> n : getNewka().entrySet())
 				minus_number.put(n.getKey(), n.getValue());
-		
-		newka.clear();
+
+			newka.clear();
 		}
 		return minus_number;
 	}
-	
+
 	public HashMap<String, String> getNewka() {
 		return newka;
 	}
 
-	public HashMap<String,String> addUnknNumber(String number){
-		newka = new HashMap<String,String>();
+	public HashMap<String, String> addUnknNumber(String number) {
+		newka = new HashMap<String, String>();
 		newka.put(number, "unknown");
 		return newka;
-		
-	}
 
+	}
 
 	public HashMap<String, String> sms_minus_contacts() {
 		minus_sms = smslog.readAllSms();
 		contacts = calllog.readAllContacts();
-		for(Entry<String,String> c:contacts.entrySet()){
-			if(minus_sms.containsKey(c.getKey())){
+		for (Entry<String, String> c : contacts.entrySet()) {
+			if (minus_sms.containsKey(c.getKey())) {
 				minus_sms.remove(c.getKey());
 			}
 		}
-		
+
 		return minus_sms;
 	}
-	
-	public HashMap<String,String> addRegSms(String Sms){
-		newsms = new HashMap<String,String>();
-		
-		//newka.put(number, "unknown");
-		return newsms;
-	}
-	
-	public HashMap<String,String> getRegSms(){
+
+	public HashMap<String, String> addRegSms(String Sms) {
+		newsms = new HashMap<String, String>();
+
+		// newka.put(number, "unknown");
 		return newsms;
 	}
 
-	public Sms[] getAdapterSms() {
-		sms = new Sms[db.getAllSms().size()];
-		for(SmsModel smski:db.getAllSms()){
-			sms[count] = new Sms(smski.getNum(),smski.getText(),smski.getBool());
-			count++;
-		
-		}
-		count=0;
-		return sms;
+	public HashMap<String, String> getRegSms() {
+		return newsms;
 	}
-	
-
 
 }

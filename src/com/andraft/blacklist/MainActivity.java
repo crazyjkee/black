@@ -17,12 +17,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.andraft.adapter.Phone;
-import com.andraft.adapter.PhoneAdapter;
-import com.andraft.adapter.Sms;
-import com.andraft.adapter.SmsAdapter;
-import com.andraft.views.PhaseNumberBlack;
 import com.andraft.views.PhaseMain;
+import com.andraft.views.PhaseNumberBlack;
 import com.andraft.views.PhaseSmsBlack;
 
 enum Checker {
@@ -39,11 +35,8 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	private boolean second = false;
 	private PhaseNumberBlack phaseBlack;
 	private PhaseSmsBlack phaseSmsBlack;
-	private PhoneAdapter adapter_phone;
-	private SmsAdapter adapter_sms;
 	private Checking checking;
-	private Phone strNamePhone;
-	private Sms strNameSms;
+
 	private EditText num;
 
 	@Override
@@ -242,63 +235,7 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	public void onblackCallback(boolean back, boolean add, boolean list) {
 		Log.d("myLogs", "onblackCallback");
 
-		if (list) {
-			AlertDialog.Builder customDialog = new AlertDialog.Builder(this);
-			customDialog.setTitle("List");
-
-			Phone[] phone_data = checking.getAdapterPhone();
-			adapter_phone = new PhoneAdapter(this, R.layout.array, phone_data);
-			customDialog.setAdapter(adapter_phone,
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface inter, int which) {
-							strNamePhone = adapter_phone.getItem(which);
-							AlertDialog.Builder builderInner = new AlertDialog.Builder(
-									MainActivity.this);
-							builderInner.setMessage(strNamePhone.name);
-							builderInner.setTitle("Your Selected Item is");
-							builderInner.setPositiveButton("Delete",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											checking.getDb().deleteNumber(
-													strNamePhone.number);
-											dialog.dismiss();
-											phaseBlack.invalidate();
-										}
-									});
-							builderInner.setNegativeButton("Cancel",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog, int arg1) {
-											dialog.dismiss();
-
-										}
-									});
-							builderInner.show();
-
-						}
-					});
-
-			customDialog.setNegativeButton("Clear",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							checking.getDb().clearAllNumbers();
-							phaseBlack.invalidate();
-
-						}
-					});
-
-			customDialog.show();
-		}
+		
 
 		if (add) {
 			AlertDialog.Builder customDialog = new AlertDialog.Builder(this);
@@ -352,63 +289,9 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			check = Checker.phasemain;
 			showDialog(100);
 		}
-		if (list) {
-			AlertDialog.Builder customDialog = new AlertDialog.Builder(this);
-			customDialog.setTitle("List");
+		
 
-			Sms[] sms_data = checking.getAdapterSms();
-			adapter_sms = new SmsAdapter(this, R.layout.array, sms_data);
-			customDialog.setAdapter(adapter_sms,
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface inter, int which) {
-							strNameSms = adapter_sms.getItem(which);
-							AlertDialog.Builder builderInner = new AlertDialog.Builder(
-									MainActivity.this);
-							builderInner.setMessage(strNameSms.number);
-							builderInner.setTitle("Your Selected Item is");
-							builderInner.setPositiveButton("Delete",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											checking.getDb().deleteSms(
-													strNameSms.number);
-											dialog.dismiss();
-											phaseSmsBlack.invalidate();
-										}
-									});
-							builderInner.setNegativeButton("Cancel",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog, int arg1) {
-											dialog.dismiss();
-
-										}
-									});
-							builderInner.show();
-
-						}
-					});
-
-			customDialog.setNegativeButton("Clear",
-					new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							checking.getDb().clearAllSms();
-							phaseSmsBlack.invalidate();
-
-						}
-					});
-
-			customDialog.show();
-		}
+		
 
 	}
 }

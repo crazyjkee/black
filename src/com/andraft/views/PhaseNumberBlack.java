@@ -1,6 +1,5 @@
 package com.andraft.views;
 
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 import android.content.Context;
@@ -14,25 +13,30 @@ import android.view.View;
 
 import com.andraft.blacklist.Checking;
 import com.andraft.models.NumberModel;
+import com.andraft.utils.CustomNumbersList;
+
+enum Checker {
+	leftRect, rightRect, def
+}
 
 public class PhaseNumberBlack extends View {
 	public static interface blackCallback {
 		public void onblackCallback(boolean back, boolean add, boolean list);
 	}
 
-	private String[] names, numbers;
 	private Checking check;
-	private int size, textSize = 100;
-
-	private Paint pUnkn, pBlack, pWhite, pRect, plRect, lText, pback, pname,
-			pnumber, mTextPaint, pAdd, pList, pTextAdd, pTextList;
-	private Rect unkn, black, white, rect, lrect, backrect, namerect,
-			numberrect, addrect, listrect;
+	private int textSize = 50;
+	private Checker check_rect = Checker.def;
+	private Paint pUnkn, pBlack, pWhite, pRect, plRect, lText, pback,
+			mTextPaint, pAdd;
+	private Rect left, main, right, lrect, backrect, addrect;
 	blackCallback blackReadyCb = null;
 	private int x, y;
-	private boolean brect = false;
+	private boolean brect = false, last = false, swap = false, drag = false;
+	private CustomNumbersList[] cust = new CustomNumbersList[3];// 0 - white, 1
+																// - black, 2 -
+																// unknown
 
-	private HashMap<String, String> hm;
 	private Rect bounds;
 
 	public PhaseNumberBlack(Context context) {
@@ -40,7 +44,8 @@ public class PhaseNumberBlack extends View {
 		init(context);
 	}
 
-	public PhaseNumberBlack(Context context, AttributeSet attrs, int defStyleAttr) {
+	public PhaseNumberBlack(Context context, AttributeSet attrs,
+			int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init(context);
 	}
@@ -53,32 +58,24 @@ public class PhaseNumberBlack extends View {
 	private void init(Context context) {
 		Log.d("myLogs", "init");
 		check = Checking.getInstance(context);
-		unkn = new Rect();
-		black = new Rect();
-		white = new Rect();
-		rect = new Rect();
+		cust[2] = new CustomNumbersList(check, 2);
+		cust[0] = new CustomNumbersList(check, 0);
+		cust[1] = new CustomNumbersList(check, 1);
+		main = new Rect();
+		left = new Rect();
+		right = new Rect();
+		;
 		lrect = new Rect();
 		backrect = new Rect();
-		namerect = new Rect();
-		numberrect = new Rect();
+
 		addrect = new Rect();
-		listrect = new Rect();
 		pAdd = new Paint();
 		pAdd.setColor(Color.RED);
-		pList = new Paint();
-		pList.setColor(Color.MAGENTA);
-		pTextAdd = new Paint();
-		pTextAdd.setColor(Color.WHITE);
-		pTextList = new Paint();
-		pTextList.setColor(Color.WHITE);
-		pname = new Paint();
-		pname.setColor(Color.YELLOW);
-		pnumber = new Paint();
-		pnumber.setColor(Color.RED);
+
 		pUnkn = new Paint();
 		lText = new Paint();
 		plRect = new Paint();
-		pUnkn.setColor(Color.GREEN);
+		pUnkn.setColor(Color.MAGENTA);
 		pBlack = new Paint();
 		pBlack.setColor(Color.BLACK);
 		pWhite = new Paint();
@@ -98,46 +95,91 @@ public class PhaseNumberBlack extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		if (!brect) {
-			hm = check.list_minus_phone();
-			size = hm.size();
-			names = hm.values().toArray(new String[size]);
-			numbers = hm.keySet().toArray(new String[size]);
-		}
-
-		rect.set(canvas.getWidth() / 4,
-				canvas.getHeight() / 2 - canvas.getWidth() / 8,
-				canvas.getWidth() - canvas.getWidth() / 4, canvas.getHeight()
-						/ 2 + canvas.getWidth() / 8);
-		namerect.set(rect.left + 5, rect.top + 5, rect.bottom - rect.height()
-				/ 2 - 5, rect.right - 5);
-		numberrect.set(rect.left + 5, namerect.bottom + 5, rect.right - 5,
-				rect.bottom - 5);
 
 		lrect.set(0, 0, canvas.getWidth(), 50);
-		canvas.drawRect(lrect, plRect);
+
 		backrect.set(0, 0, 50, lrect.bottom);
+
+		addrect.set(0, canvas.getHeight() - lrect.height() * 2,
+				canvas.getWidth(), canvas.getHeight());
+
+		main.set(canvas.getWidth() / 4, lrect.bottom, canvas.getWidth()
+				- canvas.getWidth() / 4, addrect.top);
+		left.set(0, lrect.bottom, canvas.getWidth() / 4, addrect.top);
+		right.set(canvas.getWidth() - canvas.getWidth() / 4, lrect.bottom,
+				canvas.getWidth(), addrect.top);
+		textSize("Add", addrect);
+
+		if (!brect && !drag) {
+
+			switch (check_rect) {
+
+			case leftRect:
+				Log.d("myLogs", "leftRect");
+				for (int i = 0; i < cust.length; i++) {
+					if (cust[i].getMainRect().contains(left)) {
+						for (int j = 0; j < cust.length; j++) {
+							if (cust[j].getMainRect().contains(main)) {
+								cust[i].onDrawMainRect(canvas, main);
+								cust[i].fillWorkMap();
+								cust[j].onDrawMainRect(canvas, left);
+								swap = true;
+								break;
+							}
+						}
+						if (swap)
+							break;
+					}
+				}
+				for (int i = 0; i < cust.length; i++) {
+					cust[i].onDrawMainRect(canvas);
+				}
+				break;
+			case rightRect:
+				Log.d("myLogs", "rightRect");
+				for (int i = 0; i < cust.length; i++) {
+					if (cust[i].getMainRect().contains(right)) {
+						for (int j = 0; j < cust.length; j++) {
+							if (cust[j].getMainRect().contains(main)) {
+								cust[i].onDrawMainRect(canvas, main);
+								cust[i].fillWorkMap();
+								cust[j].onDrawMainRect(canvas, right);
+								swap = true;
+								break;
+							}
+						}
+						if (swap)
+							break;
+					}
+				}
+				for (int i = 0; i < cust.length; i++) {
+					cust[i].onDrawMainRect(canvas);
+				}
+				break;
+			case def:
+				cust[0].onDrawMainRect(canvas, left);
+				cust[0].fillWorkMap();
+				cust[1].onDrawMainRect(canvas, right);
+				cust[1].fillWorkMap();
+				cust[2].onDrawMainRect(canvas, main);
+				cust[2].fillWorkMap();
+				break;
+
+			}
+		}
+		for (int i = 0; i < cust.length; i++) {
+			cust[i].onDrawMainRect(canvas);
+		}
+		swap = false;
+
+		for (int i = 0; i < cust.length; i++)
+			if (cust[i].getMainRect().contains(main))
+				cust[i].scrollList(canvas, y, x, last);
+
+		canvas.drawRect(lrect, plRect);
 		canvas.drawRect(backrect, pback);
 		canvas.drawText("Label", canvas.getWidth() / 2, lrect.bottom / 2, lText);
-
-		white.set(rect.left / 2, (3 * lrect.height() / 2), rect.left / 2
-				+ rect.left, (3 * lrect.height() / 2) + rect.left);
-		canvas.drawRect(white, pWhite);
-
-		black.set(canvas.getWidth() - rect.left / 2 - rect.left,
-				(3 * lrect.height() / 2), canvas.getWidth() - rect.left / 2,
-				(3 * lrect.height() / 2) + rect.left);
-		canvas.drawRect(black, pBlack);
-
-		unkn.set(rect.left / 2 + rect.left, rect.bottom + (lrect.height() / 2),
-				canvas.getWidth() - rect.left / 2 - rect.left, rect.bottom
-						+ (lrect.height() / 2) + rect.left);
-		canvas.drawRect(unkn, pUnkn);
-
-		addrect.set(0, unkn.bottom + 10, canvas.getWidth() / 2 - 5,
-				canvas.getHeight());
 		canvas.drawRect(addrect, pAdd);
-		textSize("Add", addrect);
 		canvas.drawText(
 				"Add", // Text to display
 				addrect.centerX() - bounds.width() / 2,
@@ -145,71 +187,6 @@ public class PhaseNumberBlack extends View {
 						+ (bounds.top + (addrect.height() - bounds.bottom) / 2.0f)
 						+ (Math.abs(mTextPaint.ascent()) + Math.abs(mTextPaint
 								.descent()) / 2), mTextPaint);
-		listrect.set(canvas.getWidth() / 2 + 5, unkn.bottom + 10,
-				canvas.getWidth(), canvas.getHeight());
-		canvas.drawRect(listrect, pList);
-		textSize("List", addrect);
-		canvas.drawText(
-				"List", // Text to display
-				listrect.centerX() - bounds.width() / 2,
-				listrect.top
-						+ (bounds.top + (listrect.height() - bounds.bottom) / 2.0f)
-						+ (Math.abs(mTextPaint.ascent()) + Math.abs(mTextPaint
-								.descent()) / 2), mTextPaint);
-		if (size == 0) {
-			brect = false;
-			canvas.drawRect(rect, pRect);
-			textSize("DONE", rect);
-
-			canvas.drawText(
-					"DONE",
-					rect.centerX() - bounds.width() / 2,
-					rect.top
-							+ (bounds.top + (rect.height() - bounds.bottom) / 2.0f)
-							+ (Math.abs(mTextPaint.ascent()) + Math
-									.abs(mTextPaint.descent()) / 2), mTextPaint);
-			return;
-
-		}
-		if ((this.x != 0 && this.y != 0) && brect) {
-
-			rect.set(this.x - rect.width() / 2, this.y - rect.height() / 2,
-					this.x + rect.width() / 2, this.y + rect.height() / 2);
-			namerect.set(rect.left + 5, rect.top + 5, rect.right - 5,
-					rect.bottom - rect.height() / 2 - 5);
-			numberrect.set(rect.left + 5, namerect.bottom + 5, rect.right - 5,
-					rect.bottom - 5);
-		}
-		canvas.drawRect(rect, pRect);
-
-		canvas.drawRect(namerect, pname);
-
-		canvas.drawRect(numberrect, pnumber);
-
-		// Later when you draw...'
-		//for (int i = 0; i < names.length; i++)
-			//Log.d("myLogs", "name:" + names[i]);
-		textSize(names[0], namerect);
-
-		canvas.drawText(
-				names[0],
-				namerect.centerX() - bounds.width() / 2,
-				namerect.top
-						+ (bounds.top + (namerect.height() - bounds.bottom) / 2.0f)
-						+ (Math.abs(mTextPaint.ascent()) + Math.abs(mTextPaint
-								.descent()) / 2), mTextPaint);
-
-		textSize(numbers[0], numberrect);
-
-		canvas.drawText(
-				numbers[0], // Text to display
-				numberrect.centerX() - bounds.width() / 2,
-				numberrect.top
-						+ (bounds.top + (numberrect.height() - bounds.bottom) / 2.0f)
-						+ (Math.abs(mTextPaint.ascent()) + Math.abs(mTextPaint
-								.descent()) / 2),
-
-				mTextPaint);
 
 		super.onDraw(canvas);
 	}
@@ -227,33 +204,96 @@ public class PhaseNumberBlack extends View {
 			}
 
 		}
-		if (brect) {
-			if (unkn.contains(this.x, this.y)) {
-				check.getDb().createNumber(
-						new NumberModel(numbers[0], 2, names[0], 0));
-				Log.d("myLogs", "unkn contains");
+		if (main.contains((int) x, (int) y)) {
+			brect = true;
+			last = false;
+			drag = false;
+			this.y = 0;
+			this.x = 0;
+			for (int j = 0; j < cust.length; j++)
+				if (cust[j].getMainRect().contains(main))
+					cust[j].updateX();
+			this.invalidate();
+			return;
+		} else if (right.contains((int) x, (int) y)) {
+			drag = false;
+			for (int i = 0; i < cust.length; i++) {
+				if (cust[i].getMainRect().contains(main)) {
+					Log.d("myLogs", "right rect1");
+					for (Entry<NumberModel, Rect> e : cust[i].getWorkMap()
+							.entrySet()) {
 
-			} else if (black.contains(this.x, this.y)) {
-				check.getDb().createNumber(
-						new NumberModel(numbers[0], 1, names[0], 0));
-				Log.d("myLogs", "black contains");
+						if (e.getValue().right > main.right) {
+							drag = true;
+							for (int j = 0; j < cust.length; j++)
+								if (cust[j].getMainRect().contains(right)) {
+									check.getDb().updateNumber(e.getKey(),
+											cust[j].getColor());
+									cust[i].updateList();
+									cust[i].updateY(e.getValue());
+								}
+							Log.d("myLogs", "right rect2");
+						}
+					}
+					break;
 
-			} else if (white.contains(this.x, this.y)) {
-				check.getDb().createNumber(
-						new NumberModel(numbers[0], 0, names[0], 0));
-				Log.d("myLogs", "white contains");
+				}
+
 			}
+			for (int i = 0; i < cust.length; i++) {
+				cust[i].updateList();
+			}
+			this.y = 0;
+			this.x = 0;
+			last = false;
+			brect = false;
+			this.invalidate();
+
+			return;
+		} else if (left.contains((int) x, (int) y)) {
+			drag = false;
+			for (int i = 0; i < cust.length; i++) {
+				if (cust[i].getMainRect().contains(main)) {
+					Log.d("myLogs", "left rect1");
+					for (Entry<NumberModel, Rect> e : cust[i].getWorkMap()
+							.entrySet()) {
+						Log.d("myLogs", "e.left:" + e.getValue().left
+								+ " ,main.left:" + main.left);
+						if (e.getValue().left < main.left) {
+							drag = true;
+							for (int j = 0; j < cust.length; j++)
+								if (cust[j].getMainRect().contains(left)) {
+									check.getDb().updateNumber(e.getKey(),
+											cust[j].getColor());
+									cust[i].updateList();
+									cust[i].updateY(e.getValue());
+								}
+							Log.d("myLogs", "left rect2");
+						}
+					}
+					break;
+
+				}
+
+			}
+			for (int i = 0; i < cust.length; i++) {
+				cust[i].updateList();
+				// cust[i].fillWorkMap();
+			}
+			this.y = 0;
+			this.x = 0;
+			last = false;
+			brect = false;
+			this.invalidate();
+
+			return;
 		}
-		if (!brect) {
-			if (addrect.contains(this.x, this.y))
-				blackReadyCb.onblackCallback(false, true, false);
-			else if (listrect.contains(this.x, this.y))
-				blackReadyCb.onblackCallback(false, false, true);
-		}
+
 		this.x = 0;
 		this.y = 0;
 		this.brect = false;
-		this.invalidate();
+		this.last = false;
+		// this.invalidate();
 
 	}
 
@@ -261,24 +301,32 @@ public class PhaseNumberBlack extends View {
 		// Log.d("myLogs", "MOVE x:" + x + " ,y:" + y);
 		this.x = (int) x;
 		this.y = (int) y;
+		last = false;
 		if (brect) {
 			this.invalidate();
 
-			Log.d("myLogs", "brect=true MOVE");
-		} else
-			Log.d("myLogs", "brect=false MOVE");
+			// Log.d("myLogs", "brect=true MOVE");
+		}
 
 	}
 
 	public void onTouchDown(float x, float y) {
-		Log.d("myLogs", "DOWN x:" + x + " ,y:" + y);
+		// Log.d("myLogs", "DOWN x:" + x + " ,y:" + y);
 		this.x = (int) x;
 		this.y = (int) y;
 		brect = false;
-		if (rect.contains(this.x, this.y)) {
-			Log.d("myLogs", "brect=true");
+		if (main.contains(this.x, this.y)) {
+			// Log.d("myLogs", "brect=true");
 			brect = true;
+			last = true;
 			this.invalidate();
+
+		} else if (left.contains((int) x, (int) y)) {
+			check_rect = Checker.leftRect;
+			// Log.d("myLogs", "left_contains");
+		} else if (right.contains((int) x, (int) y)) {
+			// Log.d("myLogs", "right_contains");
+			check_rect = Checker.rightRect;
 		}
 
 	}
@@ -288,13 +336,13 @@ public class PhaseNumberBlack extends View {
 		mTextPaint.setColor(Color.GREEN);
 
 		bounds = new Rect();
-		textSize = 100;
+		textSize = 50;
 		mTextPaint.setTextSize(textSize);
 		mTextPaint.getTextBounds(s, 0, s.length(), bounds);
 		int text_height = bounds.height();
 		int text_width = bounds.width();
-		Log.d("myLogs", "text_height:" + text_height + " text_width"
-				+ text_width);
+		// Log.d("myLogs", "text_height:" + text_height + " text_width"
+		// + text_width);
 		while (res.width() - Math.abs(mTextPaint.ascent())
 				- Math.abs(mTextPaint.descent()) - 20 < text_width) {
 			// have this the same as your text size
