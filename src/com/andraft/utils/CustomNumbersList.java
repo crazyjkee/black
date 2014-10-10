@@ -124,11 +124,7 @@ public class CustomNumbersList {
 			if (start > entry.getValue().top)
 				start = entry.getValue().top;
 		}
-		if (canScroll())
-			canvas.drawCircle(mainRect.right + 5,
-					mainRect.top + ((workMap.size() + 45) * 2)
-							* (this.y - y - (start)) / (mainRect.height()), 5,
-					scroll);
+
 		for (Entry<NumberModel, Rect> entry : workMap.entrySet()) {
 			if (!drag)
 				if (canScroll()) {
@@ -137,34 +133,20 @@ public class CustomNumbersList {
 								entry.getValue().top + (this.y - y) / 2,
 								entry.getValue().right,
 								entry.getValue().top + 40 + (this.y - y) / 2);
-					else if (start > mainRect.top && this.y - y < 0)
+					else if (start > mainRect.top && this.y - y < 0){
+						//updateYup();
 						entry.getValue().set(entry.getValue().left,
 								entry.getValue().top + (this.y - y) / 2,
 								entry.getValue().right,
 								entry.getValue().top + 40 + (this.y - y) / 2);
-					else if (end < mainRect.bottom && this.y - y > 0)
+					}else if (end < mainRect.bottom && this.y - y > 0)
 						entry.getValue().set(entry.getValue().left,
 								entry.getValue().top + (this.y - y) / 2,
 								entry.getValue().right,
 								entry.getValue().top + 40 + (this.y - y) / 2);
-					if (y == 0 && end < mainRect.bottom) {
-						Log.d("myLogs", "end<mainRect.bottom");
-						entry.getValue().set(
-								entry.getValue().left,
-								entry.getValue().top + mainRect.bottom - end,
-								entry.getValue().right,
-								entry.getValue().top + 40 + mainRect.bottom
-										- end);
-					} else if (y == 0 && start > mainRect.top) {
-						Log.d("myLogs", "start>mainRect.top");
-						entry.getValue().set(
-								entry.getValue().left,
-								entry.getValue().top - start + mainRect.top,
-								entry.getValue().right,
-								entry.getValue().top + 40 - start
-										+ mainRect.top);
+					
 
-					}
+					
 				} else
 					entry.getValue().set(entry.getValue().left,
 							entry.getValue().top, entry.getValue().right,
@@ -208,7 +190,8 @@ public class CustomNumbersList {
 
 					mTextPaint);
 
-		}
+			
+			}
 		// delta = this.y;
 
 	}
@@ -279,25 +262,42 @@ public class CustomNumbersList {
 		numbers = new ArrayList<NumberModel>();
 
 		for (Entry<NumberModel, Rect> entry : workMap.entrySet()) {
-			if (entry.getValue().top > rect.top){
+			if (entry.getValue().top > rect.top) {
 				entry.getValue().set(mainRect.left + 5,
-						entry.getValue().top - rect.height()-5,
+						entry.getValue().top - rect.height() - 5,
 						mainRect.right - 5,
 						entry.getValue().top - rect.height() + 35);
 			}
-				if(!entry.getValue().contains(rect)){
-					rects.add(entry.getValue());	
-					numbers.add(entry.getKey());
-				}
+			if (!entry.getValue().contains(rect)) {
+				rects.add(entry.getValue());
+				numbers.add(entry.getKey());
+			}
 		}
-		//Arrays.sort(rects.toArray());
-		
-		workMap = new HashMap<NumberModel,Rect>();
-		for(int i=0;i<list.size();i++){
+
+		workMap = new HashMap<NumberModel, Rect>();
+		for (int i = 0; i < list.size(); i++) {
 			workMap.put(numbers.get(i), rects.get(i));
 		}
-		
 
 	}
 
+	public void updateYup() {
+		rects = new ArrayList<Rect>();
+		numbers = new ArrayList<NumberModel>();
+		int bottom = start -5;
+
+		for (Entry<NumberModel, Rect> entry : workMap.entrySet()) {
+			if (entry.getValue().contains(mainRect.centerX(), end-10)) {
+				rects.add(entry.getValue());
+				numbers.add(entry.getKey());
+			}
+		}
+
+		//workMap = new HashMap<NumberModel, Rect>();
+		for (int i = rects.size()-1; i >=0; i--) {
+			workMap.get(numbers.get(i)).set(mainRect.left+5,bottom-40,mainRect.right,bottom-5);
+			break;
+		}
+
+	}
 }
