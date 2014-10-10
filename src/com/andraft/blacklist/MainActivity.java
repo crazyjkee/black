@@ -132,6 +132,16 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			break;
 
 		case phaseTimer:
+			dialog = this.getLayoutInflater().inflate(R.layout.dailog, null);
+			dialog.setOnTouchListener(this);
+			content = (RelativeLayout) dialog.findViewById(R.id.content);
+			content.removeView(phase);
+			phase = this.getLayoutInflater()
+					.inflate(R.layout.conpas_test_layout, null);
+			phaseSmsBlack = (PhaseSmsBlack) phase.findViewById(R.id.silenseChoiceView1);
+			phaseSmsBlack.setSmsReadyCallback(this);
+			content.addView(phase);
+			dialog1.setContentView(dialog);
 			break;
 		default:
 			break;
@@ -152,6 +162,10 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 		}else if(smsblack){
 			Log.d("myLogs","smsblack");
 			check = Checker.phaseBlackSms;
+			showDialog(100);
+		}else if(circle){
+			Log.d("myLogs", "timer");
+			check = Checker.phaseTimer;
 			showDialog(100);
 		}
 
