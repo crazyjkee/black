@@ -26,4 +26,5 @@ static {
 public static  Bitmap getIcons(Context context){
 	 if(icons==null)icons=BitmapFactory.decodeResource(context.getResources(), R.drawable.icons); 
 	return icons;} 
+public enum ico{smslist,calllist,opt,cancel,ok,add,right,up,down,left,timer,sms,white,black,delete}
 }

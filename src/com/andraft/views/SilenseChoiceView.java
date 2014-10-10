@@ -18,7 +18,8 @@ import android.view.View;
 
 public class SilenseChoiceView extends View {
 	Context context;
-	private Rect src, dst;
+	private Rect src  = new Rect(),
+	dst = new Rect();  
 	private RectF daysRectf[] = new RectF[7];
 	private RectF bigDigitals[] = new RectF[2];
 	private RectF seecbarRectf = null;
@@ -27,34 +28,23 @@ public class SilenseChoiceView extends View {
 
 	public SilenseChoiceView(Context context) {
 		super(context);
-		this.context = context;
-		initRects();
-	}
-
-	private void initRects() {
-		// TODO Auto-generated method stub
-		src = new Rect();
-		dst = new Rect();
-		
-	}
+		this.context = context; 
+	} 
 
 	public SilenseChoiceView(Context context, AttributeSet attrs,
 			int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		this.context = context;
-		initRects();
+		this.context = context; 
 	}
 
 	public SilenseChoiceView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.context = context;
-		initRects();
-
+		this.context = context; 
 	}
-
-
+ 
 
 	private void init(int w, int h) {
+		
 		final int wBigRectf = w / 2 - STROKEWIDTH * 8;
 		bigDigitals[0] = new RectF(STROKEWIDTH * 2, h / 2 - wBigRectf / 2,
 				STROKEWIDTH * 2 + wBigRectf, h / 2 + wBigRectf / 2);
@@ -78,11 +68,11 @@ public class SilenseChoiceView extends View {
 		super.onDraw(canvas);
 		if (seecbarRectf == null)
 			init(canvas.getWidth(), canvas.getHeight());
-		src.set(36, 0, 72, 36);
+		src.set(360, 0,360,  36);
 		dst.set(100, 100, 200, 200);
 		canvas.drawColor(COLOR_OF_FON);
 		for (int i = 0; i < daysRectf.length; i++) {
-			canvas.drawText(DAYNAMES[i + 1], daysRectf[i].left + fontsize / 2,
+			canvas.drawText(DAYNAMES[i + 1], daysRectf[i].left + fontsize /3,
 					daysRectf[i].centerY() + fontsize / 2, paintText);
 			canvas.drawRoundRect(daysRectf[i], STROKEWIDTH * 2,
 					STROKEWIDTH * 2, paintRamca);
