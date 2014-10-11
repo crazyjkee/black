@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fon"
     android:orientation="vertical" >
 
     <com.andraft.views.SilenseChoiceView
         android:id="@+id/silenseChoiceView1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:background="@color/fon"
+        android:paddingTop="@dimen/tendp" />
 
-    <TimePicker
-        android:id="@+id/timePicker1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+     
 
 </LinearLayout>

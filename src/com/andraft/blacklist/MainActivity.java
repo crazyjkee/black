@@ -1,11 +1,11 @@
 package com.andraft.blacklist;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +16,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-
 import com.andraft.views.PhaseMain;
 import com.andraft.views.PhaseNumberBlack;
 import com.andraft.views.PhaseSmsBlack;
@@ -25,6 +24,7 @@ enum Checker {
 	phasemain, phaseBlackNumber, phaseBlackSms, phaseCall, phaseOpt, phaseTimer
 }
 
+@SuppressLint("InflateParams")
 public class MainActivity extends Activity implements PhaseMain.nextCallback,
 		PhaseNumberBlack.blackCallback, PhaseSmsBlack.smsCallback,
 		OnTouchListener {
@@ -36,22 +36,23 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	private PhaseNumberBlack phaseBlack;
 	private PhaseSmsBlack phaseSmsBlack;
 	private Checking checking;
-
+    private static Ecran ecran =Ecran.pervyi;
 	private EditText num;
-
+ 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		com.andraft.conpas.Constants.init(this.getResources());
 		// Remove title bar
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// Remove notification bar
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.activity_main);
-		checking = Checking.getInstance(this);
-		showDialog(1);
-		Intent service = new Intent(this, BlackService.class);
-		this.startService(service);
+		setContentView(R.layout.conpas_test_layout);
+		//checking = Checking.getInstance(this);
+		//showDialog(1);
+		//Intent service = new Intent(this, BlackService.class);
+		//this.startService(service);
 
 	}
 
@@ -78,7 +79,9 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
+		 try {
+			com.andraft.conpas.Constants.destroy();
+		} finally {}  
 	}
 
 	@Override
@@ -144,8 +147,7 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			dialog1.setContentView(dialog);
 			break;
 		default:
-			break;
-
+			break; 
 		}
 	}
 
@@ -173,6 +175,15 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		Log.i("cccc","cccc");
+		switch (ecran){
+		case conpas:
+			com.andraft.views.SilenseChoiceView.instance.onTouch(  event);
+			break;
+		case pervyi:
+			break;
+		default:
+			
 		if (event.getAction() == MotionEvent.ACTION_UP) { // ACTION UP
 			Log.d("myLogs", "MainActivity UP");
 			switch (check) {
@@ -240,9 +251,9 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 
 			}
 
-		}
+		}break;}
 		return super.onTouchEvent(event);
-
+		
 	}
 
 	@Override
@@ -303,9 +314,10 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			check = Checker.phasemain;
 			showDialog(100);
 		}
-		
-
-		
-
+		 
 	}
+public static void setEcran(Ecran ecran){
+	if(ecran!=Ecran.conpas)com.andraft.views.SilenseChoiceView.instance=null;
+	MainActivity.ecran=ecran;
+}	 
 }
