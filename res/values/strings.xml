@@ -5,8 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="press_me">Press me</string>
  <string name="from">from</string>
- <string name="to">to</string>
-   
+ <string name="to">to</string> 
   <item name="fon" type="color">#85d3e7</item>
-  <item name="activeframe" type="color">#FF33B5E5</item>
-</resources>
+ </resources>

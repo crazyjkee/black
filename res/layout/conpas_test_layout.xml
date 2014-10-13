@@ -5,13 +5,15 @@
     android:background="@color/fon"
     android:orientation="vertical" >
 
-    <com.andraft.views.SilenseChoiceView
-        android:id="@+id/silenseChoiceView1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/fon"
-        android:paddingTop="@dimen/tendp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-     
+        <com.andraft.conpas.Surf
+            android:id="@+id/surf1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 </LinearLayout>
