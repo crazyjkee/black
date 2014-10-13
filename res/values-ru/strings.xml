@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Blacklist</string>
+    <string name="main_opt">Настройка</string>
+    <string name="sms">СМС</string>
+    <string name="call">звонков</string>
+    <string name="main_list_sms">Списки номеров</string>
+    <string name="main_list_call">Списки контактов</string>
+    <string name="main_white_list">Белый список</string>
+    <string name="main_black_list">Черный список</string>
+    <string name="main_schedule">Расписание</string>
+    
+
+</resources>

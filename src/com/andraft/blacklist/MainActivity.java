@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import com.andraft.views.PhaseMain;
 import com.andraft.views.PhaseNumberBlack;
 import com.andraft.views.PhaseSmsBlack;
+import com.andraft.views.SilenceChoiceView;
 
 enum Checker {
 	phasemain, phaseBlackNumber, phaseBlackSms, phaseCall, phaseOpt, phaseTimer
@@ -35,6 +36,7 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	private boolean second = false;
 	private PhaseNumberBlack phaseBlack;
 	private PhaseSmsBlack phaseSmsBlack;
+	private SilenceChoiceView phaseTimer;
 	private Checking checking;
 
 	private EditText num;
@@ -119,9 +121,10 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			dialog.setOnTouchListener(this);
 			content = (RelativeLayout) dialog.findViewById(R.id.content);
 			content.removeView(phase);
-			phase = this.getLayoutInflater()
-					.inflate(R.layout.sms_black_phase, null);
-			phaseSmsBlack = (PhaseSmsBlack) phase.findViewById(R.id.blackSmsPhase);
+			phase = this.getLayoutInflater().inflate(R.layout.sms_black_phase,
+					null);
+			phaseSmsBlack = (PhaseSmsBlack) phase
+					.findViewById(R.id.blackSmsPhase);
 			phaseSmsBlack.setSmsReadyCallback(this);
 			content.addView(phase);
 			dialog1.setContentView(dialog);
@@ -132,6 +135,17 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			break;
 
 		case phaseTimer:
+			dialog = this.getLayoutInflater().inflate(R.layout.dailog, null);
+			dialog.setOnTouchListener(this);
+			content = (RelativeLayout) dialog.findViewById(R.id.content);
+			content.removeView(phase);
+			phase = this.getLayoutInflater().inflate(
+					R.layout.conpas_test_layout, null);
+			phaseTimer = (SilenceChoiceView) phase
+					.findViewById(R.id.silenseChoiceView1);
+			//phaseTimer.setSmsReadyCallback(this);
+			content.addView(phase);
+			dialog1.setContentView(dialog);
 			break;
 		default:
 			break;
@@ -149,9 +163,13 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			Log.d("myLogs", "black");
 			check = Checker.phaseBlackNumber;
 			showDialog(100);
-		}else if(smsblack){
-			Log.d("myLogs","smsblack");
+		} else if (smsblack) {
+			Log.d("myLogs", "smsblack");
 			check = Checker.phaseBlackSms;
+			showDialog(100);
+		} else if (circle) {
+			Log.d("myLogs", "circle");
+			check = Checker.phaseTimer;
 			showDialog(100);
 		}
 
@@ -220,7 +238,7 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 
 			case phaseTimer:
 				break;
-				
+
 			default:
 				break;
 
@@ -234,8 +252,6 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 	@Override
 	public void onblackCallback(boolean back, boolean add, boolean list) {
 		Log.d("myLogs", "onblackCallback");
-
-		
 
 		if (add) {
 			AlertDialog.Builder customDialog = new AlertDialog.Builder(this);
@@ -289,9 +305,6 @@ public class MainActivity extends Activity implements PhaseMain.nextCallback,
 			check = Checker.phasemain;
 			showDialog(100);
 		}
-		
-
-		
 
 	}
 }

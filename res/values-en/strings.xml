@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Blacklist</string>
+    <string name="main_opt">Setting up</string>
+    <string name="sms">SMS</string>
+    <string name="call">call</string>
+    <string name="main_list_sms">List of numbers</string>
+    <string name="main_list_call">List of contacts</string>
+    <string name="main_white_list">White list</string>
+    <string name="main_black_list">Black list</string>
+    <string name="main_schedule">Schedule</string>
+</resources>
