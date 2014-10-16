@@ -1,24 +1,25 @@
 package com.andraft.blacklist;
 
+import com.andraft.conpas.Screens.Constants;
 import com.andraft.conpas.Screens.Screen;
+import com.andraft.conpas.Screens.Timer;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
   
 @SuppressLint("InflateParams")
 public class MainActivity extends Activity  { 
-private static com.andraft.conpas.Screens.Screen activeScreen;
-	
-
+private static com.andraft.conpas.Screens.Screen activeScreen; 
 	public static com.andraft.conpas.Screens.Screen getActiveScreen() {
 	if(activeScreen==null)return mainScreen;
 		return activeScreen;
 }
-private static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, callScreen, phaseOpt; 
- 
+public static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, callScreen, phaseOpt; 
+  
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
@@ -26,9 +27,7 @@ private static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, 
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.conpas_test_layout); 
-		mainScreen=new com.andraft.conpas.Screens.Main(this);
-		
-		 activeScreen= mainScreen;
+		Constants.Res=this.getResources();
 	}
  
 	@Override
@@ -39,6 +38,7 @@ private static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, 
 		} finally {}  
 	} 
 	public static void setActiveScreen(Checker Checker){
+		com.andraft.conpas.Screens.Constants.BannerIcon.offset(0, 0);
 		switch (Checker){
 		case phaseBlackNumber:
 			break;
@@ -49,13 +49,14 @@ private static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, 
 		case phaseOpt:
 			break;
 		case phaseTimer:
-			if(timerScreen==null)timerScreen=new com.andraft.conpas.Screens.Timer();
-			MainActivity.activeScreen=timerScreen;
+			if(timerScreen==null)timerScreen=new Timer();
+			 MainActivity.activeScreen=timerScreen;
 			break;
 		case phasemain:
+			MainActivity.activeScreen=mainScreen;
+			//com.andraft.conpas.Screens.Constants.BannerIcon.offset(0,250);
 			break;
-		default:
-			break;}	 
+		 }	 
 		 
 	}
 }

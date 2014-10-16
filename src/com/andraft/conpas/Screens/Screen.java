@@ -1,18 +1,33 @@
 package com.andraft.conpas.Screens;
  
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.view.MotionEvent;
+import com.andraft.blacklist.Checker;
+import com.andraft.blacklist.MainActivity;
+import com.andraft.blacklist.R;
 
+import android.graphics.Canvas;
+import android.graphics.RectF;
+import android.view.MotionEvent;
+import static com.andraft.conpas.Screens.Constants.*;
 public abstract class Screen {
-	 
-	 
-public abstract boolean OnTouch(MotionEvent event);
+  com.andraft.conpas.Screens.Constants.ico iconca=com.andraft.conpas.Screens.Constants.ico.back_blue ;
  
-public   void OnDraw(Canvas canvas){
-	 
-	canvas.drawColor(Color.BLUE);
+  abstract boolean onTouch(MotionEvent event);
+public   boolean touch(MotionEvent event){
+	if(BannerIcon.contains(event.getX(),event.getY())){
+		if(iconca==com.andraft.conpas.Screens.Constants.ico.back_blue){
+			MainActivity.setActiveScreen(Checker.phasemain);
+			
+		}
+		return true;
+	} 
+	else return onTouch(event);
 };
-  
+ 
+public   void OnDraw(Canvas canvas){ 
+	canvas.drawPaint(Constants.FONfill);
+	canvas.drawRect(new RectF(0,0,w,  getBannerWidth()), Constants.WhiteText);
+	Constants.DrowIcon(canvas, iconca, BannerIcon);
+	canvas.drawText(Res.getString(R.string.app_name),w/2, getBannerWidth(),FONfill);
+	 
+} 
 }

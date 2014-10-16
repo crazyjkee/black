@@ -3,14 +3,13 @@ package com.andraft.conpas;
 import com.andraft.blacklist.MainActivity;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Canvas; 
 import android.view.SurfaceHolder;
  
 
 public class DrawThread extends Thread{
 	private      boolean runFlag = true;
-	public static final long FPS=40; 
+	public static final long FPS=25; 
     private static SurfaceHolder surfaceHolder; 
     public static boolean isDraw(){
 		return draw;
@@ -22,7 +21,7 @@ public class DrawThread extends Thread{
      public static DrawThread Risovalca=null; 
 public static void Init(SurfaceHolder surfaceHolder, Context context){
 	DrawThread.surfaceHolder=surfaceHolder;  
-	com.andraft.conpas.Screens.Constants.init( context.getResources(),surfaceHolder.getSurfaceFrame()); 
+	com.andraft.conpas.Screens.Constants.init( context.getResources(),surfaceHolder.getSurfaceFrame());
 	  Risovalca=new DrawThread( ) ;  
 	  Risovalca.start();
 }  

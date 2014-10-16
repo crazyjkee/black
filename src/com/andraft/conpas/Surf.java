@@ -52,5 +52,5 @@ public final class Surf extends SurfaceView implements SurfaceHolder.Callback, O
 	@Override 
 		public boolean onTouch(View arg0, MotionEvent event) { 
 		if(MainActivity.getActiveScreen()==null)return true;
-		return MainActivity.getActiveScreen().OnTouch(event)  ;
+		return MainActivity.getActiveScreen().touch(event)  ;
 	}} 
