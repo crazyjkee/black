@@ -37,8 +37,7 @@ public static HashMap<String,String> hNumber = new HashMap<String,String>();
  PaintWhiteRamca.setColor(Color.WHITE); 
  PaintWhiteRamca.setTextAlign(Align.CENTER); 
  PaintFON.setStyle(Style.FILL_AND_STROKE);
- PaintFON.setTextAlign(Align.CENTER);
- 
+ PaintFON.setTextAlign(Align.CENTER); 
  hNumber.put("+7950122121", "Гавнюк");
  
  

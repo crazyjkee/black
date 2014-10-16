@@ -26,7 +26,7 @@ private static Screen mainScreen,timerScreen,blackNumberScreen, blackSmsScreen, 
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.conpas_test_layout); 
-		mainScreen=new com.andraft.conpas.Screens.Main();
+		mainScreen=new com.andraft.conpas.Screens.Main(this);
 		
 		 activeScreen= mainScreen;
 	}
