@@ -1,8 +1,7 @@
 package com.andraft.conpas.Screens;
 
 import java.text.DateFormatSymbols;
-import java.util.HashMap;
-
+import java.util.HashMap;  
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,31 +11,18 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
-import android.graphics.RectF;
-
-import com.andraft.blacklist.Checker;
+import android.graphics.RectF;  
 import com.andraft.blacklist.MainActivity;
 import com.andraft.blacklist.R;
-import com.andraft.conpas.Screens.Constants.ico;
+import com.andraft.blacklist.ecrans;
 
 public class Constants {
 	public static Resources Res;
-	private static RectF CashedRectf = new RectF();
-	public static final int STROKEWIDTH = 2;
-	private static int BitmapHeight = 0;
-	public static Bitmap ICONS = null;
-	public static RectF BannerIcon=new RectF();
-	public static Paint WhiteRamca = new Paint(Paint.ANTI_ALIAS_FLAG);// white
-																		// stroke
-																		// textAligneCentr
-	public static Paint FONfill = new Paint(Paint.ANTI_ALIAS_FLAG);// Fon
-																	// fillAndstroke
-																	// textAligneCentr
-	public static Paint PaintPressed = new Paint(Paint.ANTI_ALIAS_FLAG);// Fon
-																		// fillAndstroke
-																		// textAligneCentr
-	public static Paint WhiteText;// Fon fillAndstroke textAligneCentr
-	public static int h, w, fontsize;
+	private static Bitmap ICONS = null;
+	public static Paint WhiteRamca = new Paint(Paint.ANTI_ALIAS_FLAG); 
+	 public static Paint FONfill = new Paint(Paint.ANTI_ALIAS_FLAG); 
+	public static Paint PaintPressed = new Paint(Paint.ANTI_ALIAS_FLAG);  
+	public static int h, w;
 	public static final String[] DAYNAMES = new DateFormatSymbols()
 			.getShortWeekdays();
  
@@ -44,15 +30,13 @@ public class Constants {
 	 
 	static {
 		// PaintPressed.setStyle(Style.STROKE );
-		PaintPressed.setShadowLayer(STROKEWIDTH * 2, STROKEWIDTH, STROKEWIDTH,
-				Color.GRAY);
+		
 		PaintPressed.setAlpha(20);
 		WhiteRamca.setStyle(Style.STROKE);
 		WhiteRamca.setColor(Color.WHITE);
 		WhiteRamca.setTextAlign(Align.CENTER);
-		WhiteText = new Paint(WhiteRamca);
-		WhiteText.setStyle(Style.FILL);
-		FONfill.setStyle(Style.FILL_AND_STROKE);
+		
+		FONfill.setStyle(Style.FILL);
 		FONfill.setTextAlign(Align.CENTER);
 		hNumber.put("+7950122121", "Гавнюк");
 
@@ -61,19 +45,18 @@ public class Constants {
 	public static void init(Resources res, Rect rect) {
 		w = rect.width();
 		h = rect.height(); 
-		if (ICONS != null)
-			ICONS.recycle();
+		if (ICONS != null)	ICONS.recycle();
+		Res=res;
+		
+		FONfill.setStyle(Style.FILL);
+		PaintPressed.setShadowLayer(res.getInteger(R.integer.stokewidth), res.getInteger(R.integer.stokewidth), res.getInteger(R.integer.stokewidth),
+				Color.GRAY);
 		FONfill.setColor(res.getColor(R.color.fon));
-		ICONS = BitmapFactory.decodeResource(res, R.drawable.icons);
-		BitmapHeight = ICONS.getHeight(); 
-		int maxCharsIndaynames = 1;
-		for (String s : DAYNAMES)
-			maxCharsIndaynames = Math.max(maxCharsIndaynames, s.length());
-		fontsize = w / (7 * maxCharsIndaynames + 1);
-		FONfill.setTextSize(fontsize);
-		MainActivity.mainScreen = new Main();
-		MainActivity.setActiveScreen(Checker.phasemain); 
-		BannerIcon=new RectF(0,0,getBannerWidth(),getBannerWidth());
+		ICONS = BitmapFactory.decodeResource(res, R.drawable.icons); 
+		FONfill.setTextSize(res.getInteger(R.integer.fontsize)*1.1f);;
+		MainActivity.main = new Main();
+		MainActivity.setActiveScreen(ecrans.main);  
+		WhiteRamca.setStrokeWidth(res.getInteger(R.integer.stokewidth));;
 	}
 
 	public static void destroy() {
@@ -82,30 +65,20 @@ public class Constants {
 	}
 
 	public enum ico {
-		smslist, calllist, opt, cancel, ok, add, right, up, down, back_blue, timer, sms, white, black, delete
+		linesConvert, linesTruba, bluHren, roundCrest,roundOk,roundPlus,roundRight,roundUp,roundDown,
+		bluRoundLeft,shedule,konvert,whiteList,blackList,roundMinus,truba
 	}
-
-	public static void DrowIcon(Canvas canvas, ico ico, RectF dst) {
-		
-		if (dst.width() >h/20)
-			CashedRectf.set(dst.centerX() - h/20, dst.centerY() - h/20,
-					dst.centerX() + h/20, dst.centerY() + h/20);
-
-		else {
-			final float w = Math.min(dst.width(), dst.height());
-			CashedRectf.set(0, 0, w, w);
-			CashedRectf.offset(dst.centerX() - w / 2, dst.centerY() - w / 2);
-		}
-		canvas.drawBitmap(ICONS,
-				new Rect(ico.ordinal() * BitmapHeight, 0, (ico.ordinal() + 1)
-						* BitmapHeight, BitmapHeight), CashedRectf, null);
-	}
-public static void DrowIcon(Canvas canvas, ico ico, int x, int y) {
-	DrowIcon(canvas, ico, new RectF(x-h/10,y-h/10,x+h/10,y+h/10));
-			
-	}
-	 static int getBannerWidth(){
-		return (h-w)/8;}
-
 	
+	public static void DrowIcon(Canvas canvas, ico ico,float f,float g,boolean smallTruelargeFalse) {
+		  final RectF r = (smallTruelargeFalse)?
+			  new RectF(0,0,Res.getInteger(R.integer.smallIconWidth),Res.getInteger(R.integer.smallIconWidth)):
+			  new RectF(0,0,Res.getInteger(R.integer.largeIconWidth) ,Res.getInteger(R.integer.largeIconWidth) );
+		  r.offsetTo(f-r.width()/2, g-r.width()/2);
+		canvas.drawBitmap(ICONS,
+				new Rect(ico.ordinal() * ICONS.getHeight(), 0, (ico.ordinal() + 1)
+						* ICONS.getHeight(), ICONS.getHeight()), r, null);
+	}
+ 
+	 
+ 
 }

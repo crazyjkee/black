@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
- 
-    <string name="main_opt">Setting up</string>
+<resources> 
+    <string name="setup">Setting up</string>
     <string name="sms">SMS</string>
     <string name="call">call</string>
-    <string name="main_list_sms">List of numbers</string>
-    <string name="main_list_call">List of contacts</string>
-    <string name="main_white_list">White list</string>
-    <string name="main_black_list">Black list</string>
-    <string name="main_schedule">Schedule</string>
+    <string name="list_of_numbers">List of numbers</string>
+    <string name="list_of_contacts">List of contacts</string>
+    <string name="white_list">White list</string>
+    <string name="black_list">Black list</string>
+    <string name="schedule">Schedule</string>
     <string name="app_name">Blacklist</string> 
     <string name="action_settings">Settings</string>
     <string name="press_me">Press me</string>
+    <string name="setup_sms">Setup sms</string> 
+    <string name="setup_calls">Setup calls</string> 
  <string name="from">from</string>
- <string name="to">to</string> 
+ <string name="to">to</string>  
   <item name="fon" type="color">#85d3e7</item>
  </resources>

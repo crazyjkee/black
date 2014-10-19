@@ -19,7 +19,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import static com.andraft.conpas.Screens.Constants.*;
 
-public class Timer extends Screen {
+public class Schedule extends Screen {
 	private int Silense[][][] = null;
 	private Paint paintgradient = new Paint(Paint.ANTI_ALIAS_FLAG); 
 	private RectF bigDigitals[] = new RectF[2];
@@ -27,7 +27,8 @@ public class Timer extends Screen {
 	private RectF buttonsDownRectf[] = new RectF[4];
 	private RectF buttonsUpRectf[] = new RectF[4]; 
 	private RectF aciveDay = null, pressedRectf = null;
-	public Timer( ) {  
+	private int fontSizeWeek; 
+	public Schedule( ) { super(R.string.schedule) ;
 			if (Silense == null) { 
 				Silense = new int[7][2][2];
 				for (int i = 0; i < 7; i++)
@@ -35,11 +36,20 @@ public class Timer extends Screen {
 						for (int k = 0; i < 2; i++)
 							Silense[i][j][k] = 0; 
 	}
- 		final int wBigRectf = w / 2 - STROKEWIDTH * 8;
-		bigDigitals[0] = new RectF(STROKEWIDTH * 2, h / 2 - wBigRectf / 2,
-				STROKEWIDTH * 2 + wBigRectf, h / 2 + wBigRectf / 2);
+			final Integer StrokeWidth=(int) Res.getInteger(R.integer.stokewidth);
+			
+			int maxCharsIndaynames=3;
+			for (String s : DAYNAMES)
+				maxCharsIndaynames = Math.max(maxCharsIndaynames, s.length());
+			  fontSizeWeek = w / (7 * maxCharsIndaynames + 1);
+			  WhiteTextSmall.setTextSize(fontSizeWeek);
+			 
+			
+ 		final int wBigRectf = w / 2 - StrokeWidth *4;
+		bigDigitals[0] = new RectF(StrokeWidth * 2, h / 2 - wBigRectf / 2+BannerIcon.centerY(),
+				StrokeWidth * 2 + wBigRectf, h / 2 + wBigRectf / 2+BannerIcon.centerY());
 		bigDigitals[1] = new RectF(bigDigitals[0]);
-		bigDigitals[1].offset(w / 2 + STROKEWIDTH * 3, 0);
+		bigDigitals[1].offset(w / 2 , 0);
 		final float[] B = { 0.00f, 0.4f, 0.6f, 1f };
 		final int[] C = { Color.WHITE, FONfill.getColor(),
 				FONfill.getColor(), Color.WHITE };
@@ -47,23 +57,23 @@ public class Timer extends Screen {
 				bigDigitals[1].bottom, C, B, TileMode.CLAMP);
 		paintgradient.setShader(sh);
 		paintgradient.setAlpha(55);
-		final float bw = bigDigitals[0].width() / 2; 
+		WhiteText.setTextSize( bigDigitals[0].width() / 2.8f);
 		for (int i = 0; i < daysRectf.length; i++) {
-			daysRectf[i] = new RectF(i * w / 7 + STROKEWIDTH * 2,
-					getBannerWidth()+STROKEWIDTH * 2, (i + 1) * w / 7 - STROKEWIDTH * 2,
-					getBannerWidth()+fontsize * 2);
+			daysRectf[i] = new RectF(i * w / 7 + StrokeWidth ,
+					BannerIcon.width()*1.2f, (i + 1) * w / 7 - StrokeWidth ,
+					BannerIcon.width()*1.2f+fontSizeWeek * 2 );
 		}
-
+        final float bw = bigDigitals[0].width() / 2-StrokeWidth*4; 
 		for (int i = 0; i < buttonsDownRectf.length; i++) {
 			buttonsDownRectf[i] = new RectF(0, 0, bw, bw);
 			buttonsUpRectf[i] = new RectF(0, 0, bw, bw);
 		}
 
 		for (int i = 0; i < bigDigitals.length; i++) {
-			buttonsUpRectf[i].offset(bigDigitals[i].left, bigDigitals[i].top- bw);
-			buttonsUpRectf[i + 2].offset(bigDigitals[i].right - bw,bigDigitals[i].top - bw);
-			buttonsDownRectf[i].offset(bigDigitals[i].left,	bigDigitals[i].bottom);
-			buttonsDownRectf[i + 2].offset(bigDigitals[i].right - bw,bigDigitals[i].bottom);
+			buttonsUpRectf[i].offset(bigDigitals[i].left, bigDigitals[i].top- bw- StrokeWidth*2);
+			buttonsUpRectf[i + 2].offset(bigDigitals[i].right - bw,bigDigitals[i].top - bw- StrokeWidth*2);
+			buttonsDownRectf[i].offset(bigDigitals[i].left,	bigDigitals[i].bottom+StrokeWidth*2);
+			buttonsDownRectf[i + 2].offset(bigDigitals[i].right - bw,bigDigitals[i].bottom+StrokeWidth*2);
 		}
 	
 		aciveDay = (daysRectf[Calendar.DAY_OF_WEEK - 1]);
@@ -98,50 +108,51 @@ public class Timer extends Screen {
 		 super.OnDraw(canvas); 
 		 checkToAndFromTime();
 		  final String fromTo[]={Res.getString(R.string.from),Res.getString(R.string.to)};
-		for (int i = 0; i < daysRectf.length; i++) { 
+		
+		  for (int i = 0; i < daysRectf.length; i++) { 
 			if (aciveDay == daysRectf[i]) { 
-				final  Paint p=new Paint(WhiteText);
+				final  Paint p=new Paint(WhiteTextSmall);
 		           p.setStyle(Style.FILL_AND_STROKE); 
-				canvas.drawRoundRect(daysRectf[i], fontsize,
-						fontsize, p);
+				canvas.drawRoundRect(daysRectf[i], fontSizeWeek,
+						fontSizeWeek, p);
 				 p.setColor( FONfill.getColor());
 				canvas.drawText(DAYNAMES[i + 1], daysRectf[i].centerX(),
-						daysRectf[i].centerY() + fontsize /3,  p); 
+						daysRectf[i].centerY() + fontSizeWeek /3,  p); 
 			} else { 
-				canvas.drawRoundRect(daysRectf[i],fontsize,
-						fontsize,WhiteRamca);
+				canvas.drawRoundRect(daysRectf[i],fontSizeWeek,
+						fontSizeWeek,WhiteRamca);
 				canvas.drawText(DAYNAMES[i + 1], daysRectf[i].centerX(),
-						daysRectf[i].centerY() + fontsize / 3,
-						WhiteText);
+						daysRectf[i].centerY() + fontSizeWeek / 3,
+						WhiteTextSmall);
 			}
 		} 
 		
 		for (int i = 0; i < bigDigitals.length; i++) {
-			WhiteText.setTextSize( bigDigitals[0].width() / 2.8f);
-			canvas.drawRoundRect(bigDigitals[i], fontsize,
-					fontsize, paintgradient);
-			canvas.drawRoundRect(bigDigitals[i], fontsize,
-					fontsize, WhiteRamca);
+			
+			canvas.drawRoundRect(bigDigitals[i], fontSizeWeek,
+					fontSizeWeek, paintgradient);
+			canvas.drawRoundRect(bigDigitals[i], fontSizeWeek,
+					fontSizeWeek, WhiteRamca);
 			canvas.drawText(formatTime(i), bigDigitals[i].centerX(),
 					bigDigitals[i].centerY() + WhiteText.getTextSize() / 3,
 					WhiteText);
-			WhiteText.setTextSize(fontsize);
-			canvas.drawText(fromTo[i], bigDigitals[i].centerX(),
-					canvas.getHeight() - fontsize * 2, WhiteText);
+			 		canvas.drawText(fromTo[i], bigDigitals[i].centerX(),
+					canvas.getHeight() - fontSizeWeek , WhiteTextSmall);
 			for (int j = 0; j < 3; j = j + 2) {
 				 
-				canvas.drawRoundRect(buttonsUpRectf[i + j], fontsize,
-						fontsize, WhiteRamca);
-				canvas.drawRoundRect(buttonsDownRectf[i + j],fontsize,
-						fontsize, WhiteRamca);
-				Constants.DrowIcon(canvas, ico.up, (buttonsUpRectf[i + j]));
-				Constants.DrowIcon(canvas, ico.down, (buttonsDownRectf[i + j]));
+				canvas.drawRoundRect(buttonsUpRectf[i + j], fontSizeWeek,
+						fontSizeWeek, WhiteRamca);
+				canvas.drawRoundRect(buttonsDownRectf[i + j],fontSizeWeek,
+						fontSizeWeek, WhiteRamca);
+				Constants.DrowIcon(canvas, ico.roundUp,  buttonsUpRectf[i + j].centerX(),buttonsUpRectf[i + j].centerY(),true);
+				Constants.DrowIcon(canvas, ico.roundDown, buttonsDownRectf[i + j].centerX(),buttonsDownRectf[i + j].centerY(),true);
 			} }
 		
 		if (pressedRectf != null) {
-			canvas.drawRoundRect(pressedRectf, fontsize, fontsize,
+			canvas.drawRoundRect(pressedRectf,fontSizeWeek ,fontSizeWeek ,
 					PaintPressed);
 		}
+		 
 	} 
 	@Override
 	public boolean onTouch(MotionEvent event) {
