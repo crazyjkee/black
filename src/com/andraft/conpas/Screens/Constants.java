@@ -28,14 +28,11 @@ public class Constants {
  
 	public static HashMap<String, String> hNumber = new HashMap<String, String>();
 	 
-	static {
-		// PaintPressed.setStyle(Style.STROKE );
-		
+	static { 
 		PaintPressed.setAlpha(20);
 		WhiteRamca.setStyle(Style.STROKE);
 		WhiteRamca.setColor(Color.WHITE);
-		WhiteRamca.setTextAlign(Align.CENTER);
-		
+		WhiteRamca.setTextAlign(Align.CENTER); 
 		FONfill.setStyle(Style.FILL);
 		FONfill.setTextAlign(Align.CENTER);
 		hNumber.put("+7950122121", "Гавнюк");

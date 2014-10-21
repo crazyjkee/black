@@ -99,7 +99,7 @@ public class Main extends Screen{
 		 WhiteText.setTextAlign(Align.RIGHT);
 		 final int sw=Res.getInteger(R.integer.smallIconWidth)/2  ; 
 		 float mt =w/2-sw  ; 
-		 final float dy=  (RectFs[1].top+BannerIcon.bottom )/2;
+		 final float dy=  (RectFs[1].top+BannerHeight())/2;
 		 canvas.drawText( " "+blockedCount[0],mt  , dy+Res.getInteger(R.integer.smallIconWidth) /3, WhiteText); 
 		 Constants.DrowIcon(canvas, ico.konvert, mt-sw -WhiteText .measureText(" "+blockedCount[0]) , dy,true);
 		 WhiteText.setTextAlign(Align.LEFT);

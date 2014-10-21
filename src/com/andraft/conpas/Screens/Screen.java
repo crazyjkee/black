@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import static com.andraft.conpas.Screens.Constants.*;
 public abstract class Screen {
    ico iconca= ico.bluRoundLeft ;
-    RectF BannerIcon=new RectF();
+   private RectF BannerIcon=new RectF();
   abstract boolean onTouch(MotionEvent event);
   private int label;
    Paint  WhiteText=new Paint(WhiteRamca),WhiteTextSmall;
@@ -36,11 +36,13 @@ public   boolean touch(MotionEvent event){
 	} 
 	else return onTouch(event);
 };
- 
+float BannerHeight(){
+	return Res.getInteger(R.integer.fontsize)*1.45f;}
 public   void OnDraw(Canvas canvas){ 
 	 canvas.drawPaint(FONfill);
-	canvas.drawRect(new RectF(0,0,w,  Res.getInteger(R.integer.fontsize)*1.45f), WhiteText);
+	canvas.drawRect(0,0,w, BannerHeight() , WhiteText);
 	 Constants.DrowIcon(canvas, iconca, BannerIcon.centerX(),BannerIcon.centerY(),true);
-	canvas.drawText(Res.getString(label),w/2, Res.getInteger(R.integer.fontsize)*1.2f,FONfill); 
+	canvas.drawText(Res.getString(label),w/2, Res.getInteger(R.integer.fontsize)*1.2f,FONfill);
+	canvas.clipRect(0,BannerHeight(),w, h); 
 } 
 }

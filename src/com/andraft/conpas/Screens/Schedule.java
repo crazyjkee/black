@@ -46,8 +46,8 @@ public class Schedule extends Screen {
 			 
 			
  		final int wBigRectf = w / 2 - StrokeWidth *4;
-		bigDigitals[0] = new RectF(StrokeWidth * 2, h / 2 - wBigRectf / 2+BannerIcon.centerY(),
-				StrokeWidth * 2 + wBigRectf, h / 2 + wBigRectf / 2+BannerIcon.centerY());
+		bigDigitals[0] = new RectF(StrokeWidth * 2, h / 2 - wBigRectf / 2+BannerHeight()/2,
+				StrokeWidth * 2 + wBigRectf, h / 2 + wBigRectf / 2+BannerHeight()/2);
 		bigDigitals[1] = new RectF(bigDigitals[0]);
 		bigDigitals[1].offset(w / 2 , 0);
 		final float[] B = { 0.00f, 0.4f, 0.6f, 1f };
@@ -60,8 +60,8 @@ public class Schedule extends Screen {
 		WhiteText.setTextSize( bigDigitals[0].width() / 2.8f);
 		for (int i = 0; i < daysRectf.length; i++) {
 			daysRectf[i] = new RectF(i * w / 7 + StrokeWidth ,
-					BannerIcon.width()*1.2f, (i + 1) * w / 7 - StrokeWidth ,
-					BannerIcon.width()*1.2f+fontSizeWeek * 2 );
+					BannerHeight()*1.2f, (i + 1) * w / 7 - StrokeWidth ,
+					BannerHeight()*1.2f+fontSizeWeek * 2 );
 		}
         final float bw = bigDigitals[0].width() / 2-StrokeWidth*4; 
 		for (int i = 0; i < buttonsDownRectf.length; i++) {
