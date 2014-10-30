@@ -12,35 +12,33 @@ import android.util.Log;
 public class SmsLogUtils {
 	private ContentResolver resolver;
 	private Context context;
-	private HashMap<String,String> sms;
-	
-	public HashMap<String,String> readAllSms(){
-		sms = new HashMap<String,String>();
-		 Uri inboxURI = Uri.parse("content://sms/inbox");
-		 
-         // List required columns
-         String[] reqCols = new String[] { "_id", "address", "body" };
+	private HashMap<String, String> sms;
 
-         // Get Content Resolver object, which will deal with Content Provider
-         ContentResolver cr = this.resolver;
+	public HashMap<String, String> readAllSms() {
+		sms = new HashMap<String, String>();
+		Uri inboxURI = Uri.parse("content://sms/inbox");
 
-         // Fetch Inbox SMS Message from Built-in Content Provider
-         Cursor c = cr.query(inboxURI, reqCols, null, null, null);
-         while(c.moveToNext()){
-        	 
-                
-                 String number=c.getString(c.getColumnIndex(Sms.ADDRESS));
-       		  String body = c.getString(c.getColumnIndex(Sms.BODY));
-       		  Log.d("myLogs","number:"+number+" ,body:"+body);
-                 sms.put(number, body);
-             
-         }
-         c.close();
+		// List required columns
+		String[] reqCols = new String[] { "_id", "address", "body" };
+
+		// Get Content Resolver object, which will deal with Content Provider
+		ContentResolver cr = this.resolver;
+
+		// Fetch Inbox SMS Message from Built-in Content Provider
+		Cursor c = cr.query(inboxURI, reqCols, null, null, null);
+		while (c.moveToNext()) {
+
+			String number = c.getString(c.getColumnIndex(Sms.ADDRESS));
+			String body = c.getString(c.getColumnIndex(Sms.BODY));
+			sms.put(number, body);
+
+		}
+		c.close();
 		return sms;
-		
+
 	}
-	
-	public SmsLogUtils( Context context) {
+
+	public SmsLogUtils(Context context) {
 		super();
 		this.resolver = context.getContentResolver();
 		this.context = context;

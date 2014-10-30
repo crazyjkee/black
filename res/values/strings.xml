@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources> 
-    <string name="setup">Setting up</string> 
+<resources>
+
+    <string name="setup">Setting up</string>
     <string name="list_of_numbers">List of numbers</string>
     <string name="list_of_contacts">List of contacts</string>
     <string name="white_list">White list</string>
     <string name="black_list">Black list</string>
     <string name="schedule">Schedule</string>
-    <string name="app_name">Blacklist</string> 
-    <string name="no_data">No data</string>  
-    <string name="setup_sms">Setup sms</string> 
-    <string name="setup_calls">Setup calls</string> 
- <string name="from">from</string>
- <string name="to">to</string>  
-  <item name="fon" type="color">#85d3e7</item>
- </resources>
+    <string name="app_name">BlackList lite</string>
+    <string name="no_data">No data</string>
+    <string name="setup_sms">Setup sms</string>
+    <string name="setup_calls">Setup calls</string>
+    <string name="from">FROM</string>
+    <string name="to">TO</string>
+    <string name="setup_pass">Set password</string>
+    <string name="coming">coming soon</string>
+    <string name="comment">Write a Review</string>
+    <string name="clear_stat">Reset statistics</string>
+
+    <item name="fon_blue" type="color">#85d3e7</item>
+    <item name="fon_white" type="color">#ffffff</item>
+    <item name="fon_green" type="color">#6ed394</item>
+    <item name="fon_gray" type="color">#8c9d9b</item>
+
+</resources>

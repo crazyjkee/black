@@ -18,21 +18,21 @@ public class DataBase extends SQLiteOpenHelper {
 	private static String LOG = "myLogs";
 	private static final String DATABASE_NAME = "blacklist";
 	private static final int DATABASE_VERSION = 1;
-	private static String TABLE_NUMBERS = "numbers";
-	private static String TABLE_SMS = "sms";
+	public static String TABLE_NUMBERS = "numbers";
+	public static String TABLE_SMS = "sms";
 
 	// common column
-	private static final String KEY_ID = "_id";
-	private static final String NUM = "num";
+	public static final String KEY_ID = "_id";
+	public static final String NUM = "num";
 
 	// numbers column
 
-	private static final String BOOL = "bool";
-	private static final String NAME = "name";
-	private static final String COUNT_BLACK = "count_black";
+	public static final String BOOL = "bool";//0 - white, 1 - black, 2 - unknown
+	public static final String NAME = "name";
+	public static final String COUNT_BLACK = "count_black";
 
 	// sms column
-	private static final String TEXT = "text";
+	public static final String TEXT = "text";
 
 	// Number table create statement
 	private static final String CREATE_TABLE_NUMBERS = "CREATE TABLE "
@@ -42,8 +42,8 @@ public class DataBase extends SQLiteOpenHelper {
 
 	// SMS table create statement
 	private static final String CREATE_TABLE_SMS = "CREATE TABLE " + TABLE_SMS
-			+ "(" + KEY_ID + " INTEGER PRIMARY KEY,"+BOOL+" INTEGER," + TEXT + " TEXT," + NUM
-			+ " TEXT" + ");";
+			+ "(" + KEY_ID + " INTEGER PRIMARY KEY," + BOOL + " INTEGER,"
+			+ TEXT + " TEXT," + NUM + " TEXT NOT NULL," +COUNT_BLACK+" INTEGER"+ ");";
 
 	public DataBase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,7 +51,7 @@ public class DataBase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d("myLogs","onCreateDatabase");
+		Log.d("myLogs", "onCreateDatabase");
 		db.execSQL(CREATE_TABLE_NUMBERS);
 		db.execSQL(CREATE_TABLE_SMS);
 
@@ -80,7 +80,7 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(COUNT_BLACK, number.getCount_black());
 		// insert row
 		long number_id = db.insert(TABLE_NUMBERS, null, values);
-		Log.d("myLogs","number_id:"+number_id);
+		Log.d("myLogs", "number_id:" + number_id);
 		return number_id;
 	}
 
@@ -143,6 +143,7 @@ public class DataBase extends SQLiteOpenHelper {
 				numbers.add(number);
 			} while (c.moveToNext());
 		}
+		c.close();
 
 		return numbers;
 	}
@@ -163,21 +164,23 @@ public class DataBase extends SQLiteOpenHelper {
 				t.setId(c.getInt((c.getColumnIndex(KEY_ID))));
 				t.setNum(c.getString(c.getColumnIndex(NUM)));
 				t.setText(c.getString(c.getColumnIndex(TEXT)));
+				t.setCount_black(c.getInt((c.getColumnIndex(COUNT_BLACK))));
 
 				// adding to tags list
 				sms.add(t);
 			} while (c.moveToNext());
 		}
+		c.close();
 		return sms;
 	}
 
-	public int updateNumber(NumberModel number,int bool) {
+	public int updateNumber(NumberModel number, int bool) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 
 		values.put(NUM, number.getNum());
-		values.put(BOOL,bool);
+		values.put(BOOL, bool);
 		values.put(NAME, number.getName());
 		values.put(COUNT_BLACK, number.getCount_black());
 
@@ -186,45 +189,46 @@ public class DataBase extends SQLiteOpenHelper {
 				new String[] { String.valueOf(number.getNum()) });
 	}
 
-	public int updateSms(SmsModel sms) {
+	public int updateSms(SmsModel sms,int bool) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(NUM, sms.getNum());
 		values.put(TEXT, sms.getText());
+		values.put(COUNT_BLACK, sms.getCount_black());
+		values.put(BOOL, bool);
 
 		// updating row
-		return db.update(TABLE_SMS, values, KEY_ID + " = ?",
-				new String[] { String.valueOf(sms.getId()) });
+		return db.update(TABLE_SMS, values, NUM + " = ?",
+				new String[] { String.valueOf(sms.getNum()) });
 	}
 
 	public void deleteNumber(String number) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.delete(TABLE_NUMBERS, NUM + " = ?",
-				new String[] { number });
+		db.delete(TABLE_NUMBERS, NUM + " = ?", new String[] { number });
 	}
 
 	public void deleteSms(String number) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		db.delete(TABLE_SMS, NUM + " = ?",
-				new String[] { number });
+		db.delete(TABLE_SMS, NUM + " = ?", new String[] { number });
 	}
-	
-	public void clearAllNumbers(){
+
+	public void clearAllNumbers() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.execSQL("delete from "+TABLE_NUMBERS);
+		db.execSQL("delete from " + TABLE_NUMBERS);
 	}
 
 	public void clearAllSms() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		db.execSQL("delete from "+TABLE_SMS);
-		
+		db.execSQL("delete from " + TABLE_SMS);
+
 	}
 
 	public List<NumberModel> getWhereNumber(int bool) {
 		List<NumberModel> numbers = new ArrayList<NumberModel>();
-		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS+" WHERE "+BOOL+"="+bool+ " ORDER BY "+NAME+" ASC";
+		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE "
+				+ BOOL + "=" + bool + " ORDER BY " + NAME + " ASC";
 
 		Log.e(LOG, selectQuery);
 
@@ -248,18 +252,62 @@ public class DataBase extends SQLiteOpenHelper {
 		return numbers;
 	}
 	
-	public boolean TableNumberIsEmpty(){
-		String countQuery = "SELECT  * FROM " + TABLE_NUMBERS;
-	    SQLiteDatabase db = this.getReadableDatabase();
-	    Cursor cursor = db.rawQuery(countQuery, null);
-	    int cnt = cursor.getCount();
-	    cursor.close();
-	   if(cnt>0)
-		return false;
-	   else
-		   return true;
-		
+	public List<SmsModel> getWhereSms(int bool) {
+		List<SmsModel> sms = new ArrayList<SmsModel>();
+		String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE "
+				+ BOOL + "=" + bool + " ORDER BY " + NUM + " ASC";
+
+		Log.e(LOG, selectQuery);
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (c.moveToFirst()) {
+			do {
+				SmsModel smsm = new SmsModel();
+				smsm.setNum(c.getString(c.getColumnIndex(NUM)));
+				smsm.setBool(c.getInt(c.getColumnIndex(BOOL)));
+                smsm.setText(c.getString(c.getColumnIndex(TEXT)));
+				// adding to todo list
+				sms.add(smsm);
+			} while (c.moveToNext());
+		}
+
+		return sms;
+	
 	}
 
+	public boolean isNumberInTable(String num) {
+		String selectQuery = "SELECT * FROM " + TABLE_NUMBERS + " WHERE " + NUM
+				+ "=" + NUM;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+
+		return c.moveToFirst();
+	}
+
+	public boolean isSmsInTable(String num) {
+		String selectQuery = "SELECT * FROM " + TABLE_SMS + " WHERE " + NUM
+				+ "=" + "\""+num+"\"";
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		return c.moveToFirst();
+	}
+
+	public boolean TableIsEmpty(String table) {
+		String countQuery = "SELECT  * FROM " + table;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(countQuery, null);
+		int cnt = cursor.getCount();
+		cursor.close();
+		if (cnt > 0)
+			return false;
+		else
+			return true;
+
+	}
+
+	
 
 }

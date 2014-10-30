@@ -19,67 +19,65 @@ public class CallLogUtils {
 	private ContentResolver resolver;
 	private Context context;
 	int i = 0;
-	private HashMap<String,String> contacts,all;
+	private HashMap<String, String> contacts, all;
 
-	public CallLogUtils( Context context) {
+	public CallLogUtils(Context context) {
 		super();
 		this.resolver = context.getContentResolver();
 		this.context = context;
 	}
+
 	String[] strFields = { android.provider.CallLog.Calls.NUMBER,
 			android.provider.CallLog.Calls.TYPE,
 			android.provider.CallLog.Calls.CACHED_NAME,
 			android.provider.CallLog.Calls.CACHED_NUMBER_TYPE,
-			android.provider.CallLog.Calls.CACHED_NAME};
+			android.provider.CallLog.Calls.CACHED_NAME };
 	String strOrder = android.provider.CallLog.Calls.DATE + " DESC";
 	String[] number;
-	
-	public HashMap<String,String> readAllContacts(){
-		contacts = new HashMap<String,String>();
-		Cursor phones = resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
-		while (phones.moveToNext())
-		{
-		  String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-		  String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-		  
-		  contacts.put(phoneNumber, name);
-          //Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
+
+	public HashMap<String, String> readAllContacts() {
+		contacts = new HashMap<String, String>();
+		Cursor phones = resolver.query(
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
+				null, null);
+		while (phones.moveToNext()) {
+			String name = phones
+					.getString(phones
+							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+			String phoneNumber = phones
+					.getString(phones
+							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+			contacts.put(phoneNumber, name);
+			// Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
 		}
 		phones.close();
 		return contacts;
 	}
-	
-	public HashMap<String,String> readAllCalls(){
-		contacts = new HashMap<String,String>();
-		Cursor cursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
-                null, null, null, null);//CallLog.Calls.NUMBER + "," + CallLog.Calls.DATE + " DESC");
-        int number = cursor.getColumnIndex(CallLog.Calls.NUMBER); 
-        int iname = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
-        while(cursor.moveToNext()){
-        	String name = cursor.getString(iname);
-        	String phoneNumber = cursor.getString(number);
-        	//Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
-        	if(name==null){
-        		//Log.d("myLogs","name==null");
-        		contacts.put(phoneNumber, "unknown");
-        	}
-        	else
-        	contacts.put(phoneNumber, name);
-        }
-        cursor.close();
-		return contacts;
-	}
-	
-	public HashMap<String,String> readAll(){
-		all = readAllContacts();
-		for (Entry<String, String> entry : readAllCalls()
-				.entrySet()) {
-			all.put(entry.getKey(), entry.getValue());
+
+	public HashMap<String, String> readAllCalls() {
+		all = new HashMap<String, String>();
+		Cursor cursor = context.getContentResolver().query(
+				CallLog.Calls.CONTENT_URI, null, null, null, null);// CallLog.Calls.NUMBER
+																	// + "," +
+																	// CallLog.Calls.DATE
+																	// +
+																	// " DESC");
+		int number = cursor.getColumnIndex(CallLog.Calls.NUMBER);
+		int iname = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
+		while (cursor.moveToNext()) {
+			String name = cursor.getString(iname);
+			String phoneNumber = cursor.getString(number);
+			if (name == null) {
+				// Log.d("myLogs","name==null");
+				all.put(phoneNumber, "unknown");
+			} else
+				all.put(phoneNumber, name);
 		}
+		cursor.close();
 		return all;
 	}
-	
-	
+
 	public int DeleteNumFromCallLog(String strNum) {
 
 		number = new String[] { strNum };
@@ -111,7 +109,6 @@ public class CallLogUtils {
 	}
 
 	public void markCallLogRead() {
-
 		ContentValues values = new ContentValues();
 		values.put(Calls.NEW, 0);
 		values.put(Calls.IS_READ, 1);
@@ -124,6 +121,5 @@ public class CallLogUtils {
 				where.toString(),
 				new String[] { Integer.toString(Calls.MISSED_TYPE) });
 	}
-	
-	
+
 }

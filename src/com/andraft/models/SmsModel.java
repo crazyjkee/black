@@ -6,6 +6,7 @@ public class SmsModel {
 	private String num;
 	private String text;
 	private int bool;
+	private int count_black;
 
 	public SmsModel(String num, String text) {
 		super();
@@ -18,12 +19,15 @@ public class SmsModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SmsModel(String num, String text, int bool) {
+	public SmsModel(String num, String text, int bool,int count_black) {
 		super();
 		this.num = num;
 		this.text = text;
 		this.bool = bool;
+		this.count_black= count_black;
 	}
+
+
 
 	public SmsModel(int id, String num, String text, int bool) {
 		super();
@@ -65,4 +69,11 @@ public class SmsModel {
 		this.bool = bool;
 	}
 
+	public int getCount_black() {
+		return count_black;
+	}
+
+	public void setCount_black(int count_black) {
+		this.count_black = count_black;
+	}
 }
