@@ -33,7 +33,7 @@ public class Constants {
 	public static Context context;
 	public static String color_pref = "com.andraft.blacklist.color";
 	private SharedPreferences sharedPref = context.getSharedPreferences(
-		      "com.andraft.blacklist", Context.MODE_PRIVATE);
+			"com.andraft.blacklist", Context.MODE_PRIVATE);
 
 	static {
 		PaintPressed.setAlpha(20);
@@ -56,9 +56,9 @@ public class Constants {
 		PaintPressed.setShadowLayer(res.getInteger(R.integer.stokewidth),
 				res.getInteger(R.integer.stokewidth),
 				res.getInteger(R.integer.stokewidth), Color.GRAY);
-		init(colors.blue,true);
+		init(colors.blue, true);
 		FONfill.setTextSize(res.getInteger(R.integer.fontsize) * 1.1f);
-		
+
 		FONwhitefill.set(FONfill);
 		FONwhitefill.setColor(res.getColor(R.color.fon_white));
 		MainActivity.main = new Main();
@@ -66,44 +66,44 @@ public class Constants {
 		WhiteRamca.setStrokeWidth(res.getInteger(R.integer.stokewidth));
 		;
 	}
-	
-	public static void init(colors color,boolean first){
-		if(FONfill.getColor()==getColor(color)&&!first)
-		    return;
-		switch(color){
+
+	public static void init(colors color, boolean first) {
+		if (FONfill.getColor() == getColor(color) && !first)
+			return;
+		switch (color) {
 		case blue:
 			FONfill.setColor(Res.getColor(R.color.fon_blue));
 			ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
 			break;
 		case gray:
 			FONfill.setColor(Res.getColor(R.color.fon_gray));
-			ICONS = changeColor(ICONS,colors.gray);
+			ICONS = changeColor(ICONS, colors.gray);
 			break;
 		case green:
 			FONfill.setColor(Res.getColor(R.color.fon_green));
-			ICONS = changeColor(ICONS,colors.green);
+			ICONS = changeColor(ICONS, colors.green);
 			break;
 		default:
 			break;
 		}
-		
+
 	}
-	
-	private static int getColor(colors color){
-		switch(color){
+
+	private static int getColor(colors color) {
+		switch (color) {
 		case blue:
 			return Res.getColor(R.color.fon_blue);
 		case gray:
 			return Res.getColor(R.color.fon_gray);
 		case green:
 			return Res.getColor(R.color.fon_green);
-		
+
 		default:
 			break;
-		
+
 		}
 		return Res.getColor(R.color.fon_blue);
-		
+
 	}
 
 	public static void destroy() {
@@ -112,11 +112,11 @@ public class Constants {
 	}
 
 	public enum ico {
-		linesConvert, linesTruba, bluHren, roundCrest, roundOk, roundPlus, roundRight, roundUp, roundDown, bluRoundLeft, shedule, konvert, whiteList, blackList, roundMinus, truba, shield
+		linesConvert, linesTruba, bluHren, roundCrest, roundOk, roundPlus, roundRight, roundUp, roundDown, bluRoundLeft, shedule, konvert, whiteList, blackList, roundMinus, truba, shield,write,stat
 	}
-	
-	public enum colors{
-		gray,blue,green
+
+	public enum colors {
+		gray, blue, green
 	}
 
 	public static void DrowIcon(Canvas canvas, ico ico, float f, float g,
@@ -130,9 +130,9 @@ public class Constants {
 		canvas.drawBitmap(ICONS, new Rect(ico.ordinal() * ICONS.getHeight(), 0,
 				(ico.ordinal() + 1) * ICONS.getHeight(), ICONS.getHeight()), r,
 				null);
-	}  
+	}
 
-	private static Bitmap changeColor(Bitmap bitmap,colors color) {
+	private static Bitmap changeColor(Bitmap bitmap, colors color) {
 		int orgWidth = bitmap.getWidth();
 		int orgHeight = bitmap.getHeight();
 		Bitmap newBitmap = Bitmap.createBitmap(orgWidth, orgHeight,
@@ -140,7 +140,7 @@ public class Constants {
 		int[] srcPixels = new int[orgWidth * orgHeight];
 		int[] dstPixels = new int[orgWidth * orgHeight];
 		int col;
-		switch(color){
+		switch (color) {
 		case blue:
 			col = Color.parseColor(Res.getString(R.color.fon_blue));
 			break;
@@ -153,9 +153,9 @@ public class Constants {
 		default:
 			col = Color.parseColor(Res.getString(R.color.fon_blue));
 			break;
-		
+
 		}
-		
+
 		bitmap.getPixels(srcPixels, 0, orgWidth, 0, 0, orgWidth, orgHeight);
 
 		for (int i = 0; i < srcPixels.length; i++) {

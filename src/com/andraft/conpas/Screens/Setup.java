@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.colors;
+import com.andraft.conpas.Screens.Constants.ico;
 
 public class Setup extends Screen {
 	private RectF[] rects = new RectF[3];
@@ -19,7 +20,8 @@ public class Setup extends Screen {
 	private String[] text = new String[3];
 	private RectF switcher,grayr,bluer,greenr;
 	private Paint greyp,bluep,greenp,testp; //rgb bluep : 133,211,231; rgb greenp: 110,211,148 rgb grayp: 140,157,155
-	SharedPreferences prefs;
+	private RectF[] icons= new RectF[3];
+	SharedPreferences prefs; 
 	public Setup() {
 		super(R.string.setup, Constants.FONwhitefill);
 		init();
@@ -28,6 +30,7 @@ public class Setup extends Screen {
 	}
 	private void init(){
 		switcher = new RectF(w/8,h-HEIGHT*1.5f,7*w/8,h);
+		
 		testp = new Paint();
 		testp.setAntiAlias(true);
 		testp.setColor(Color.RED);
@@ -67,7 +70,7 @@ public class Setup extends Screen {
 						rects[0].centerX(),
 						rects[0].centerY(),
 						this.WhiteText);
-				canvas.drawText(
+				canvas.drawText( 
 						Constants.Res.getString(R.string.coming),
 						rects[0].centerX(),
 						rects[0].bottom
@@ -79,7 +82,8 @@ public class Setup extends Screen {
 				canvas.drawText(text[i],rects[i].centerX(), rects[i].centerY(), this.WhiteText);
 			}
 		}
-		
+		Constants.DrowIcon(canvas, ico.write, rects[1].width()-3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, rects[1].centerY(), true);
+		Constants.DrowIcon(canvas, ico.stat, rects[2].width()-3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, rects[2].centerY(), true);
 		canvas.drawRect(switcher, testp);
 		canvas.drawRect(grayr, greyp);
 		canvas.drawRect(greenr, greenp);

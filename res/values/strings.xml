@@ -17,6 +17,15 @@
     <string name="coming">coming soon</string>
     <string name="comment">Write a Review</string>
     <string name="clear_stat">Reset statistics</string>
+    <string name="block_hidden_numbers">Block hidden numbers</string>
+    <string name="block_all_calls">Block all calls</string>
+    <string name="notice">Notifications</string>
+    <string name="version">android version 4.0 or higher</string>
+    <string name="call_forwarding">Call forwarding</string>
+    <string name="silent">Silent mode</string>
+    <string name="busy">Busy mode</string>
+    <string name="block_all_sms">Block all sms</string>
+    <string name="spam_filter">Filter keywords</string>
 
     <item name="fon_blue" type="color">#85d3e7</item>
     <item name="fon_white" type="color">#ffffff</item>
