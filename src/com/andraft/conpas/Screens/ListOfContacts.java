@@ -29,8 +29,7 @@ public class ListOfContacts extends ListOfNumbers {
 		Messages = new String[checking.getCalls(2).size()];
 		for (NumberModel number : checking.getCalls(2)) {
 			// Log.d("myLogs","num:"+number.getNum()+" ,text:"+number.getText());
-			Messages[i] = number.getNum() + " " + number.getName();
-			allMessagesOrCalls.add(new SmallListPanel(i, Messages[i]));
+			allMessagesOrCalls.add(new SmallListPanel(i, number.getNum(),number.getName()));
 			i++;
 		}
 		checking.getDb().closeDB();

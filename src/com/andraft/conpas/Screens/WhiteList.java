@@ -22,7 +22,7 @@ private Checking checking;
 		int i = 0;
 		for(NumberModel num:checking.getCalls(0)){
 			calls[i] = num.getNum()+" "+num.getName();
-			allMessagesOrCalls.add(new SmallListPanel(i, calls[i]));
+			allMessagesOrCalls.add(new SmallListPanel(i, num.getNum(),num.getName()));
 			i++;
 		}
 		 

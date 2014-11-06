@@ -55,27 +55,36 @@ public class Checking {
 				addNumberValues(db1, e.getKey(), e.getValue());
 		else
 			for (Entry<String, String> e : contacts_plus_calls().entrySet())
-				if (!db.isNumberInTable(e.getKey())){
-					Log.d("myLogs","yes");
-					addNumberValues(db1, e.getKey(), e.getValue());}
+				if (!db.isNumberInTable(e.getKey())) {
+					Log.d("myLogs", "yes");
+					addNumberValues(db1, e.getKey(), e.getValue());
+				}
 
 		if (db.TableIsEmpty(DataBase.TABLE_SMS))
 			for (Entry<String, String> e : sms_minus_contacts().entrySet()) {
-				//Log.d("myLogs", "key" + e.getKey() + " value:" + e.getValue());
+				// Log.d("myLogs", "key" + e.getKey() + " value:" +
+				// e.getValue());
 				addSmsValues(db1, e.getKey(), e.getValue());
 			}
 		else
 			for (Entry<String, String> e : sms_minus_contacts().entrySet())
 				if (!db.isSmsInTable(e.getKey())) {
-					//Log.d("myLogs",
-					//		"key" + e.getKey() + " value:" + e.getValue());
+					// Log.d("myLogs",
+					// "key" + e.getKey() + " value:" + e.getValue());
 					addSmsValues(db1, e.getKey(), e.getValue());
 				}
+		if (db.TableIsEmpty(DataBase.TABLE_NUMBERS_OPTIONS))
+			addNumberOptionsValues(db1);
+		if (db.TableIsEmpty(DataBase.TABLE_SMS_OPTIONS))
+			addSmsOptionsValues(db1);
+		if (db.TableIsEmpty(DataBase.TABLE_SCHEDULE))
+			addScheduleValues(db1);
 
 		db1.close();
 	}
 
 	private void addNumberValues(SQLiteDatabase db1, String number, String name) {
+	
 		ContentValues values = new ContentValues();
 		values.put(DataBase.NUM, number);
 		values.put(DataBase.BOOL, 2);
@@ -86,6 +95,7 @@ public class Checking {
 	}
 
 	private void addSmsValues(SQLiteDatabase db1, String number, String text) {
+		
 		ContentValues values = new ContentValues();
 		values.put(DataBase.BOOL, 2);
 		values.put(DataBase.TEXT, text);
@@ -95,6 +105,42 @@ public class Checking {
 		db1.insert(DataBase.TABLE_SMS, null, values);
 	}
 
+	private void addNumberOptionsValues(SQLiteDatabase db1) {
+		Log.d("myLogs","insert NumberValues 1 row");
+		ContentValues values = new ContentValues();
+		values.put(DataBase.KEY_ID, 1);
+		values.put(DataBase.BLOCK_ALL_CALLS, 0);
+		values.put(DataBase.BLOCK_HIDDEN_NUMBERS, 0);
+		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
+		values.put(DataBase.SILENT_MODE, 0);
+		values.put(DataBase.BUSY_MODE, 1);
+		Log.d("myLogs","TABLE NUMBER OPTIONS INSERT:"+db1.insert(DataBase.TABLE_NUMBERS_OPTIONS, null, values));
+	}
+
+	private void addSmsOptionsValues(SQLiteDatabase db1) {
+		Log.d("myLogs","insert SmsValues 1 row");
+		ContentValues values = new ContentValues();
+		values.put(DataBase.KEY_ID, 1);
+		values.put(DataBase.BLOCK_ALL_SMS, 0);
+		values.put(DataBase.BLOCK_HIDDEN_NUMBERS, 0);
+		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
+		Log.d("myLogs","TABLE SMS OPTIONS INSERT:"+db1.insert(DataBase.TABLE_SMS_OPTIONS, null, values));
+	}
+	
+	private void addScheduleValues(SQLiteDatabase db1){
+		Log.d("myLogs","insert ScheduleValues row");
+		ContentValues values;
+		for(int i=0;i<7;i++){
+			values = new ContentValues();
+			values.put(DataBase.DAY, i);
+			values.put(DataBase.FROMHOURS, 0);
+			values.put(DataBase.FROMMINUTES, 0);
+			values.put(DataBase.TOHOURS, 0);
+			values.put(DataBase.TOMINUTES, 0);
+		Log.d("myLogs","TABLE SCHEDULE INSERT"+db1.insert(DataBase.TABLE_SCHEDULE, null, values));
+		}
+	}
+
 	public DataBase getDb() {
 		return db;
 	}
@@ -102,11 +148,11 @@ public class Checking {
 	private HashMap<String, String> contacts_plus_calls() {
 		minus_number = calllog.readAllCalls();
 		contacts = calllog.readAllContacts();
-		for (Entry<String,String> num : contacts.entrySet()) {
+		for (Entry<String, String> num : contacts.entrySet()) {
 			if (!minus_number.containsKey(num.getKey()))
 				minus_number.put(num.getKey(), num.getValue());
 		}
-		
+
 		return minus_number;
 	}
 

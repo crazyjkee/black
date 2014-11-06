@@ -31,14 +31,14 @@ public class BlackList extends ListOfNumbers {
 		int i = 0;
 		for (NumberModel num : checking.getCalls(1)) {
 			calls[i] = num.getNum() + " " + num.getName();
-			allMessagesOrCalls.add(new SmallList(i, calls[i], false, num
+			allMessagesOrCalls.add(new SmallList(i, num.getNum(),num.getName(), false, num
 					.getCount_black()));
 			i++;
 		}
 		i = 0;
 		for (SmsModel smska : checking.getSms(1)) {
 			smski[i] = smska.getNum() + " " + smska.getText();
-			allMessagesOrCalls.add(new SmallList(i, smski[i], true, smska
+			allMessagesOrCalls.add(new SmallList(i, smska.getNum(),smska.getText(), true, smska
 					.getCount_black()));
 			i++;
 		}
@@ -129,8 +129,8 @@ public class BlackList extends ListOfNumbers {
 		private boolean sms = false;
 		private int count_black;
 
-		SmallList(int pos, String text, boolean sms, int count_black) {
-			super(pos, text);
+		SmallList(int pos,String name,String text, boolean sms, int count_black) {
+			super(pos, name, text);
 			this.sms = sms;
 			this.count_black = count_black;
 		}

@@ -1,19 +1,30 @@
 package com.andraft.conpas.Screens;
 
-import com.andraft.blacklist.MainActivity;
-import com.andraft.blacklist.R;
-import com.andraft.blacklist.ecrans;
-
+import static com.andraft.conpas.Screens.Constants.FONfill;
+import static com.andraft.conpas.Screens.Constants.Res;
+import static com.andraft.conpas.Screens.Constants.WhiteRamca;
+import static com.andraft.conpas.Screens.Constants.h;
+import static com.andraft.conpas.Screens.Constants.w;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.view.MotionEvent;
-import static com.andraft.conpas.Screens.Constants.*;
+
+import com.andraft.blacklist.MainActivity;
+import com.andraft.blacklist.R;
+import com.andraft.blacklist.ecrans;
+import com.andraft.conpas.Screens.Constants.ico;
 
 public abstract class Screen {
+	public static interface Back {
+		public void onBack();
+	}
+
+	private Back backReadyCb = null;
+
 	ico iconca = ico.bluRoundLeft;
-	private RectF BannerIcon, ShieldIcon;
+	protected RectF BannerIcon, ShieldIcon;
 
 	abstract boolean onTouch(MotionEvent event);
 
@@ -25,23 +36,25 @@ public abstract class Screen {
 		this.label = label;
 		init();
 	}
-		
-	
-	
-	public Screen(int label,Paint fon){
-		this.fon=fon;
-		this.label=label;
+
+	public Screen(int label, Paint fon) {
+		this.fon = fon;
+		this.label = label;
 		init();
-		
 	}
-	
-	private void init(){
+
+	public void setBackReadyCb(Back backReadyCb) {
+		this.backReadyCb = backReadyCb;
+	}
+
+	private void init() {
 		BannerIcon = new RectF(0, 0, Res.getInteger(R.integer.fontsize) * 1.4f,
 				Res.getInteger(R.integer.fontsize) * 1.4f);
 		if (label == R.string.app_name) {
-			ShieldIcon = new RectF(0,0,w,BannerIcon.bottom);
+			ShieldIcon = new RectF(0, 0, w, BannerIcon.bottom);
 			BannerIcon.offsetTo(
-					w - Constants.Res.getInteger(R.integer.smallIconWidth)-5, 0);
+					w - Constants.Res.getInteger(R.integer.smallIconWidth) - 5,
+					0);
 
 		}
 		WhiteText.setTextSize(Res.getInteger(R.integer.fontsize));
@@ -49,14 +62,16 @@ public abstract class Screen {
 		WhiteText.setLinearText(true);
 		WhiteTextSmall = new Paint(WhiteText);
 		WhiteTextSmall.setTextSize(Res.getInteger(R.integer.fontsize) * 0.6f);
-	
+
 	}
 
 	public boolean touch(MotionEvent event) {
 		if (BannerIcon.contains(event.getX(), event.getY())) {
-			if (iconca == com.andraft.conpas.Screens.Constants.ico.bluRoundLeft)
+			if (iconca == com.andraft.conpas.Screens.Constants.ico.bluRoundLeft) {
 				MainActivity.setActiveScreen(ecrans.main);
-			else
+				if (backReadyCb != null)
+					backReadyCb.onBack();
+			} else
 				MainActivity.setActiveScreen(ecrans.setup);
 			return false;
 		} else
@@ -76,9 +91,9 @@ public abstract class Screen {
 			Constants.DrowIcon(canvas, ico.shield, ShieldIcon.centerX(),
 					ShieldIcon.centerY(), true);
 		}
-		if(label!=R.string.app_name)
-		canvas.drawText(Res.getString(label), w / 2,
-				Res.getInteger(R.integer.fontsize) * 1.2f, FONfill);
+		if (label != R.string.app_name)
+			canvas.drawText(Res.getString(label), w / 2,
+					Res.getInteger(R.integer.fontsize) * 1.2f, FONfill);
 		canvas.clipRect(0, BannerHeight(), w, h);
 	}
 }

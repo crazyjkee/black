@@ -1,7 +1,6 @@
 package com.andraft.blacklist;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -12,7 +11,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.andraft.models.NumberModel;
+import com.andraft.models.NumberOptionsModel;
+import com.andraft.models.ScheduleModel;
 import com.andraft.models.SmsModel;
+import com.andraft.models.SmsOptionsModel;
 
 public class DataBase extends SQLiteOpenHelper {
 	private static String LOG = "myLogs";
@@ -20,6 +22,9 @@ public class DataBase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 	public static String TABLE_NUMBERS = "numbers";
 	public static String TABLE_SMS = "sms";
+	public static String TABLE_NUMBERS_OPTIONS = "options_numbers";
+	public static String TABLE_SMS_OPTIONS = "options_sms";
+	public static String TABLE_SCHEDULE = "schedule";
 
 	// common column
 	public static final String KEY_ID = "_id";
@@ -27,12 +32,32 @@ public class DataBase extends SQLiteOpenHelper {
 
 	// numbers column
 
-	public static final String BOOL = "bool";//0 - white, 1 - black, 2 - unknown
+	public static final String BOOL = "bool";// 0 - white, 1 - black, 2 -
+												// unknown
 	public static final String NAME = "name";
 	public static final String COUNT_BLACK = "count_black";
 
 	// sms column
 	public static final String TEXT = "text";
+
+	// numbers options column
+	public static final String BLOCK_ALL_CALLS = "block_all_calls";
+	public static final String SILENT_MODE = "silent_mode";
+	public static final String BUSY_MODE = "busy_mode";
+
+	// universal option
+	public static final String BLOCK_HIDDEN_NUMBERS = "block_hidden_numbers";
+	public static final String BLOCK_NOTIFICATIONS = "block_notifications";
+
+	// sms options column
+	public static final String BLOCK_ALL_SMS = "block_all_sms";
+
+	// schedule column
+	public static final String DAY = "day";
+	public static final String TOHOURS = "tohours";
+	public static final String TOMINUTES = "tominutes";
+	public static final String FROMHOURS = "fromhours";
+	public static final String FROMMINUTES = "fromminutes";
 
 	// Number table create statement
 	private static final String CREATE_TABLE_NUMBERS = "CREATE TABLE "
@@ -43,7 +68,25 @@ public class DataBase extends SQLiteOpenHelper {
 	// SMS table create statement
 	private static final String CREATE_TABLE_SMS = "CREATE TABLE " + TABLE_SMS
 			+ "(" + KEY_ID + " INTEGER PRIMARY KEY," + BOOL + " INTEGER,"
-			+ TEXT + " TEXT," + NUM + " TEXT NOT NULL," +COUNT_BLACK+" INTEGER"+ ");";
+			+ TEXT + " TEXT," + NUM + " TEXT NOT NULL," + COUNT_BLACK
+			+ " INTEGER" + ");";
+
+	private static final String CREATE_TABLE_NUMBERS_OPTIONS = "CREATE TABLE "
+			+ TABLE_NUMBERS_OPTIONS + "(" + KEY_ID + " INTEGER,"
+			+ BLOCK_ALL_CALLS + " INTEGER," + BLOCK_HIDDEN_NUMBERS
+			+ " INTEGER," + BLOCK_NOTIFICATIONS + " INTEGER," + SILENT_MODE
+			+ " INTEGER," + BUSY_MODE + " ,INTEGER);";
+
+	private static final String CREATE_TABLE_SMS_OPTIONS = "CREATE TABLE "
+			+ TABLE_SMS_OPTIONS + "(" + KEY_ID + " INTEGER," + BLOCK_ALL_SMS
+			+ " INTEGER," + BLOCK_HIDDEN_NUMBERS + " INTEGER,"
+			+ BLOCK_NOTIFICATIONS + " INTEGER," + SILENT_MODE + " INTEGER,"
+			+ BUSY_MODE + " ,INTEGER);";
+
+	private static final String CREATE_TABLE_SCHEDULE = "CREATE TABLE "
+			+ TABLE_SCHEDULE + "(" + DAY + " INTEGER," + FROMHOURS
+			+ " INTEGER," + FROMMINUTES + " INTEGER," + TOHOURS + " INTEGER,"
+			+ TOMINUTES + " INTEGER);";
 
 	public DataBase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -54,6 +97,9 @@ public class DataBase extends SQLiteOpenHelper {
 		Log.d("myLogs", "onCreateDatabase");
 		db.execSQL(CREATE_TABLE_NUMBERS);
 		db.execSQL(CREATE_TABLE_SMS);
+		db.execSQL(CREATE_TABLE_NUMBERS_OPTIONS);
+		db.execSQL(CREATE_TABLE_SMS_OPTIONS);
+		db.execSQL(CREATE_TABLE_SCHEDULE);
 
 	}
 
@@ -65,8 +111,11 @@ public class DataBase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.d("myLogs", "onUpgrade");
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUMBERS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCHEDULE);
+
 		onCreate(db);
 	}
 
@@ -173,6 +222,29 @@ public class DataBase extends SQLiteOpenHelper {
 		c.close();
 		return sms;
 	}
+	
+	public List<ScheduleModel> getSchedule(){
+		List<ScheduleModel> sched = new ArrayList<ScheduleModel>();
+		String selectQuery = "SELECT * FROM " + TABLE_SCHEDULE;
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		
+		if(c.moveToFirst()){
+			do{
+				ScheduleModel s = new ScheduleModel();
+				s.setDay(c.getInt((c.getColumnIndex(DAY))));
+				s.setFromHour(c.getInt(c.getColumnIndex(FROMHOURS)));
+				s.setFromMinute(c.getInt(c.getColumnIndex(FROMMINUTES)));
+				s.setToHour(c.getInt(c.getColumnIndex(TOHOURS)));
+				s.setToMinute(c.getInt(c.getColumnIndex(TOMINUTES)));
+				sched.add(s);
+			}while(c.moveToNext());
+		}
+		c.close();
+		return sched;
+		
+	}
 
 	public int updateNumber(NumberModel number, int bool) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -189,7 +261,7 @@ public class DataBase extends SQLiteOpenHelper {
 				new String[] { String.valueOf(number.getNum()) });
 	}
 
-	public int updateSms(SmsModel sms,int bool) {
+	public int updateSms(SmsModel sms, int bool) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -201,6 +273,63 @@ public class DataBase extends SQLiteOpenHelper {
 		// updating row
 		return db.update(TABLE_SMS, values, NUM + " = ?",
 				new String[] { String.valueOf(sms.getNum()) });
+	}
+
+	public void updateNumbersOptions(NumberOptionsModel num) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+
+		values.put(KEY_ID, num.getId());
+		values.put(BLOCK_ALL_CALLS, num.isBlock_all_calls());
+		values.put(BLOCK_HIDDEN_NUMBERS, num.isBlock_hidden_numbers_calls());
+		values.put(BLOCK_NOTIFICATIONS, num.isBlock_notifications_calls());
+		values.put(SILENT_MODE, num.isSilent_mode());
+		values.put(BUSY_MODE, num.isBusy_mode());
+		Log.d("myLogs",
+				"updateNumbersOptions:"
+						+ db.update(TABLE_NUMBERS_OPTIONS, values, KEY_ID
+								+ " = ?",
+								new String[] { String.valueOf(num.getId()) }));
+
+	}
+
+	public void updateSmsOptions(SmsOptionsModel sms) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+
+		values.put(KEY_ID, sms.getId());
+		values.put(BLOCK_ALL_SMS, sms.isBlock_all_sms());
+		values.put(BLOCK_HIDDEN_NUMBERS, sms.isBlock_hidden_numbers_sms());
+		values.put(BLOCK_NOTIFICATIONS, sms.isBlock_notifications_sms());
+		Log.d("myLogs",
+				"updateSmsOptions:BLOCK_ALL_CALLS:" + sms.isBlock_all_sms()
+						+ " ,BLOCK_HIDDEN_NUMBERS:"
+						+ sms.isBlock_hidden_numbers_sms());
+		Log.d("myLogs",
+				"updateSmsOptions:"
+						+ db.update(TABLE_SMS_OPTIONS, values, KEY_ID + " = ?",
+								new String[] { String.valueOf(sms.getId()) }));
+
+	}
+
+	public void updateSchedule(ArrayList<ScheduleModel> ArraySched) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values;
+		for (ScheduleModel sched : ArraySched) {
+			values = new ContentValues();
+			values.put(DAY, sched.getDay());
+			values.put(FROMHOURS, sched.getFromHour());
+			values.put(FROMMINUTES, sched.getFromMinute());
+			values.put(TOHOURS, sched.getToHour());
+			values.put(TOMINUTES, sched.getToMinute());
+			Log.d("myLogs",
+					"updateSchedule:"
+							+ db.update(TABLE_SCHEDULE, values, DAY + " = ?",
+									new String[] { String.valueOf(sched
+											.getDay()) }));
+		}
 	}
 
 	public void deleteNumber(String number) {
@@ -251,11 +380,11 @@ public class DataBase extends SQLiteOpenHelper {
 
 		return numbers;
 	}
-	
+
 	public List<SmsModel> getWhereSms(int bool) {
 		List<SmsModel> sms = new ArrayList<SmsModel>();
-		String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE "
-				+ BOOL + "=" + bool + " ORDER BY " + NUM + " ASC";
+		String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + BOOL
+				+ "=" + bool + " ORDER BY " + NUM + " ASC";
 
 		Log.e(LOG, selectQuery);
 
@@ -268,14 +397,77 @@ public class DataBase extends SQLiteOpenHelper {
 				SmsModel smsm = new SmsModel();
 				smsm.setNum(c.getString(c.getColumnIndex(NUM)));
 				smsm.setBool(c.getInt(c.getColumnIndex(BOOL)));
-                smsm.setText(c.getString(c.getColumnIndex(TEXT)));
+				smsm.setText(c.getString(c.getColumnIndex(TEXT)));
 				// adding to todo list
 				sms.add(smsm);
 			} while (c.moveToNext());
 		}
 
 		return sms;
-	
+	}
+
+	public NumberOptionsModel getNumberOptionsModel(int key_id) {
+		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS_OPTIONS
+				+ " WHERE " + KEY_ID + "=" + key_id;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			NumberOptionsModel num = new NumberOptionsModel();
+			num.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+			num.setBlock_all_calls(c.getInt(c.getColumnIndex(BLOCK_ALL_CALLS)));
+			Log.d("myLogs",
+					"getCallOption: isBlockAllCalls:"
+							+ c.getInt(c.getColumnIndex(BLOCK_ALL_CALLS)));
+			num.setBlock_hidden_numbers_calls(c.getInt(c
+					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			Log.d("myLogs",
+					"getCallOption: isBlockHiddenNumbers:"
+							+ c.getInt(c.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			num.setBlock_notifications_calls(c.getInt(c
+					.getColumnIndex(BLOCK_NOTIFICATIONS)));
+			num.setSilent_mode(c.getInt(c.getColumnIndex(SILENT_MODE)));
+			Log.d("myLogs",
+					"getCallOption: SILENT_MODE:"
+							+ c.getInt(c.getColumnIndex(SILENT_MODE)));
+			num.setBusy_mode(c.getInt(c.getColumnIndex(BUSY_MODE)));
+			Log.d("myLogs",
+					"getCallOption: BUSY_MODE:"
+							+ c.getInt(c.getColumnIndex(BUSY_MODE)));
+			return num;
+		} else {
+			Log.d("myLogs", "getNumber null");
+			return null;
+		}
+	}
+
+	public SmsOptionsModel getSmsOptionsModel(int key_id) {
+		String selectQuery = "SELECT  * FROM " + TABLE_SMS_OPTIONS + " WHERE "
+				+ KEY_ID + "=" + key_id;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			SmsOptionsModel sms = new SmsOptionsModel();
+			sms.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+			sms.setBlock_all_sms(c.getInt(c.getColumnIndex(BLOCK_ALL_SMS)));
+			Log.d("myLogs",
+					"getSmsOption: isBlockAllSms:"
+							+ c.getInt(c.getColumnIndex(BLOCK_ALL_SMS)));
+			sms.setBlock_hidden_numbers_sms(c.getInt(c
+					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			Log.d("myLogs",
+					"getSmsOption: isBlockHiddenSms:"
+							+ c.getInt(c.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			sms.setBlock_notifications_sms(c.getInt(c
+					.getColumnIndex(BLOCK_NOTIFICATIONS)));
+
+			return sms;
+		} else {
+			Log.d("myLogs", "getSms null");
+			return null;
+		}
+
 	}
 
 	public boolean isNumberInTable(String num) {
@@ -289,7 +481,7 @@ public class DataBase extends SQLiteOpenHelper {
 
 	public boolean isSmsInTable(String num) {
 		String selectQuery = "SELECT * FROM " + TABLE_SMS + " WHERE " + NUM
-				+ "=" + "\""+num+"\"";
+				+ "=" + "\"" + num + "\"";
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 		return c.moveToFirst();
@@ -307,7 +499,5 @@ public class DataBase extends SQLiteOpenHelper {
 			return true;
 
 	}
-
-	
 
 }

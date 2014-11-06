@@ -1,25 +1,37 @@
 package com.andraft.conpas.Screens;
 
+import static com.andraft.conpas.Screens.Constants.DAYNAMES;
+import static com.andraft.conpas.Screens.Constants.FONfill;
+import static com.andraft.conpas.Screens.Constants.PaintPressed;
+import static com.andraft.conpas.Screens.Constants.Res;
+import static com.andraft.conpas.Screens.Constants.Silence;
+import static com.andraft.conpas.Screens.Constants.WhiteRamca;
+import static com.andraft.conpas.Screens.Constants.h;
+import static com.andraft.conpas.Screens.Constants.w;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-
-import com.andraft.blacklist.R;
-import com.andraft.conpas.Screens.Constants.ico;
+import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Paint.Style;
+import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.util.Log;
 import android.view.MotionEvent;
-import static com.andraft.conpas.Screens.Constants.*;
 
-public class Schedule extends Screen {
+import com.andraft.blacklist.Checking;
+import com.andraft.blacklist.R;
+import com.andraft.conpas.Screens.Constants.ico;
+import com.andraft.models.ScheduleModel;
+
+public class Schedule extends Screen implements Screen.Back {
 	private int Silense[][][] = null;
 	private Paint paintgradient = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private RectF bigDigitals[] = new RectF[2];
@@ -28,16 +40,23 @@ public class Schedule extends Screen {
 	private RectF buttonsUpRectf[] = new RectF[4];
 	private RectF aciveDay = null, pressedRectf = null;
 	private int fontSizeWeek;
+	private ScheduleModel save;
+	private ArrayList<ScheduleModel> saveList;
+	private Checking checking;
 
 	public Schedule() {
 		super(R.string.schedule);
-		if (Silense == null) {
-			Silense = new int[7][2][2];
+		this.setBackReadyCb(this);
+		Silense = Constants.Silence;
+		checking = Checking.getInstance(Constants.context);
+
+
 			for (int i = 0; i < 7; i++)
-				for (int j = 0; i < 2; i++)
-					for (int k = 0; i < 2; i++)
-						Silense[i][j][k] = 0;
-		}
+				for (int j = 0; j < 2; j++)
+					for (int k = 0; j < 2; j++)
+						Log.d("myLogs","day:"+i+":"+ Silense[i][j][k]);
+		
+
 		final Integer StrokeWidth = (int) Res.getInteger(R.integer.stokewidth);
 
 		int maxCharsIndaynames = 3;
@@ -182,8 +201,8 @@ public class Schedule extends Screen {
 				pressedRectf = r;
 				int rect = Arrays.asList(buttonsDownRectf).indexOf(r);
 				if (rect > 1) {
-					Log.d("dd" + Silense[getDayOfWeek()][rect - 2][1], "dd"
-							+ Silense[getDayOfWeek()][rect - 2][0]);
+					//Log.d("dd" + Silense[getDayOfWeek()][rect - 2][1], "dd"
+						//	+ Silense[getDayOfWeek()][rect - 2][0]);
 					if (Silense[getDayOfWeek()][rect - 2][1] == 0)
 						Silense[getDayOfWeek()][rect - 2][1] = 59;
 					else
@@ -216,5 +235,28 @@ public class Schedule extends Screen {
 		}
 		pressedRectf = null;
 		return true;
+	}
+
+	@Override
+	public void onBack() {
+		saveList = new ArrayList<ScheduleModel>();
+		for (int i = 0; i < 7; i++) {
+			save = new ScheduleModel();
+			save.setDay(i);
+			for (int j = 0; j < 2; j++)
+				for (int k = 0; k < 2; k++) {
+					if (j == 0 && k == 0)
+						save.setFromHour(Silence[i][j][k]);
+					else if (j == 0 && k == 1)
+						save.setFromMinute(Silence[i][j][k]);
+					else if (j == 1 && k == 0)
+						save.setToHour(Silence[i][j][k]);
+					else if (j == 1 && k == 1)
+						save.setToMinute(Silence[i][j][k]);
+				}
+			saveList.add(save);
+		}
+		checking.getDb().updateSchedule(saveList);
+		Constants.initSchedule();
 	}
 }

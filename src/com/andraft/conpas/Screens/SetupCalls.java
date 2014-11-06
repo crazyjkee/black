@@ -1,36 +1,41 @@
 package com.andraft.conpas.Screens;
 
 import static com.andraft.conpas.Screens.Constants.w;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Canvas;
-import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.ico;
+import com.andraft.models.NumberOptionsModel;
 
-public class SetupCalls extends Screen {
+public class SetupCalls extends SetupSms implements Screen.Back {
 	private static final int HEIGHT = 60;
-	private RectF[] rects = new RectF[4];
 	private String[] text = new String[6];
-	private RectF[] rectShow = new RectF[2];
+	private List<MenuList> rectshow;
 	private String[] textShow = new String[2];
 	private boolean show = false;
+	private NumberOptionsModel numModel;
+	private Checking checking;
 
 	public SetupCalls() {
-		super(R.string.setup_calls, Constants.FONwhitefill);
+		super(R.string.setup_calls);
 		init();
 	}
 
 	private void init() {
-		for (int i = 0; i < rects.length; i++) {
-			rects[i] = new RectF(0, BannerHeight() + i * HEIGHT, w,
-					BannerHeight() + (i + 1) * HEIGHT);
-		}
-		for (int i = 0; i < rectShow.length; i++) {
-			rectShow[i] = new RectF(0, rects[rects.length - 1].bottom + i
-					* HEIGHT, w, rects[rects.length - 1].bottom + (i + 1)
-					* HEIGHT);
-		}
+		this.setBackReadyCb(this);
+		this.rects = new ArrayList<SmallListPanel>();
+		this.rectshow = new ArrayList<MenuList>();
+		this.numModel = new NumberOptionsModel(1, Constants.BLOCK_ALL_CALLS?1:0, Constants.BLOCK_HIDDEN_CALLS?1:0, Constants.BLOCK_NOTIFICATION_CALLS?1:0, Constants.SILENT_MODE?1:0, Constants.BUSY_MODE?1:0);
+		this.checking = Checking.getInstance(Constants.context);
+		Log.d("myLogs", "sdk:" + android.os.Build.VERSION.SDK_INT + "");
+
 		text[0] = Constants.Res.getString(R.string.block_all_calls);
 		text[1] = Constants.Res.getString(R.string.block_hidden_numbers);
 		text[2] = Constants.Res.getString(R.string.notice);
@@ -39,70 +44,121 @@ public class SetupCalls extends Screen {
 		text[5] = Constants.Res.getString(R.string.version);
 		textShow[0] = Constants.Res.getString(R.string.silent);
 		textShow[1] = Constants.Res.getString(R.string.busy);
+		rects.add(new SmallListPanel(0, Constants.BLOCK_ALL_CALLS, text[0],
+				null, true, ico.roundOk, ico.roundCrest));
+		rects.add(new SmallListPanel(1, Constants.BLOCK_HIDDEN_CALLS, text[1],
+				null, true, ico.roundOk, ico.roundCrest));
+		if (android.os.Build.VERSION.SDK_INT < 12) {
+			rects.add(new SmallListPanel(2, Constants.BLOCK_NOTIFICATION_CALLS,
+					text[2], text[5], false, null, null));
+		} else
+			rects.add(new SmallListPanel(2, Constants.BLOCK_NOTIFICATION_CALLS,
+					text[2], text[5], true, ico.roundOk, ico.roundCrest));
+
+		rects.add(new SmallListPanel(3, false, text[3], null, true,
+				ico.roundUp, ico.roundDown));
+		rectshow.add(new MenuList(4, Constants.SILENT_MODE, textShow[0], null,
+				true, ico.roundOk, ico.roundCrest));
+		rectshow.add(new MenuList(5, Constants.BUSY_MODE, textShow[1], null,
+				true, ico.roundOk, ico.roundCrest));
 	}
 
 	@Override
 	public void OnDraw(Canvas canvas) {
 		super.OnDraw(canvas);
-		for (int i = 0; i < rects.length; i++) {
-			canvas.drawLine(0, rects[i].top, w, rects[i].top,
-					Constants.WhiteRamca);
-			canvas.drawRect(rects[i], Constants.FONfill);
-			canvas.drawLine(0, rects[i].bottom, w, rects[i].bottom,
-					Constants.WhiteRamca);
-
-			if (i == 2) {
-				canvas.drawText(text[i], rects[i].centerX(),
-						rects[i].centerY(), this.WhiteText);
-				canvas.drawText(
-						text[5],
-						rects[i].centerX(),
-						rects[i].bottom
-
-								- (Math.abs(WhiteTextSmall.ascent()
-										+ Math.abs(WhiteTextSmall.descent()))),
-						this.WhiteTextSmall);
-				Constants.DrowIcon(canvas, ico.roundCrest, rects[i].width() - 3
-						* Constants.Res.getInteger(R.integer.smallIconWidth)
-						/ 2, rects[i].centerY(), true);
-			} else {
-				canvas.drawText(text[i], rects[i].centerX(),
-						rects[i].centerY(), this.WhiteText);
-			}
-			if(i==rects.length-1){
-				Constants.DrowIcon(canvas, ico.roundDown, rects[i].width()-3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, rects[i].centerY(), true);
-			}else{
-				Constants.DrowIcon(canvas, ico.roundCrest, rects[i].width()-3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, rects[i].centerY(), true);
+		for (MenuList menu : rectshow) {
+			if (show) {
+				canvas.drawRect(menu, Constants.FONfill);
+				menu.draw(canvas);
+				canvas.drawText(menu.getMain(), menu.centerX(), menu.centerY(),
+						this.WhiteText);
+				canvas.drawLine(0, menu.bottom, w, menu.bottom,
+						Constants.WhiteRamca);
 			}
 		}
-
-		if (show)
-			for (int i = 0; i < rectShow.length; i++) {
-				canvas.drawLine(0, rectShow[i].top, w, rectShow[i].top,
-						Constants.WhiteRamca);
-				canvas.drawRect(rectShow[i], Constants.FONfill);
-				canvas.drawLine(0, rectShow[i].bottom, w, rectShow[i].bottom,
-						Constants.WhiteRamca);
-				canvas.drawText(textShow[i], rectShow[i].centerX(),
-						rectShow[i].centerY(), this.WhiteText);
-			}
 
 	}
 
 	@Override
 	boolean onTouch(MotionEvent event) {
-		if(event.getAction()==MotionEvent.ACTION_DOWN)
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			return true;
-		if(event.getAction()==MotionEvent.ACTION_UP){
-			if(rects[rects.length-1].contains(event.getX(),event.getY())){
-				if(!show)
-					show = true;
-				else
-					show = false;
+		}
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			for (SmallListPanel rect : rects) {
+				if (rect.contains(event.getX(), event.getY())) {
+					if (rect.isBlock()) {
+						rect.setBlock(false);
+						if (rect.getMain().equals(text[0]))
+							numModel.setBlock_all_calls(0);
+						if (rect.getMain().equals(text[1]))
+							numModel.setBlock_hidden_numbers_calls(0);
+						if (rect.getMain().equals(text[2])
+								&& android.os.Build.VERSION.SDK_INT > 12)
+							numModel.setBlock_notifications_calls(0);
+					} else {
+						rect.setBlock(true);
+						if (rect.getMain().equals(text[0]))
+							numModel.setBlock_all_calls(1);
+						if (rect.getMain().equals(text[1]))
+							numModel.setBlock_hidden_numbers_calls(1);
+						if (rect.getMain().equals(text[2])
+								&& android.os.Build.VERSION.SDK_INT > 12)
+							numModel.setBlock_notifications_calls(1);
+
+					}
+					if (rect.getMain().equals(text[3])) {
+						if (rect.isBlock()) {
+							show = true;
+							Log.d("myLogs", "show:" + show);
+						} else {
+							show = false;
+							Log.d("myLogs", "show:" + show);
+						}
+					}
+				}
+			}
+            if(show)
+			for (int i = 0; i < rectshow.size(); i++) {
+				if (rectshow.get(0).contains(event.getX(), event.getY())) {
+					rectshow.get(0).setBlock(true);
+					rectshow.get(1).setBlock(false);
+					numModel.setSilent_mode(1);
+					numModel.setBusy_mode(0);
+					Log.d("myLogs","contains:"+rectshow.get(0).getMain());
+				} else if(rectshow.get(1).contains(event.getX(),event.getY())) {
+					rectshow.get(0).setBlock(false);
+					rectshow.get(1).setBlock(true);
+					numModel.setSilent_mode(0);
+					numModel.setBusy_mode(1);
+					Log.d("myLogs","contains:"+rectshow.get(1).getMain());
+				}
+
 			}
 			return false;
 		}
 		return false;
+	}
+
+	@Override
+	public void onBack() {
+		checking.getDb().updateNumbersOptions(numModel);
+		Constants.initNumberOptions();
+		Log.d("myLogs", "Back");
+		Log.d("myLogs",
+				"smsModel.blockallcalls" + numModel.isBlock_all_calls()
+						+ ",nummodel.blockhiddennumbers:"
+						+ numModel.isBlock_hidden_numbers_calls()+",SILENT_MODE: "+numModel.isSilent_mode()+", BUSY_MODE:"+numModel.isBusy_mode());
+	}
+
+	class MenuList extends SmallListPanel {
+
+		public MenuList(int pos, boolean block, String main, String second,
+				boolean drawCheck, ico icon, ico icoff) {
+			super(pos, block, main, second, drawCheck, icon, icoff);
+
+		}
+
 	}
 
 }

@@ -1,10 +1,9 @@
 package com.andraft.conpas.Screens;
 
 import java.text.DateFormatSymbols;
-import java.util.HashMap;
+import java.util.List;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,12 +14,18 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
+import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.MainActivity;
 import com.andraft.blacklist.R;
 import com.andraft.blacklist.ecrans;
+import com.andraft.models.NumberOptionsModel;
+import com.andraft.models.ScheduleModel;
+import com.andraft.models.SmsOptionsModel;
 
 public class Constants {
+	private static Checking checking;
 	public static Resources Res;
 	private static Bitmap ICONS = null;
 	public static Paint WhiteRamca = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -31,11 +36,14 @@ public class Constants {
 	public static final String[] DAYNAMES = new DateFormatSymbols()
 			.getShortWeekdays();
 	public static Context context;
-	public static String color_pref = "com.andraft.blacklist.color";
-	private SharedPreferences sharedPref = context.getSharedPreferences(
-			"com.andraft.blacklist", Context.MODE_PRIVATE);
+	public static boolean BLOCK_ALL_SMS, BLOCK_HIDDEN_SMS,
+			BLOCK_NOTIFICATIONS_SMS;
+	public static boolean BLOCK_ALL_CALLS, BLOCK_HIDDEN_CALLS,
+			BLOCK_NOTIFICATION_CALLS, SILENT_MODE, BUSY_MODE;
+	public static int Silence[][][] = new int[7][2][2];
 
 	static {
+
 		PaintPressed.setAlpha(20);
 		WhiteRamca.setStyle(Style.STROKE);
 		WhiteRamca.setColor(Color.WHITE);
@@ -65,6 +73,98 @@ public class Constants {
 		MainActivity.setActiveScreen(ecrans.main);
 		WhiteRamca.setStrokeWidth(res.getInteger(R.integer.stokewidth));
 		;
+		checking = Checking.getInstance(context);
+		;
+		initNumberOptions();
+		initSmsOptions();
+		initSchedule();
+	}
+
+	public static void initSchedule() {
+		List<ScheduleModel> sch = checking.getDb().getSchedule();
+		for (ScheduleModel sched : sch) {
+			for (int i = 0; i < 2; i++) {
+				for (int j = 0; j < 2; j++) {
+					if (i == 0 && j == 0)
+						Silence[sched.getDay()][i][j] = sched.getFromHour();
+					else if (i == 0 && j == 1)
+						Silence[sched.getDay()][i][j] = sched.getFromMinute();
+					else if (i == 1 && j == 0)
+						Silence[sched.getDay()][i][j] = sched.getToHour();
+					else if (i == 1 && j == 1)
+						Silence[sched.getDay()][i][j] = sched.getToMinute();
+				}
+
+			}
+
+		}
+
+	}
+
+	public static void initSmsOptions() {
+		SmsOptionsModel sms = checking.getDb().getSmsOptionsModel(1);
+		if (sms.isBlock_all_sms() == 1) {
+			BLOCK_ALL_SMS = true;
+			//Log.d("myLogs", "BLOCK_ALL_SMS true");
+		} else {
+			BLOCK_ALL_SMS = false;
+			//Log.d("myLogs", "BLOCK_ALL_SMS false");
+		}
+		if (sms.isBlock_hidden_numbers_sms() == 1) {
+			BLOCK_HIDDEN_SMS = true;
+			//Log.d("myLogs", "BLOCK_HIDDEN_SMS true");
+		} else {
+			BLOCK_HIDDEN_SMS = false;
+			//Log.d("myLogs", "BLOCK_HIDDEN_SMS false");
+		}
+		if (sms.isBlock_notifications_sms() == 1) {
+			BLOCK_NOTIFICATIONS_SMS = true;
+			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS true");
+		} else {
+			BLOCK_NOTIFICATIONS_SMS = false;
+			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS false");
+		}
+	}
+
+	public static void initNumberOptions() {
+		NumberOptionsModel num = checking.getDb().getNumberOptionsModel(1);
+
+		if (num.isBlock_all_calls() == 1) {
+			BLOCK_ALL_CALLS = true;
+			//Log.d("myLogs", "BLOCK_ALL_CALLS true");
+		} else {
+			BLOCK_ALL_CALLS = false;
+			//Log.d("myLogs", "BLOCK_ALL_CALLS false");
+		}
+		if (num.isBlock_hidden_numbers_calls() == 1) {
+			BLOCK_HIDDEN_CALLS = true;
+			//Log.d("myLogs", "BLOCK_HIDDEN_CALLS true");
+		} else {
+			BLOCK_HIDDEN_CALLS = false;
+			//Log.d("myLogs", "BLOCK_HIDDEN_CALLS false");
+		}
+		if (num.isBlock_notifications_calls() == 1) {
+			BLOCK_NOTIFICATION_CALLS = true;
+			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_CALLS true");
+		} else {
+			BLOCK_NOTIFICATION_CALLS = false;
+			//Log.d("myLogs", "BLOCK_NOTIFICATION_CALLS false");
+		}
+		if (num.isSilent_mode() == 1) {
+			SILENT_MODE = true;
+			//Log.d("myLogs", "SILENT_MODE true");
+		} else {
+			SILENT_MODE = false;
+			//Log.d("myLogs", "SILENT_MODE false");
+		}
+		if (num.isBusy_mode() == 1) {
+			BUSY_MODE = true;
+			//Log.d("myLogs", "BUSY_MODE true");
+		} else {
+			BUSY_MODE = false;
+			//Log.d("myLogs", "BUSY_MODE false");
+
+		}
 	}
 
 	public static void init(colors color, boolean first) {
@@ -112,7 +212,7 @@ public class Constants {
 	}
 
 	public enum ico {
-		linesConvert, linesTruba, bluHren, roundCrest, roundOk, roundPlus, roundRight, roundUp, roundDown, bluRoundLeft, shedule, konvert, whiteList, blackList, roundMinus, truba, shield,write,stat
+		linesConvert, linesTruba, bluHren, roundCrest, roundOk, roundPlus, roundRight, roundUp, roundDown, bluRoundLeft, shedule, konvert, whiteList, blackList, roundMinus, truba, shield, write, stat
 	}
 
 	public enum colors {

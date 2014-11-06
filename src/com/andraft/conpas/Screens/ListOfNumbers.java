@@ -71,8 +71,8 @@ public class ListOfNumbers extends Screen {
 		int i = 0;
 		for (SmsModel sms : checking.getSms(2)) {
 			Log.d("myLogs", "num:" + sms.getNum() + " ,text:" + sms.getText());
-			Messages[i] = sms.getNum() + " " + sms.getText();
-			allMessagesOrCalls.add(new SmallListPanel(i, Messages[i]));
+			//Messages[i] = sms.getNum() + "/" + sms.getText();
+			allMessagesOrCalls.add(new SmallListPanel(i, sms.getNum(),sms.getText()));
 			i++;
 
 		}
@@ -94,7 +94,7 @@ public class ListOfNumbers extends Screen {
 	protected void CheckISEmtyMessages() {
 		// проверка, удаление или добавление R.string.no_data
 		if (allMessagesOrCalls.isEmpty()) {
-			NoData = new SmallListPanel(0, Res.getString(R.string.no_data));
+			NoData = new SmallListPanel(0, Res.getString(R.string.no_data),Res.getString(R.string.no_data));
 		} else if (allMessagesOrCalls.size() > 1
 				&& allMessagesOrCalls.contains(NoData))
 			allMessagesOrCalls.remove(NoData);
@@ -270,12 +270,14 @@ public class ListOfNumbers extends Screen {
 		private String nomer;
 		private String mess;
 
-		SmallListPanel(int pos, String text) {
+
+		SmallListPanel(int pos, String nomer, String mess) {
 			super.set(0, BannerHeight() + pos * HEIGHT, w, BannerHeight()
 					+ (pos + 1) * HEIGHT);
+			
 
-			this.nomer = text.split(" ")[0];
-			this.mess = text.split(" ")[1];
+			this.nomer = nomer;
+			this.mess = mess.split(" ")[0];
 		}
 
 		public String getNomer() {

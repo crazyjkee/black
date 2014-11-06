@@ -95,12 +95,12 @@ public class MainActivity extends Activity {
 			activeScreen = setup;
 			break;
 		case setupCalls:
-			if (setupCalls == null)
+			//if (setupCalls == null)
 				setupCalls = new SetupCalls();
 			activeScreen = setupCalls;
 			break;
 		case setupSMS:
-			if (setupSMS == null)
+			//if (setupSMS == null)
 				setupSMS = new SetupSms();
 			activeScreen = setupSMS;
 			break;

@@ -19,7 +19,7 @@
     <string name="clear_stat">Reset statistics</string>
     <string name="block_hidden_numbers">Block hidden numbers</string>
     <string name="block_all_calls">Block all calls</string>
-    <string name="notice">Notifications</string>
+    <string name="notice">Block notifications</string>
     <string name="version">android version 4.0 or higher</string>
     <string name="call_forwarding">Call forwarding</string>
     <string name="silent">Silent mode</string>
