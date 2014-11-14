@@ -52,11 +52,15 @@ public class CallLogUtils {
 			// Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
 		}
 		phones.close();
+	
 		return contacts;
 	}
 
 	public HashMap<String, String> readAllCalls() {
 		all = new HashMap<String, String>();
+		all.put("212121", "OIIIII");
+		all.put("122121", "NE MOGY");
+		
 		Cursor cursor = context.getContentResolver().query(
 				CallLog.Calls.CONTENT_URI, null, null, null, null);// CallLog.Calls.NUMBER
 																	// + "," +
@@ -75,6 +79,7 @@ public class CallLogUtils {
 				all.put(phoneNumber, name);
 		}
 		cursor.close();
+		
 		return all;
 	}
 

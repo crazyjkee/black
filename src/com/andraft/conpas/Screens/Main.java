@@ -37,11 +37,12 @@ public class Main extends Screen {
 		checking = Checking.getInstance(Constants.context);
 		blockedCountSms = checking.getDb().getCountBlockSms();
 		blockedCountNumber = checking.getDb().getCountBlockNumber();
+		checking.getDb().close();
 
-		RectFs[4] = new RectF(0, RectFs[3].bottom, w / 2, RectFs[3].bottom
-				+ RectFs[3].height() / 2);
-		RectFs[5] = new RectF(w / 2, RectFs[3].bottom, w, RectFs[3].bottom
-				+ RectFs[3].height() / 2);
+		RectFs[4] = new RectF(0, RectFs[3].bottom, w / 2,h);// RectFs[3].bottom
+				//+ RectFs[3].height() / 2);
+		RectFs[5] = new RectF(w / 2, RectFs[3].bottom, w,h); //RectFs[3].bottom
+				//+ RectFs[3].height() / 2);
 		LargeIconsPosition[0] = new Point(w / 4,
 				(int) (RectFs[0].centerY() - Res
 						.getInteger(R.integer.largeIconWidth) / 2.1f));

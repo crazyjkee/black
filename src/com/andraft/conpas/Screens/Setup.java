@@ -92,11 +92,11 @@ public class Setup extends Screen {
 						rects[i].centerY()+(WhiteText.descent()-WhiteText.ascent())/4, this.WhiteText);
 			}
 		}
-		Constants.DrowIcon(canvas, ico.write, rects[1].width() - 3
-				* Constants.Res.getInteger(R.integer.smallIconWidth) / 2,
+		Constants.DrowIcon(canvas, ico.write, rects[1].width() -
+				 Constants.Res.getInteger(R.integer.smallIconWidth),
 				rects[1].centerY(), true);
-		Constants.DrowIcon(canvas, ico.stat, rects[2].width() - 3
-				* Constants.Res.getInteger(R.integer.smallIconWidth) / 2,
+		Constants.DrowIcon(canvas, ico.stat, rects[2].width()-
+				 Constants.Res.getInteger(R.integer.smallIconWidth),
 				rects[2].centerY(), true);
 		canvas.drawRoundRect(switcher,6,6, switchp);
 		canvas.drawRect(grayr, greyp);

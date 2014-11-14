@@ -99,6 +99,7 @@ public class Constants {
 			}
 
 		}
+		checking.getDb().close();
 
 	}
 
@@ -125,6 +126,7 @@ public class Constants {
 			BLOCK_NOTIFICATIONS_SMS = false;
 			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS false");
 		}
+		checking.getDb().close();
 	}
 
 	public static void initNumberOptions() {
@@ -164,8 +166,8 @@ public class Constants {
 		} else {
 			BUSY_MODE = false;
 			//Log.d("myLogs", "BUSY_MODE false");
-
 		}
+		checking.getDb().close();
 	}
 
 	public static void init(colors color, boolean first) {

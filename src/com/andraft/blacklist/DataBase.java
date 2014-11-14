@@ -107,6 +107,7 @@ public class DataBase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		if (db != null && db.isOpen())
 			db.close();
+		
 	}
 
 	@Override
@@ -435,6 +436,7 @@ public class DataBase extends SQLiteOpenHelper {
 					"getCallOption: BUSY_MODE:"
 							+ c.getInt(c.getColumnIndex(BUSY_MODE)));
 			c.close();
+			
 			return num;
 		} else {
 			c.close();

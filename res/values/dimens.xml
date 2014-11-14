@@ -1,6 +1,0 @@
-<resources>
-  <integer name="fontsize">30</integer>
-  <integer name="stokewidth">3</integer>
-  <integer name="smallIconWidth">30</integer>
-  <integer name="largeIconWidth">60</integer>
-</resources>

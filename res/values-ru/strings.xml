@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup">Общие настройки</string>
+    <string name="list_of_numbers">Список входящих</string>
+    <string name="list_of_contacts">Список входящих</string>
+    <string name="white_list">Белый список</string>
+    <string name="black_list">Черный список</string>
+    <string name="schedule">Расписание</string>
+    <string name="app_name">BlackList lite</string>
+    <string name="no_data">Пусто</string>
+    <string name="setup_sms">Настройка смс</string>
+    <string name="setup_calls">Настройка вызовов</string>
+    <string name="from">ОТ</string>
+    <string name="to">ДО</string>
+    <string name="setup_pass">Установить пароль</string>
+    <string name="coming">в следующей версии</string>
+    <string name="comment">Оставить отзыв</string>
+    <string name="clear_stat">Сбросить статистику</string>
+    <string name="block_hidden_numbers">Блок скрытых номеров</string>
+    <string name="block_all_calls">Блок всех входящих</string>
+    <string name="notice">Блок оповещаний</string>
+    <string name="version">android версия 4.0 или выше</string>
+    <string name="call_forwarding">Переадресация</string>
+    <string name="silent">Тихий режим</string>
+    <string name="busy">Занятой режим</string>
+    <string name="block_all_sms">Блок всех входящих</string>
+    <string name="spam_filter">Фильтр по совпадению</string>
+
+    <item name="fon_blue" type="color">#85d3e7</item>
+    <item name="fon_white" type="color">#ffffff</item>
+    <item name="fon_green" type="color">#6ed394</item>
+    <item name="fon_gray" type="color">#a2c1be</item>
+    
+</resources>

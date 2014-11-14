@@ -171,13 +171,13 @@ public class SetupSms extends Screen implements Screen.Back {
 
 		public void draw(Canvas canvas) {
 			if (isBlock() && drawCheck)
-				Constants.DrowIcon(canvas, icon, this.width() - 3
-						* Constants.Res.getInteger(R.integer.smallIconWidth)
-						/ 2, this.centerY(), true);
+				Constants.DrowIcon(canvas, icon, this.width()-
+						Constants.Res.getInteger(R.integer.smallIconWidth)
+						, this.centerY(), true);
 			else if (drawCheck)
-				Constants.DrowIcon(canvas, icoff, this.width() - 3
-						* Constants.Res.getInteger(R.integer.smallIconWidth)
-						/ 2, this.centerY(), true);
+				Constants.DrowIcon(canvas, icoff, this.width() - 
+						Constants.Res.getInteger(R.integer.smallIconWidth)
+						, this.centerY(), true);
 		}
 
 		public boolean isBlock() {

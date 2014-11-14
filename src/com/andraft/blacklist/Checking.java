@@ -42,14 +42,14 @@ public class Checking {
 	private Checking(Context context) {
 		Log.d("myLogs","CHECKING INIT");
 		this.context = context;
-		
+		db = new DataBase(context);
 		calllog = new CallLogUtils(context);
 		this.smslog = new SmsLogUtils(context);
 		init();
 	}
 
 	public void init() {
-		db = new DataBase(context);
+		
 		SQLiteDatabase db1 = db.getWritableDatabase();
 		contacts = calllog.readAllCalls();
 		if (db.TableIsEmpty(DataBase.TABLE_NUMBERS))
@@ -82,7 +82,7 @@ public class Checking {
 		if (db.TableIsEmpty(DataBase.TABLE_SCHEDULE))
 			addScheduleValues(db1);
 
-		db1.close();
+		db.close();
 	}
 
 	private void addNumberValues(SQLiteDatabase db1, String number, String name) {

@@ -246,10 +246,8 @@ public class ListOfNumbers extends Screen {
 					canvas.drawText(
 							tr.nomer,
 							tr.centerX(),
-							tr.top
-									+ tr.height()
-									/ 4
-									+ (Math.abs(WhiteText.ascent()
+							tr.centerY()
+									- (Math.abs(WhiteText.ascent()
 											+ Math.abs(WhiteText.descent()))),
 							WhiteText);
 					if (!allMessagesOrCalls.contains(NoData))
@@ -260,11 +258,9 @@ public class ListOfNumbers extends Screen {
 					canvas.drawText(
 							tr.getMessSplit(),
 							tr.centerX(),
-							tr.bottom
-									- tr.height()
-									/ 4
-									- (Math.abs(WhiteText.ascent()
-											+ Math.abs(WhiteText.descent()))),
+							tr.centerY()
+									+ 3*(Math.abs(WhiteText.ascent()
+											+ Math.abs(WhiteText.descent()))/2),
 							WhiteText);
 					if (bmenu) {
 						menu.move();
