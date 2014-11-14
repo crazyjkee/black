@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onStop() {
 		checking.getDb().closeDB();
+		Constants.destroy();
 		super.onStop();
 	}
 

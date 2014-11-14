@@ -8,32 +8,28 @@ import static com.andraft.conpas.Screens.Constants.w;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
+import com.andraft.blacklist.MainActivity;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.ico;
 import com.andraft.models.SmsModel;
 
 public class ListOfNumbers extends Screen {
 	static LinkedList<SmallListPanel> allMessagesOrCalls;
-	String[] Messages;/*
-					 * { "3333333333333333 sdsd", "22222222 sdSDsggnsd",
-					 * "11111111 dndfn", "55555555 dfgndfndfn",
-					 * "7777777 adfgtetwt", "3333333 sdsdf", "88888888 sdefsdf",
-					 * "888888888 sdsd", "777777777 sdSDsggnsd",
-					 * "8888888 dndfn", "77777777 " + "55555555 dfgndfndfn",
-					 * "5555555 adfgtetwt", "5555555 sdsdf", "4444444 sdefsdf"
-					 * };
-					 */
+
+	String[] Messages;
 
 	private boolean twoIconsTrueOneIconFalse = false;
 	private static final int HEIGHT = 60;
 	protected float v = 0;
-	private SmallListPanel NoData = null;
+	protected SmallListPanel NoData = null;
 	protected MenuRect menu = null;
 	protected RectF Centr = new RectF(0, h / 2 + BannerHeight() / 2 - HEIGHT,
 			w, h / 2 + BannerHeight() / 2 + HEIGHT);
@@ -46,6 +42,11 @@ public class ListOfNumbers extends Screen {
 					- Constants.Res.getInteger(R.integer.smallIconWidth) / 2,
 			Centr.centerY()
 					+ Constants.Res.getInteger(R.integer.smallIconWidth) / 2);
+	protected RectF messageRect = new RectF(Centr.centerX() - plus.width() * 2,
+			Centr.centerY()
+					- (Math.abs(WhiteText.ascent()
+							+ Math.abs(WhiteText.descent()))), Centr.centerX()
+					+ 2 * plus.width(), Centr.centerY() + plus.height());
 
 	protected boolean active = false;
 
@@ -57,6 +58,7 @@ public class ListOfNumbers extends Screen {
 		Log.d("myLogs", "ListOfNumbers Constructor");
 		this.twoIconsTrueOneIconFalse = false;
 		checking = Checking.getInstance(Constants.context);
+		checking.init();
 		fillList();
 
 		// checking.getDb().closeDB();
@@ -70,14 +72,18 @@ public class ListOfNumbers extends Screen {
 		Messages = new String[checking.getSms(2).size()];
 		int i = 0;
 		for (SmsModel sms : checking.getSms(2)) {
-			Log.d("myLogs", "num:" + sms.getNum() + " ,text:" + sms.getText());
-			//Messages[i] = sms.getNum() + "/" + sms.getText();
-			allMessagesOrCalls.add(new SmallListPanel(i, sms.getNum(),sms.getText()));
+			// Log.d("myLogs", "num:" + sms.getNum() + " ,text:" +
+			// sms.getText());
+			// Messages[i] = sms.getNum() + "/" + sms.getText();
+			allMessagesOrCalls.add(new SmallListPanel(i, sms.getNum(), sms
+					.getText()));
 			i++;
 
 		}
+		CheckISEmtyMessages();
 		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
 		v = (Centr.centerY() - toched.centerY()) / 40;
+
 	}
 
 	public ListOfNumbers(int r, boolean bmenu) {
@@ -94,14 +100,21 @@ public class ListOfNumbers extends Screen {
 	protected void CheckISEmtyMessages() {
 		// проверка, удаление или добавление R.string.no_data
 		if (allMessagesOrCalls.isEmpty()) {
-			NoData = new SmallListPanel(0, Res.getString(R.string.no_data),Res.getString(R.string.no_data));
+			Log.d("myLogs", "CheckISEmtyMessages isEmpty");
+			NoData = new SmallListPanel(0, Res.getString(R.string.no_data),
+					Res.getString(R.string.no_data));
+			allMessagesOrCalls.add(NoData);
 		} else if (allMessagesOrCalls.size() > 1
-				&& allMessagesOrCalls.contains(NoData))
+				&& allMessagesOrCalls.contains(NoData)) {
+			Log.d("myLogs", "CheckISEmtyMessages >1");
 			allMessagesOrCalls.remove(NoData);
+		}
 	};
 
 	protected RectF toched = null;
 	private String center_nomer;
+
+	private String full_message;
 
 	@Override
 	boolean onTouch(MotionEvent event) {
@@ -111,28 +124,45 @@ public class ListOfNumbers extends Screen {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if (blackButton.contains(event.getX(), event.getY())) {
 				for (SmsModel sms : checking.getSms(2)) {
-					if (sms.getNum().equals(center_nomer)) {
-						Log.d("myLogs",""+sms.getNum().equals(center_nomer));
+					if (sms.getNum().equals(center_nomer)
+							&& !allMessagesOrCalls.contains(NoData)) {
 						active = false;
 						menu.setShow(active);
-						round=ico.roundPlus;
+						round = ico.roundPlus;
 						checking.getDb().updateSms(sms, 1);
 						for (Iterator<SmallListPanel> iter = allMessagesOrCalls
 								.iterator(); iter.hasNext();) {
 							SmallListPanel data = iter.next();
 							if (data.getNomer().equals(center_nomer)) {
+								removeSmallListPanel(data);
 								iter.remove();
+
 							}
 						}
+
 						break;
 
 					}
 
 				}
-				Log.d("myLogs", "blackButton:" + this.getCenter_nomer());
 			}
 			if (Centr.contains(event.getX(), event.getY())) {
-				v = 0;
+				if (messageRect.contains(event.getX(), event.getY()) && !active) {
+					Log.d("myLogs", "popal:" + full_message);
+					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
+					builder
+							.setMessage(full_message)
+							.setCancelable(false)
+							.setNegativeButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+
+				}
 
 				if (plus.contains(event.getX(), event.getY()) && !active) {
 					active = true;
@@ -151,7 +181,6 @@ public class ListOfNumbers extends Screen {
 			}
 
 			if (!active) {
-				Log.d("myLogs", "bmenuSAsas");
 				for (RectF r : allMessagesOrCalls)
 					if (r.contains(event.getX(), event.getY())) {
 						toched = r;
@@ -183,6 +212,25 @@ public class ListOfNumbers extends Screen {
 		}
 	}
 
+	protected void removeSmallListPanel(SmallListPanel sm) {
+		for (int i = 0; i < allMessagesOrCalls.size(); i++)
+			if (allMessagesOrCalls.get(i).contains(sm))
+				try {
+					toched = allMessagesOrCalls.get(i - 1);
+					v = (Centr.centerY() - allMessagesOrCalls.get(i - 1)
+							.centerY()) / 40;
+				} catch (IndexOutOfBoundsException ex) {
+					try {
+						toched = allMessagesOrCalls.get(i + 1);
+						v = (Centr.centerY() - allMessagesOrCalls.get(i + 1)
+								.centerY()) / 40;
+					} catch (IndexOutOfBoundsException ex1) {
+						toched = null;
+						Log.d("myLogs", "catch");
+					}
+				}
+	}
+
 	@Override
 	public void OnDraw(Canvas canvas) {
 		{
@@ -194,6 +242,7 @@ public class ListOfNumbers extends Screen {
 				tr.offset(0, v);
 				if (Centr.contains(tr)) {
 					center_nomer = tr.nomer;
+					full_message = tr.getMess();
 					canvas.drawText(
 							tr.nomer,
 							tr.centerX(),
@@ -203,16 +252,13 @@ public class ListOfNumbers extends Screen {
 									+ (Math.abs(WhiteText.ascent()
 											+ Math.abs(WhiteText.descent()))),
 							WhiteText);
-
-					Constants.DrowIcon(
-							canvas,
-							round,
-							canvas.getWidth()
-									- Res.getInteger(R.integer.smallIconWidth),
-							Centr.centerY(), true);
+					if (!allMessagesOrCalls.contains(NoData))
+						Constants.DrowIcon(canvas, round, canvas.getWidth()
+								- Res.getInteger(R.integer.smallIconWidth),
+								Centr.centerY(), true);
 
 					canvas.drawText(
-							tr.mess,
+							tr.getMessSplit(),
 							tr.centerX(),
 							tr.bottom
 									- tr.height()
@@ -241,6 +287,8 @@ public class ListOfNumbers extends Screen {
 														.getInteger(R.integer.largeIconWidth)
 												/ 2);
 						canvas.drawRect(menu, Constants.FONfill);
+						canvas.drawRoundRect(menu,6,6, Constants.WhiteRamca);
+						
 						Constants.DrowIcon(canvas, ico.blackList,
 								blackButton.centerX(), blackButton.centerY(),
 								false);
@@ -266,18 +314,20 @@ public class ListOfNumbers extends Screen {
 		return center_nomer;
 	}
 
+	protected String getFull_message() {
+		return full_message;
+	}
+
 	class SmallListPanel extends RectF {
 		private String nomer;
 		private String mess;
 
-
 		SmallListPanel(int pos, String nomer, String mess) {
 			super.set(0, BannerHeight() + pos * HEIGHT, w, BannerHeight()
 					+ (pos + 1) * HEIGHT);
-			
 
 			this.nomer = nomer;
-			this.mess = mess.split(" ")[0];
+			this.mess = mess;
 		}
 
 		public String getNomer() {
@@ -290,6 +340,13 @@ public class ListOfNumbers extends Screen {
 
 		public String getMess() {
 			return mess;
+		}
+
+		public String getMessSplit() {
+			if(mess.split(" ")[0].length()>8)
+				return mess.split(" ")[0].substring(0, 6)+"...";
+			else
+			return mess.split(" ")[0];
 		}
 
 		protected void setMess(String mess) {

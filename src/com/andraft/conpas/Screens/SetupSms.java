@@ -70,9 +70,10 @@ public class SetupSms extends Screen implements Screen.Back {
 			canvas.drawRect(rect, Constants.FONfill);
 			canvas.drawLine(0, rect.bottom, w, rect.bottom,
 					Constants.WhiteRamca);
-			canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY(),
-					this.WhiteText);
+			
 			if (rect.getSecond() != null) {
+				canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY(),
+						this.WhiteText);
 				canvas.drawText(
 						rect.getSecond(),
 						rect.centerX(),
@@ -81,6 +82,9 @@ public class SetupSms extends Screen implements Screen.Back {
 								- (Math.abs(WhiteTextSmall.ascent()
 										+ Math.abs(WhiteTextSmall.descent()))),
 						this.WhiteTextSmall);
+			}else{
+				canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY()+(WhiteText.descent()-WhiteText.ascent())/4,//(Math.abs(WhiteText.descent())-Math.abs(WhiteText.ascent()))/2,
+						this.WhiteText);
 			}
 			rect.draw(canvas);
 

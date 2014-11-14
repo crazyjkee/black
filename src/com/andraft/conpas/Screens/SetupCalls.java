@@ -70,7 +70,7 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 			if (show) {
 				canvas.drawRect(menu, Constants.FONfill);
 				menu.draw(canvas);
-				canvas.drawText(menu.getMain(), menu.centerX(), menu.centerY(),
+				canvas.drawText(menu.getMain(), menu.centerX(), menu.centerY()+(WhiteText.descent()-WhiteText.ascent())/4,
 						this.WhiteText);
 				canvas.drawLine(0, menu.bottom, w, menu.bottom,
 						Constants.WhiteRamca);

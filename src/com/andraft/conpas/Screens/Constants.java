@@ -41,6 +41,7 @@ public class Constants {
 	public static boolean BLOCK_ALL_CALLS, BLOCK_HIDDEN_CALLS,
 			BLOCK_NOTIFICATION_CALLS, SILENT_MODE, BUSY_MODE;
 	public static int Silence[][][] = new int[7][2][2];
+	private static colors colorka = colors.blue;
 
 	static {
 
@@ -64,7 +65,7 @@ public class Constants {
 		PaintPressed.setShadowLayer(res.getInteger(R.integer.stokewidth),
 				res.getInteger(R.integer.stokewidth),
 				res.getInteger(R.integer.stokewidth), Color.GRAY);
-		init(colors.blue, true);
+		init(colorka, true);
 		FONfill.setTextSize(res.getInteger(R.integer.fontsize) * 1.1f);
 
 		FONwhitefill.set(FONfill);
@@ -172,16 +173,29 @@ public class Constants {
 			return;
 		switch (color) {
 		case blue:
+			colorka = colors.blue;
 			FONfill.setColor(Res.getColor(R.color.fon_blue));
 			ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
 			break;
 		case gray:
+			colorka = colors.gray;
 			FONfill.setColor(Res.getColor(R.color.fon_gray));
+			if(ICONS != null)
 			ICONS = changeColor(ICONS, colors.gray);
+			else{
+				ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
+				ICONS = changeColor(ICONS, colors.gray);
+			}
 			break;
 		case green:
+			colorka = colors.green;
 			FONfill.setColor(Res.getColor(R.color.fon_green));
+			if(ICONS !=null)
 			ICONS = changeColor(ICONS, colors.green);
+			else{
+				ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
+				ICONS = changeColor(ICONS, colors.green);
+			}
 			break;
 		default:
 			break;
@@ -207,8 +221,10 @@ public class Constants {
 	}
 
 	public static void destroy() {
+		if(ICONS!=null){
 		ICONS.recycle();
 		ICONS = null;
+		}
 	}
 
 	public enum ico {

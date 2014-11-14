@@ -3,6 +3,8 @@ package com.andraft.conpas.Screens;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.Log;
@@ -11,9 +13,7 @@ import android.view.MotionEvent;
 import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.ico;
-import com.andraft.conpas.Screens.ListOfNumbers.SmallListPanel;
 import com.andraft.models.NumberModel;
-import com.andraft.models.SmsModel;
 
 public class ListOfContacts extends ListOfNumbers {
 	private static String Messages[];
@@ -24,6 +24,7 @@ public class ListOfContacts extends ListOfNumbers {
 	public ListOfContacts() {
 		super(R.string.list_of_contacts, true);
 		checking = Checking.getInstance(Constants.context);
+		checking.init();
 		allMessagesOrCalls = new LinkedList<SmallListPanel>();
 		int i = 0;
 		Messages = new String[checking.getCalls(2).size()];
@@ -33,10 +34,15 @@ public class ListOfContacts extends ListOfNumbers {
 			i++;
 		}
 		checking.getDb().closeDB();
+		CheckISEmtyMessages();
 		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
 		v = (Centr.centerY() - toched.centerY()) / 40;
 
 	}
+	
+
+	
+
 
 	@Override
 	public void OnDraw(Canvas canvas) {
@@ -66,7 +72,7 @@ public class ListOfContacts extends ListOfNumbers {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if (whiteButton.contains(event.getX(), event.getY())) {
 				for (NumberModel num : checking.getCalls(2)) {
-					if (num.getNum().equals(this.getCenter_nomer())) {
+					if (num.getNum().equals(this.getCenter_nomer())&&!allMessagesOrCalls.contains(NoData)) {
 						active = false;
 						menu.setShow(active);
 						round = ico.roundPlus;
@@ -75,6 +81,7 @@ public class ListOfContacts extends ListOfNumbers {
 								.iterator(); iter.hasNext();) {
 							SmallListPanel data = iter.next();
 							if (data.getNomer().equals(this.getCenter_nomer())) {
+								this.removeSmallListPanel(data);
 								iter.remove();
 							}
 						}
@@ -96,6 +103,7 @@ public class ListOfContacts extends ListOfNumbers {
 								.iterator(); iter.hasNext();) {
 							SmallListPanel data = iter.next();
 							if (data.getNomer().equals(this.getCenter_nomer())) {
+								this.removeSmallListPanel(data);
 								iter.remove();
 							}
 						}
@@ -109,7 +117,22 @@ public class ListOfContacts extends ListOfNumbers {
 			
 
 			if (Centr.contains(event.getX(), event.getY())) {
-				v = 0;
+                if(messageRect.contains(event.getX(),event.getY())&&!active){
+                	Log.d("myLogs", "popal:" + this.getFull_message());
+					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
+					builder
+							.setMessage(this.getFull_message())
+							.setCancelable(false)
+							.setNegativeButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+
+                }
 
 				if (plus.contains(event.getX(), event.getY()) && !active) {
 					active = true;

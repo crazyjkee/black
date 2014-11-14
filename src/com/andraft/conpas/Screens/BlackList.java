@@ -1,5 +1,7 @@
 package com.andraft.conpas.Screens;
 
+import static com.andraft.conpas.Screens.Constants.Res;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -13,6 +15,7 @@ import android.view.MotionEvent;
 import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.ico;
+import com.andraft.conpas.Screens.ListOfNumbers.SmallListPanel;
 import com.andraft.models.NumberModel;
 import com.andraft.models.SmsModel;
 
@@ -42,6 +45,10 @@ public class BlackList extends ListOfNumbers {
 					.getCount_black()));
 			i++;
 		}
+		CheckISEmtyMessages();
+		Log.d("myLogs","size:"+allMessagesOrCalls.size());
+		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
+		v = (Centr.centerY() - toched.centerY()) / 40;
 	}
 	
 
@@ -58,7 +65,7 @@ public class BlackList extends ListOfNumbers {
 		}
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if(stat)
-			if (Centr.contains(event.getX(), event.getY())) {
+			if (Centr.contains(event.getX(), event.getY())&&!allMessagesOrCalls.contains(NoData)) {
 				v = 0;
 
 				if (plus.contains(event.getX(), event.getY())) {
@@ -79,6 +86,7 @@ public class BlackList extends ListOfNumbers {
 									if (num.getNum().equals(getCenter_nomer()))
 										checking.getDb().updateNumber(num, 2);
 							}
+							removeSmallListPanel(data);
 							iter.remove();
 							break;
 						}
@@ -105,12 +113,27 @@ public class BlackList extends ListOfNumbers {
 		return false;
 	}
 
+	/*@Override
+	protected void CheckISEmtyMessages() {
+		//super.CheckISEmtyMessages();
+		if (allMessagesOrCalls.isEmpty()) {
+			NoData = new SmallList(0, Res.getString(R.string.no_data),
+					Res.getString(R.string.no_data),false,-1);
+			allMessagesOrCalls.add(NoData);
+		} else if (allMessagesOrCalls.size() > 1
+				&& allMessagesOrCalls.contains(NoData))
+			allMessagesOrCalls.remove(NoData);
+	}*/
+	
+
+
 	@Override
 	public void OnDraw(Canvas canvas) {
 		super.OnDraw(canvas);
 		if(stat)
 		for (SmallListPanel tr : allMessagesOrCalls) {
 			if (Centr.contains(tr)) {
+				if(((SmallList) tr).getCount_black()!=-1)
 				if(((SmallList) tr).isSms()){
 					Log.d("myLogs","isSms");
 					Constants.DrowIcon(canvas, ico.konvert, Centr.left+5+Constants.Res.getInteger(R.integer.smallIconWidth)/2, Centr.bottom-5-Constants.Res.getInteger(R.integer.smallIconWidth)/2, true);

@@ -40,14 +40,16 @@ public class Checking {
 	}
 
 	private Checking(Context context) {
+		Log.d("myLogs","CHECKING INIT");
 		this.context = context;
-		db = new DataBase(context);
+		
 		calllog = new CallLogUtils(context);
 		this.smslog = new SmsLogUtils(context);
 		init();
 	}
 
-	private void init() {
+	public void init() {
+		db = new DataBase(context);
 		SQLiteDatabase db1 = db.getWritableDatabase();
 		contacts = calllog.readAllCalls();
 		if (db.TableIsEmpty(DataBase.TABLE_NUMBERS))
@@ -149,22 +151,22 @@ public class Checking {
 		minus_number = calllog.readAllCalls();
 		contacts = calllog.readAllContacts();
 		for (Entry<String, String> num : contacts.entrySet()) {
-			if (!minus_number.containsKey(num.getKey()))
+			String plus7 = "+7"+num.getKey().substring(1,num.getKey().length());
+			if (!minus_number.containsKey(num.getKey())&&!minus_number.containsKey(plus7))
 				minus_number.put(num.getKey(), num.getValue());
 		}
 
 		return minus_number;
 	}
 
-	private HashMap<String, String> getNewka() {
-		return newka;
-	}
+
 
 	private HashMap<String, String> sms_minus_contacts() {
 		minus_sms = smslog.readAllSms();
 		contacts = calllog.readAllContacts();
 		for (Entry<String, String> c : contacts.entrySet()) {
-			if (minus_sms.containsKey(c.getKey())) {
+			String plus7 = "+7"+c.getKey().substring(1,c.getKey().length());
+			if (minus_sms.containsKey(c.getKey())||minus_sms.containsKey(plus7)) {
 				minus_sms.remove(c.getKey());
 			}
 		}

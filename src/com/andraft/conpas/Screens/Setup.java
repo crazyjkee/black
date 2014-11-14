@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 
@@ -19,9 +20,9 @@ public class Setup extends Screen {
 	private static final int HEIGHT = 60;
 	private String[] text = new String[3];
 	private RectF switcher, grayr, bluer, greenr;
-	private Paint greyp, bluep, greenp, testp; // rgb bluep : 133,211,231; rgb
+	private Paint greyp, bluep, greenp, switchp; // rgb bluep : 133,211,231; rgb
 												// greenp: 110,211,148 rgb
-												// grayp: 140,157,155
+												// grayp: 162,193,190
 	private RectF[] icons = new RectF[3];
 	SharedPreferences prefs;
 
@@ -33,11 +34,13 @@ public class Setup extends Screen {
 	}
 
 	private void init() {
-		switcher = new RectF(w / 8, h - HEIGHT * 1.5f, 7 * w / 8, h);
-
-		testp = new Paint();
-		testp.setAntiAlias(true);
-		testp.setColor(Color.RED);
+		switcher = new RectF(w / 5, h - HEIGHT, 4 * w / 5, h);
+        switchp = new Paint();
+		switchp.set(Constants.FONfill);
+		switchp.setAntiAlias(true);
+		switchp.setStyle(Style.STROKE);
+		switchp.setStrokeWidth(3);
+		
 		grayr = new RectF(switcher.left + 5, switcher.top + 5, switcher.width()
 				/ 3 - 5 + switcher.left, switcher.bottom - 5);
 		bluer = new RectF(switcher.width() / 3 + 5 + switcher.left,
@@ -86,7 +89,7 @@ public class Setup extends Screen {
 						this.WhiteTextSmall);
 			} else {
 				canvas.drawText(text[i], rects[i].centerX(),
-						rects[i].centerY(), this.WhiteText);
+						rects[i].centerY()+(WhiteText.descent()-WhiteText.ascent())/4, this.WhiteText);
 			}
 		}
 		Constants.DrowIcon(canvas, ico.write, rects[1].width() - 3
@@ -95,7 +98,7 @@ public class Setup extends Screen {
 		Constants.DrowIcon(canvas, ico.stat, rects[2].width() - 3
 				* Constants.Res.getInteger(R.integer.smallIconWidth) / 2,
 				rects[2].centerY(), true);
-		canvas.drawRect(switcher, testp);
+		canvas.drawRoundRect(switcher,6,6, switchp);
 		canvas.drawRect(grayr, greyp);
 		canvas.drawRect(greenr, greenp);
 		canvas.drawRect(bluer, bluep);
@@ -108,15 +111,21 @@ public class Setup extends Screen {
 			return true;
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if (grayr.contains(event.getX(), event.getY())) {
+				switchp.setColor(Constants.Res.getColor(R.color.fon_gray));
 				Constants.init(colors.gray, false);
+				
 
 			}
 			if (bluer.contains(event.getX(), event.getY())) {
+				switchp.setColor(Constants.Res.getColor(R.color.fon_blue));
 				Constants.init(colors.blue, false);
+				
 
 			}
 			if (greenr.contains(event.getX(), event.getY())) {
+				switchp.setColor(Constants.Res.getColor(R.color.fon_green));
 				Constants.init(colors.green, false);
+				
 
 			}
 

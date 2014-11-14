@@ -1,9 +1,12 @@
 package com.andraft.conpas.Screens;
 
 import java.util.Arrays;
+
+import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.MainActivity;
 import com.andraft.blacklist.R;
 import com.andraft.blacklist.ecrans;
+
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 import android.graphics.Point;
@@ -13,7 +16,7 @@ import android.view.MotionEvent;
 import static com.andraft.conpas.Screens.Constants.*;
 
 public class Main extends Screen {
-	public static int[] blockedCount = { 55, 44 };
+	public static int blockedCountSms,blockedCountNumber;
 	private RectF RectFs[] = new RectF[6];
 	private ico icon[] = { ico.konvert, ico.truba, ico.linesConvert,
 			ico.linesTruba, ico.whiteList, ico.blackList, ico.shedule };
@@ -21,6 +24,7 @@ public class Main extends Screen {
 			R.string.list_of_numbers, R.string.list_of_contacts,
 			R.string.white_list, R.string.black_list, R.string.schedule };
 	private Point[] LargeIconsPosition = new Point[7];
+	private Checking checking;
 
 	public Main() {
 		super(R.string.app_name);
@@ -30,6 +34,9 @@ public class Main extends Screen {
 			final int dy = (i > 1) ? h / 2 : h / 2 - w / 2;
 			RectFs[i] = new RectF(dx, dy, w / 2 + dx, dy + w / 2);
 		}
+		checking = Checking.getInstance(Constants.context);
+		blockedCountSms = checking.getDb().getCountBlockSms();
+		blockedCountNumber = checking.getDb().getCountBlockNumber();
 
 		RectFs[4] = new RectF(0, RectFs[3].bottom, w / 2, RectFs[3].bottom
 				+ RectFs[3].height() / 2);
@@ -139,13 +146,13 @@ public class Main extends Screen {
 		final int sw = Res.getInteger(R.integer.smallIconWidth) / 2;
 		float mt = w / 2 - sw;
 		final float dy = (RectFs[1].top + BannerHeight()) / 2;
-		canvas.drawText(" " + blockedCount[0], mt,
+		canvas.drawText(" " + blockedCountSms, mt,
 				dy + Res.getInteger(R.integer.smallIconWidth) / 3, WhiteText);
 		Constants.DrowIcon(canvas, ico.konvert,
-				mt - sw - WhiteText.measureText(" " + blockedCount[0]), dy,
+				mt - sw - WhiteText.measureText(" " + blockedCountSms), dy,
 				true);
 		WhiteText.setTextAlign(Align.LEFT);
-		canvas.drawText(" " + blockedCount[1], w / 2 + sw * 3,
+		canvas.drawText(" " + blockedCountNumber, w / 2 + sw * 3,
 				dy + Res.getInteger(R.integer.smallIconWidth) / 3, WhiteText);
 		Constants.DrowIcon(canvas, ico.truba, w / 2 + sw * 2, dy, true);
 		canvas.drawRect(new RectF(0, RectFs[5].bottom, w, h), WhiteText);

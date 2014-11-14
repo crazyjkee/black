@@ -147,7 +147,7 @@ public class DataBase extends SQLiteOpenHelper {
 		return sms_id;
 	}
 
-	public NumberModel getNumber(long number_id) {
+	/*public NumberModel getNumber(long number_id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE "
@@ -169,7 +169,7 @@ public class DataBase extends SQLiteOpenHelper {
 
 		return number;
 	}
-
+*/
 	public List<NumberModel> getAllNumbers() {
 		List<NumberModel> numbers = new ArrayList<NumberModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS;
@@ -222,16 +222,16 @@ public class DataBase extends SQLiteOpenHelper {
 		c.close();
 		return sms;
 	}
-	
-	public List<ScheduleModel> getSchedule(){
+
+	public List<ScheduleModel> getSchedule() {
 		List<ScheduleModel> sched = new ArrayList<ScheduleModel>();
 		String selectQuery = "SELECT * FROM " + TABLE_SCHEDULE;
-		
+
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
-		
-		if(c.moveToFirst()){
-			do{
+
+		if (c.moveToFirst()) {
+			do {
 				ScheduleModel s = new ScheduleModel();
 				s.setDay(c.getInt((c.getColumnIndex(DAY))));
 				s.setFromHour(c.getInt(c.getColumnIndex(FROMHOURS)));
@@ -239,11 +239,11 @@ public class DataBase extends SQLiteOpenHelper {
 				s.setToHour(c.getInt(c.getColumnIndex(TOHOURS)));
 				s.setToMinute(c.getInt(c.getColumnIndex(TOMINUTES)));
 				sched.add(s);
-			}while(c.moveToNext());
+			} while (c.moveToNext());
 		}
 		c.close();
 		return sched;
-		
+
 	}
 
 	public int updateNumber(NumberModel number, int bool) {
@@ -377,7 +377,7 @@ public class DataBase extends SQLiteOpenHelper {
 				numbers.add(number);
 			} while (c.moveToNext());
 		}
-
+        c.close();
 		return numbers;
 	}
 
@@ -402,7 +402,7 @@ public class DataBase extends SQLiteOpenHelper {
 				sms.add(smsm);
 			} while (c.moveToNext());
 		}
-
+        c.close();
 		return sms;
 	}
 
@@ -434,8 +434,10 @@ public class DataBase extends SQLiteOpenHelper {
 			Log.d("myLogs",
 					"getCallOption: BUSY_MODE:"
 							+ c.getInt(c.getColumnIndex(BUSY_MODE)));
+			c.close();
 			return num;
 		} else {
+			c.close();
 			Log.d("myLogs", "getNumber null");
 			return null;
 		}
@@ -461,9 +463,10 @@ public class DataBase extends SQLiteOpenHelper {
 							+ c.getInt(c.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
 			sms.setBlock_notifications_sms(c.getInt(c
 					.getColumnIndex(BLOCK_NOTIFICATIONS)));
-
+            c.close();
 			return sms;
 		} else {
+			c.close();
 			Log.d("myLogs", "getSms null");
 			return null;
 		}
@@ -472,19 +475,59 @@ public class DataBase extends SQLiteOpenHelper {
 
 	public boolean isNumberInTable(String num) {
 		String selectQuery = "SELECT * FROM " + TABLE_NUMBERS + " WHERE " + NUM
-				+ "=" + NUM;
+				+ "=" + "\"" + num + "\"";
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
-
-		return c.moveToFirst();
+		if(c.moveToFirst()){
+			c.close();
+		return true;
+		}else{
+			c.close();
+			return false;
+		}
 	}
 
 	public boolean isSmsInTable(String num) {
 		String selectQuery = "SELECT * FROM " + TABLE_SMS + " WHERE " + NUM
 				+ "=" + "\"" + num + "\"";
+
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 		return c.moveToFirst();
+	}
+
+	public int getCountBlockNumber() {
+		int i = 0;
+		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			i+=c.getInt(c.getColumnIndex(COUNT_BLACK));
+		} else {
+			Log.d("myLogs", "getCount_black null");
+			return 0;
+		}
+		c.close();
+
+		return i;
+	}
+	
+	public int getCountBlockSms() {
+		int i = 0;
+		String selectQuery = "SELECT  * FROM " + TABLE_SMS;
+
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			i+=c.getInt(c.getColumnIndex(COUNT_BLACK));
+		} else {
+			Log.d("myLogs", "getCount_black null");
+			return 0;
+		}
+		c.close();
+
+		return i;
 	}
 
 	public boolean TableIsEmpty(String table) {

@@ -14,19 +14,27 @@ import com.andraft.models.NumberModel;
 public class WhiteList extends BlackList{
 private String[] calls;
 private Checking checking;
+
 	public WhiteList( ) {
 		super(R.string.white_list, false);
 		checking = Checking.getInstance(Constants.context);
 		allMessagesOrCalls = new LinkedList<SmallListPanel>();
-		calls = new String[checking.getCalls(0).size()];
 		int i = 0;
 		for(NumberModel num:checking.getCalls(0)){
-			calls[i] = num.getNum()+" "+num.getName();
 			allMessagesOrCalls.add(new SmallListPanel(i, num.getNum(),num.getName()));
 			i++;
 		}
+		CheckISEmtyMessages();
+		Log.d("myLogs","size:"+allMessagesOrCalls.size());
+		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
+		v = (Centr.centerY() - toched.centerY()) / 40;
+		
 		 
 	}
+
+	
+	
+
 
 	@Override
 	boolean onTouch(MotionEvent event) {
@@ -35,7 +43,7 @@ private Checking checking;
 			return true;
 		}
 		if(event.getAction()==MotionEvent.ACTION_UP){
-			if(Centr.contains(event.getX(),event.getY())){
+			if(Centr.contains(event.getX(),event.getY())&&!allMessagesOrCalls.contains(NoData)){
 				v=0;
 				if(plus.contains(event.getX(), event.getY())){
 					for (Iterator<SmallListPanel> iter = allMessagesOrCalls
@@ -46,7 +54,7 @@ private Checking checking;
 							for (NumberModel num : checking.getCalls(0))
 								if (num.getNum().equals(getCenter_nomer()))
 									checking.getDb().updateNumber(num, 2);
-						
+						    removeSmallListPanel(data);
 							iter.remove();
 							break;
 						}
