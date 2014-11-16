@@ -48,8 +48,8 @@ public abstract class Screen {
 	}
 
 	private void init() {
-		BannerIcon = new RectF(0, 0, Res.getInteger(R.integer.fontsize) * 1.4f,
-				Res.getInteger(R.integer.fontsize) * 1.4f);
+		BannerIcon = new RectF(0, 0, Res.getInteger(R.integer.fontsize) * 2f,
+				Res.getInteger(R.integer.fontsize) * 2f);
 		if (label == R.string.app_name) {
 			ShieldIcon = new RectF(0, 0, w, BannerIcon.bottom);
 			BannerIcon.offsetTo(
@@ -79,12 +79,13 @@ public abstract class Screen {
 	};
 
 	float BannerHeight() {
-		return Res.getInteger(R.integer.fontsize) * 1.45f;
+		return Res.getInteger(R.integer.fontsize) * 1.75f;
 	}
 
 	public void OnDraw(Canvas canvas) {
 		canvas.drawPaint(fon);
 		canvas.drawRect(0, 0, w, BannerHeight(), WhiteText);
+		if(iconca!=null)
 		Constants.DrowIcon(canvas, iconca, BannerIcon.centerX(),
 				BannerIcon.centerY(), true);
 		if (ShieldIcon != null) {

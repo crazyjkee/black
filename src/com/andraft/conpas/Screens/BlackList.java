@@ -1,21 +1,15 @@
 package com.andraft.conpas.Screens;
 
-import static com.andraft.conpas.Screens.Constants.Res;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.ico;
-import com.andraft.conpas.Screens.ListOfNumbers.SmallListPanel;
 import com.andraft.models.NumberModel;
 import com.andraft.models.SmsModel;
 
@@ -46,7 +40,7 @@ public class BlackList extends ListOfNumbers {
 			i++;
 		}
 		CheckISEmtyMessages();
-		Log.d("myLogs","size:"+allMessagesOrCalls.size());
+		
 		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
 		v = (Centr.centerY() - toched.centerY()) / 40;
 	}
@@ -92,7 +86,7 @@ public class BlackList extends ListOfNumbers {
 						}
 
 					}
-					Log.d("myLogs", "delete:" + this.getCenter_nomer());
+					
 
 				}
 
@@ -135,11 +129,11 @@ public class BlackList extends ListOfNumbers {
 			if (Centr.contains(tr)) {
 				if(((SmallList) tr).getCount_black()!=-1)
 				if(((SmallList) tr).isSms()){
-					Log.d("myLogs","isSms");
+					
 					Constants.DrowIcon(canvas, ico.konvert, Centr.left+5+Constants.Res.getInteger(R.integer.smallIconWidth)/2, Centr.bottom-5-Constants.Res.getInteger(R.integer.smallIconWidth)/2, true);
 					canvas.drawText(((SmallList)tr).getCount_black()+"", Centr.left+5+3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, Centr.bottom-5-Constants.Res.getInteger(R.integer.smallIconWidth)/2, WhiteTextSmall);
 				}else{
-					Log.d("myLogs","isn't SMS");
+					
 					Constants.DrowIcon(canvas, ico.truba, Centr.left+5+Constants.Res.getInteger(R.integer.smallIconWidth)/2, Centr.bottom-5-Constants.Res.getInteger(R.integer.smallIconWidth)/2, true);
 					canvas.drawText(((SmallList)tr).getCount_black()+"", Centr.left+5+3*Constants.Res.getInteger(R.integer.smallIconWidth)/2, Centr.bottom-5-Constants.Res.getInteger(R.integer.smallIconWidth)/2, WhiteTextSmall);
 				}

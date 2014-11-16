@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="fontsize">50</integer>
+    <integer name="stokewidth">7</integer>
+    <integer name="smallIconWidth">70</integer>
+    <integer name="largeIconWidth">125</integer>
+
+</resources>

@@ -3,7 +3,8 @@
 
     <integer name="fontsize">50</integer>
     <integer name="stokewidth">7</integer>
-    <integer name="smallIconWidth">60</integer>
-    <integer name="largeIconWidth">300</integer>
+    <integer name="smallIconWidth">70</integer>
+    <integer name="largeIconWidth">125</integer>
 
 </resources>
+

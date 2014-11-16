@@ -2,15 +2,16 @@ package com.andraft.conpas.Screens;
 
 import static com.andraft.conpas.Screens.Constants.h;
 import static com.andraft.conpas.Screens.Constants.w;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.view.MotionEvent;
 
+import com.andraft.blacklist.Checking;
 import com.andraft.blacklist.R;
 import com.andraft.conpas.Screens.Constants.colors;
 import com.andraft.conpas.Screens.Constants.ico;
@@ -21,26 +22,24 @@ public class Setup extends Screen {
 	private String[] text = new String[3];
 	private RectF switcher, grayr, bluer, greenr;
 	private Paint greyp, bluep, greenp, switchp; // rgb bluep : 133,211,231; rgb
-												// greenp: 110,211,148 rgb
-												// grayp: 162,193,190
+	private Checking checking; // greenp: 110,211,148 rgb
+								// grayp: 162,193,190
 	private RectF[] icons = new RectF[3];
-	SharedPreferences prefs;
 
 	public Setup() {
 		super(R.string.setup, Constants.FONwhitefill);
 		init();
-		prefs = Constants.context.getSharedPreferences("com.andraft.blacklist",
-				Context.MODE_PRIVATE);
 	}
 
 	private void init() {
+		checking = Checking.getInstance(Constants.context);
 		switcher = new RectF(w / 5, h - HEIGHT, 4 * w / 5, h);
-        switchp = new Paint();
+		switchp = new Paint();
 		switchp.set(Constants.FONfill);
 		switchp.setAntiAlias(true);
 		switchp.setStyle(Style.STROKE);
 		switchp.setStrokeWidth(3);
-		
+
 		grayr = new RectF(switcher.left + 5, switcher.top + 5, switcher.width()
 				/ 3 - 5 + switcher.left, switcher.bottom - 5);
 		bluer = new RectF(switcher.width() / 3 + 5 + switcher.left,
@@ -88,17 +87,24 @@ public class Setup extends Screen {
 										+ Math.abs(WhiteTextSmall.descent()))),
 						this.WhiteTextSmall);
 			} else {
-				canvas.drawText(text[i], rects[i].centerX(),
-						rects[i].centerY()+(WhiteText.descent()-WhiteText.ascent())/4, this.WhiteText);
+				canvas.drawText(text[i], rects[i].centerX(), rects[i].centerY()
+						+ (WhiteText.descent() - WhiteText.ascent()) / 4,
+						this.WhiteText);
 			}
 		}
-		Constants.DrowIcon(canvas, ico.write, rects[1].width() -
-				 Constants.Res.getInteger(R.integer.smallIconWidth),
+		Constants.DrowIcon(
+				canvas,
+				ico.write,
+				rects[1].width()
+						- Constants.Res.getInteger(R.integer.smallIconWidth),
 				rects[1].centerY(), true);
-		Constants.DrowIcon(canvas, ico.stat, rects[2].width()-
-				 Constants.Res.getInteger(R.integer.smallIconWidth),
+		Constants.DrowIcon(
+				canvas,
+				ico.stat,
+				rects[2].width()
+						- Constants.Res.getInteger(R.integer.smallIconWidth),
 				rects[2].centerY(), true);
-		canvas.drawRoundRect(switcher,6,6, switchp);
+		canvas.drawRoundRect(switcher, 6, 6, switchp);
 		canvas.drawRect(grayr, greyp);
 		canvas.drawRect(greenr, greenp);
 		canvas.drawRect(bluer, bluep);
@@ -110,22 +116,39 @@ public class Setup extends Screen {
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 			return true;
 		if (event.getAction() == MotionEvent.ACTION_UP) {
+			if (rects[1].contains(event.getX(), event.getY())) {
+				final String appPackageName = Constants.context
+						.getPackageName();
+				try {
+					Constants.context.startActivity(new Intent(
+							Intent.ACTION_VIEW, Uri
+									.parse("market://details?id="
+											+ appPackageName)));
+				} catch (android.content.ActivityNotFoundException anfe) {
+					Constants.context
+							.startActivity(new Intent(
+									Intent.ACTION_VIEW,
+									Uri.parse("http://play.google.com/store/apps/details?id="
+											+ appPackageName)));
+				}
+			}
+			if (rects[2].contains(event.getX(), event.getY())) {
+				checking.getDb().updateCountBlackSmsAndNumbers();
+				checking.getDb().close();
+			}
 			if (grayr.contains(event.getX(), event.getY())) {
 				switchp.setColor(Constants.Res.getColor(R.color.fon_gray));
 				Constants.init(colors.gray, false);
-				
 
 			}
 			if (bluer.contains(event.getX(), event.getY())) {
 				switchp.setColor(Constants.Res.getColor(R.color.fon_blue));
 				Constants.init(colors.blue, false);
-				
 
 			}
 			if (greenr.contains(event.getX(), event.getY())) {
 				switchp.setColor(Constants.Res.getColor(R.color.fon_green));
 				Constants.init(colors.green, false);
-				
 
 			}
 

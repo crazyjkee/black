@@ -11,7 +11,6 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d("myLogs","onStartService");
 		Intent service = new Intent(context, BlackService.class);
         context.startService(service);
 		

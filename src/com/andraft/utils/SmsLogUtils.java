@@ -4,10 +4,6 @@ import java.util.HashMap;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.Telephony.Sms;
-import android.util.Log;
 
 public class SmsLogUtils {
 	private ContentResolver resolver;
@@ -35,8 +31,8 @@ public class SmsLogUtils {
 			sms.put(number, body);
 
 		}
-		c.close();
-		*/
+		c.close();*/
+		
 		return sms;
 
 	}

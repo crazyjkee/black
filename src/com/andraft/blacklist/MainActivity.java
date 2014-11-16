@@ -1,21 +1,22 @@
 package com.andraft.blacklist;
 
-import com.andraft.conpas.Screens.BlackList;
-import com.andraft.conpas.Screens.ListOfNumbers;
-import com.andraft.conpas.Screens.ListOfContacts;
-import com.andraft.conpas.Screens.Schedule;
-import com.andraft.conpas.Screens.Setup;
-import com.andraft.conpas.Screens.SetupCalls;
-import com.andraft.conpas.Screens.SetupSms;
-import com.andraft.conpas.Screens.WhiteList;
-import com.andraft.conpas.Screens.Constants;
-import com.andraft.conpas.Screens.Screen;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.andraft.conpas.Screens.BlackList;
+import com.andraft.conpas.Screens.Constants;
+import com.andraft.conpas.Screens.ListOfContacts;
+import com.andraft.conpas.Screens.ListOfNumbers;
+import com.andraft.conpas.Screens.Main;
+import com.andraft.conpas.Screens.Schedule;
+import com.andraft.conpas.Screens.Screen;
+import com.andraft.conpas.Screens.Setup;
+import com.andraft.conpas.Screens.SetupCalls;
+import com.andraft.conpas.Screens.SetupSms;
+import com.andraft.conpas.Screens.WhiteList;
 
 @SuppressLint("InflateParams")
 public class MainActivity extends Activity {
@@ -72,7 +73,7 @@ public class MainActivity extends Activity {
 			break;
 
 		case main:
-
+               main = new Main();
 			activeScreen = main;
 			break;
 		case listOfContacts:

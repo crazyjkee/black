@@ -12,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -55,7 +54,7 @@ public class ListOfNumbers extends Screen {
 
 	public ListOfNumbers() {
 		super(R.string.list_of_numbers);
-		Log.d("myLogs", "ListOfNumbers Constructor");
+	
 		this.twoIconsTrueOneIconFalse = false;
 		checking = Checking.getInstance(Constants.context);
 		checking.init();
@@ -100,13 +99,13 @@ public class ListOfNumbers extends Screen {
 	protected void CheckISEmtyMessages() {
 		// проверка, удаление или добавление R.string.no_data
 		if (allMessagesOrCalls.isEmpty()) {
-			Log.d("myLogs", "CheckISEmtyMessages isEmpty");
+			
 			NoData = new SmallListPanel(0, Res.getString(R.string.no_data),
 					Res.getString(R.string.no_data));
 			allMessagesOrCalls.add(NoData);
 		} else if (allMessagesOrCalls.size() > 1
 				&& allMessagesOrCalls.contains(NoData)) {
-			Log.d("myLogs", "CheckISEmtyMessages >1");
+			
 			allMessagesOrCalls.remove(NoData);
 		}
 	};
@@ -148,7 +147,7 @@ public class ListOfNumbers extends Screen {
 			}
 			if (Centr.contains(event.getX(), event.getY())) {
 				if (messageRect.contains(event.getX(), event.getY()) && !active) {
-					Log.d("myLogs", "popal:" + full_message);
+					
 					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
 					builder
 							.setMessage(full_message)
@@ -169,7 +168,7 @@ public class ListOfNumbers extends Screen {
 					round = ico.roundMinus;
 
 					menu.setShow(active);
-					Log.d("myLogs", "plus contains");
+				
 
 				} else if (plus.contains(event.getX(), event.getY()) && active) {
 					active = false;
@@ -226,7 +225,7 @@ public class ListOfNumbers extends Screen {
 								.centerY()) / 40;
 					} catch (IndexOutOfBoundsException ex1) {
 						toched = null;
-						Log.d("myLogs", "catch");
+						
 					}
 				}
 	}

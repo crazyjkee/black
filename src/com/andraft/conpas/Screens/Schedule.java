@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -48,14 +47,7 @@ public class Schedule extends Screen implements Screen.Back {
 		super(R.string.schedule);
 		this.setBackReadyCb(this);
 		Silense = Constants.Silence;
-		checking = Checking.getInstance(Constants.context);
-
-
-			for (int i = 0; i < 7; i++)
-				for (int j = 0; j < 2; j++)
-					for (int k = 0; j < 2; j++)
-						Log.d("myLogs","day:"+i+":"+ Silense[i][j][k]);
-		
+		checking = Checking.getInstance(Constants.context);		
 
 		final Integer StrokeWidth = (int) Res.getInteger(R.integer.stokewidth);
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="fontsize">30</integer>
+    <integer name="stokewidth">5</integer>
+    <integer name="smallIconWidth">42</integer>
+    <integer name="largeIconWidth">75</integer>
+
+</resources>
+

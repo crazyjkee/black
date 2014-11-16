@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.andraft.models.NumberModel;
 import com.andraft.models.SmsModel;
@@ -40,7 +39,6 @@ public class Checking {
 	}
 
 	private Checking(Context context) {
-		Log.d("myLogs","CHECKING INIT");
 		this.context = context;
 		db = new DataBase(context);
 		calllog = new CallLogUtils(context);
@@ -58,7 +56,6 @@ public class Checking {
 		else
 			for (Entry<String, String> e : contacts_plus_calls().entrySet())
 				if (!db.isNumberInTable(e.getKey())) {
-					Log.d("myLogs", "yes");
 					addNumberValues(db1, e.getKey(), e.getValue());
 				}
 
@@ -108,7 +105,6 @@ public class Checking {
 	}
 
 	private void addNumberOptionsValues(SQLiteDatabase db1) {
-		Log.d("myLogs","insert NumberValues 1 row");
 		ContentValues values = new ContentValues();
 		values.put(DataBase.KEY_ID, 1);
 		values.put(DataBase.BLOCK_ALL_CALLS, 0);
@@ -116,21 +112,19 @@ public class Checking {
 		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
 		values.put(DataBase.SILENT_MODE, 0);
 		values.put(DataBase.BUSY_MODE, 1);
-		Log.d("myLogs","TABLE NUMBER OPTIONS INSERT:"+db1.insert(DataBase.TABLE_NUMBERS_OPTIONS, null, values));
-	}
+		}
 
 	private void addSmsOptionsValues(SQLiteDatabase db1) {
-		Log.d("myLogs","insert SmsValues 1 row");
+		
 		ContentValues values = new ContentValues();
 		values.put(DataBase.KEY_ID, 1);
 		values.put(DataBase.BLOCK_ALL_SMS, 0);
 		values.put(DataBase.BLOCK_HIDDEN_NUMBERS, 0);
 		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
-		Log.d("myLogs","TABLE SMS OPTIONS INSERT:"+db1.insert(DataBase.TABLE_SMS_OPTIONS, null, values));
+		
 	}
 	
 	private void addScheduleValues(SQLiteDatabase db1){
-		Log.d("myLogs","insert ScheduleValues row");
 		ContentValues values;
 		for(int i=0;i<7;i++){
 			values = new ContentValues();
@@ -139,7 +133,7 @@ public class Checking {
 			values.put(DataBase.FROMMINUTES, 0);
 			values.put(DataBase.TOHOURS, 0);
 			values.put(DataBase.TOMINUTES, 0);
-		Log.d("myLogs","TABLE SCHEDULE INSERT"+db1.insert(DataBase.TABLE_SCHEDULE, null, values));
+		
 		}
 	}
 

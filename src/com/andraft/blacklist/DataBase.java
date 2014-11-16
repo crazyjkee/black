@@ -8,7 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.andraft.models.NumberModel;
 import com.andraft.models.NumberOptionsModel;
@@ -94,7 +93,6 @@ public class DataBase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d("myLogs", "onCreateDatabase");
 		db.execSQL(CREATE_TABLE_NUMBERS);
 		db.execSQL(CREATE_TABLE_SMS);
 		db.execSQL(CREATE_TABLE_NUMBERS_OPTIONS);
@@ -107,12 +105,12 @@ public class DataBase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		if (db != null && db.isOpen())
 			db.close();
-		
+
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.d("myLogs", "onUpgrade");
+		
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUMBERS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCHEDULE);
@@ -130,7 +128,7 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(COUNT_BLACK, number.getCount_black());
 		// insert row
 		long number_id = db.insert(TABLE_NUMBERS, null, values);
-		Log.d("myLogs", "number_id:" + number_id);
+		
 		return number_id;
 	}
 
@@ -141,6 +139,7 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(TEXT, sms.getText());
 		values.put(BOOL, sms.getBool());
 		values.put(NUM, sms.getNum());
+		values.put(COUNT_BLACK, sms.getCount_black());
 
 		// insert row
 		long sms_id = db.insert(TABLE_SMS, null, values);
@@ -148,34 +147,33 @@ public class DataBase extends SQLiteOpenHelper {
 		return sms_id;
 	}
 
-	/*public NumberModel getNumber(long number_id) {
-		SQLiteDatabase db = this.getReadableDatabase();
-
-		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE "
-				+ KEY_ID + " = " + number_id;
-
-		Log.e(LOG, selectQuery);
-
-		Cursor c = db.rawQuery(selectQuery, null);
-
-		if (c != null)
-			c.moveToFirst();
-
-		NumberModel number = new NumberModel();
-		number.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-		number.setNum(c.getString(c.getColumnIndex(NUM)));
-		number.setBool(c.getInt(c.getColumnIndex(BOOL)));
-		number.setName(c.getString(c.getColumnIndex(NAME)));
-		number.setCount_black(c.getInt(c.getColumnIndex(COUNT_BLACK)));
-
-		return number;
-	}
-*/
+	/*
+	 * public NumberModel getNumber(long number_id) { SQLiteDatabase db =
+	 * this.getReadableDatabase();
+	 * 
+	 * String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE " +
+	 * KEY_ID + " = " + number_id;
+	 * 
+	 * Log.e(LOG, selectQuery);
+	 * 
+	 * Cursor c = db.rawQuery(selectQuery, null);
+	 * 
+	 * if (c != null) c.moveToFirst();
+	 * 
+	 * NumberModel number = new NumberModel();
+	 * number.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+	 * number.setNum(c.getString(c.getColumnIndex(NUM)));
+	 * number.setBool(c.getInt(c.getColumnIndex(BOOL)));
+	 * number.setName(c.getString(c.getColumnIndex(NAME)));
+	 * number.setCount_black(c.getInt(c.getColumnIndex(COUNT_BLACK)));
+	 * 
+	 * return number; }
+	 */
 	public List<NumberModel> getAllNumbers() {
 		List<NumberModel> numbers = new ArrayList<NumberModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS;
 
-		Log.e(LOG, selectQuery);
+	
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -202,7 +200,7 @@ public class DataBase extends SQLiteOpenHelper {
 		List<SmsModel> sms = new ArrayList<SmsModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_SMS;
 
-		Log.e(LOG, selectQuery);
+	
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -287,11 +285,9 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(BLOCK_NOTIFICATIONS, num.isBlock_notifications_calls());
 		values.put(SILENT_MODE, num.isSilent_mode());
 		values.put(BUSY_MODE, num.isBusy_mode());
-		Log.d("myLogs",
-				"updateNumbersOptions:"
-						+ db.update(TABLE_NUMBERS_OPTIONS, values, KEY_ID
+		db.update(TABLE_NUMBERS_OPTIONS, values, KEY_ID
 								+ " = ?",
-								new String[] { String.valueOf(num.getId()) }));
+								new String[] { String.valueOf(num.getId()) });
 
 	}
 
@@ -304,14 +300,8 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(BLOCK_ALL_SMS, sms.isBlock_all_sms());
 		values.put(BLOCK_HIDDEN_NUMBERS, sms.isBlock_hidden_numbers_sms());
 		values.put(BLOCK_NOTIFICATIONS, sms.isBlock_notifications_sms());
-		Log.d("myLogs",
-				"updateSmsOptions:BLOCK_ALL_CALLS:" + sms.isBlock_all_sms()
-						+ " ,BLOCK_HIDDEN_NUMBERS:"
-						+ sms.isBlock_hidden_numbers_sms());
-		Log.d("myLogs",
-				"updateSmsOptions:"
-						+ db.update(TABLE_SMS_OPTIONS, values, KEY_ID + " = ?",
-								new String[] { String.valueOf(sms.getId()) }));
+		db.update(TABLE_SMS_OPTIONS, values, KEY_ID + " = ?",
+								new String[] { String.valueOf(sms.getId()) });
 
 	}
 
@@ -325,11 +315,9 @@ public class DataBase extends SQLiteOpenHelper {
 			values.put(FROMMINUTES, sched.getFromMinute());
 			values.put(TOHOURS, sched.getToHour());
 			values.put(TOMINUTES, sched.getToMinute());
-			Log.d("myLogs",
-					"updateSchedule:"
-							+ db.update(TABLE_SCHEDULE, values, DAY + " = ?",
+			db.update(TABLE_SCHEDULE, values, DAY + " = ?",
 									new String[] { String.valueOf(sched
-											.getDay()) }));
+											.getDay()) });
 		}
 	}
 
@@ -360,7 +348,7 @@ public class DataBase extends SQLiteOpenHelper {
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE "
 				+ BOOL + "=" + bool + " ORDER BY " + NAME + " ASC";
 
-		Log.e(LOG, selectQuery);
+		
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -378,7 +366,7 @@ public class DataBase extends SQLiteOpenHelper {
 				numbers.add(number);
 			} while (c.moveToNext());
 		}
-        c.close();
+		c.close();
 		return numbers;
 	}
 
@@ -387,7 +375,7 @@ public class DataBase extends SQLiteOpenHelper {
 		String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + BOOL
 				+ "=" + bool + " ORDER BY " + NUM + " ASC";
 
-		Log.e(LOG, selectQuery);
+		
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -399,11 +387,12 @@ public class DataBase extends SQLiteOpenHelper {
 				smsm.setNum(c.getString(c.getColumnIndex(NUM)));
 				smsm.setBool(c.getInt(c.getColumnIndex(BOOL)));
 				smsm.setText(c.getString(c.getColumnIndex(TEXT)));
+				smsm.setCount_black(c.getInt(c.getColumnIndex(COUNT_BLACK)));
 				// adding to todo list
 				sms.add(smsm);
 			} while (c.moveToNext());
 		}
-        c.close();
+		c.close();
 		return sms;
 	}
 
@@ -417,30 +406,22 @@ public class DataBase extends SQLiteOpenHelper {
 			NumberOptionsModel num = new NumberOptionsModel();
 			num.setId(c.getInt(c.getColumnIndex(KEY_ID)));
 			num.setBlock_all_calls(c.getInt(c.getColumnIndex(BLOCK_ALL_CALLS)));
-			Log.d("myLogs",
-					"getCallOption: isBlockAllCalls:"
-							+ c.getInt(c.getColumnIndex(BLOCK_ALL_CALLS)));
+			
 			num.setBlock_hidden_numbers_calls(c.getInt(c
 					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
-			Log.d("myLogs",
-					"getCallOption: isBlockHiddenNumbers:"
-							+ c.getInt(c.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			
 			num.setBlock_notifications_calls(c.getInt(c
 					.getColumnIndex(BLOCK_NOTIFICATIONS)));
 			num.setSilent_mode(c.getInt(c.getColumnIndex(SILENT_MODE)));
-			Log.d("myLogs",
-					"getCallOption: SILENT_MODE:"
-							+ c.getInt(c.getColumnIndex(SILENT_MODE)));
-			num.setBusy_mode(c.getInt(c.getColumnIndex(BUSY_MODE)));
-			Log.d("myLogs",
-					"getCallOption: BUSY_MODE:"
-							+ c.getInt(c.getColumnIndex(BUSY_MODE)));
-			c.close();
 			
+			num.setBusy_mode(c.getInt(c.getColumnIndex(BUSY_MODE)));
+		
+			c.close();
+
 			return num;
 		} else {
 			c.close();
-			Log.d("myLogs", "getNumber null");
+			
 			return null;
 		}
 	}
@@ -455,21 +436,17 @@ public class DataBase extends SQLiteOpenHelper {
 			SmsOptionsModel sms = new SmsOptionsModel();
 			sms.setId(c.getInt(c.getColumnIndex(KEY_ID)));
 			sms.setBlock_all_sms(c.getInt(c.getColumnIndex(BLOCK_ALL_SMS)));
-			Log.d("myLogs",
-					"getSmsOption: isBlockAllSms:"
-							+ c.getInt(c.getColumnIndex(BLOCK_ALL_SMS)));
+			
 			sms.setBlock_hidden_numbers_sms(c.getInt(c
 					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
-			Log.d("myLogs",
-					"getSmsOption: isBlockHiddenSms:"
-							+ c.getInt(c.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
+			
 			sms.setBlock_notifications_sms(c.getInt(c
 					.getColumnIndex(BLOCK_NOTIFICATIONS)));
-            c.close();
+			c.close();
 			return sms;
 		} else {
 			c.close();
-			Log.d("myLogs", "getSms null");
+			
 			return null;
 		}
 
@@ -480,10 +457,10 @@ public class DataBase extends SQLiteOpenHelper {
 				+ "=" + "\"" + num + "\"";
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
-		if(c.moveToFirst()){
+		if (c.moveToFirst()) {
 			c.close();
-		return true;
-		}else{
+			return true;
+		} else {
 			c.close();
 			return false;
 		}
@@ -495,7 +472,13 @@ public class DataBase extends SQLiteOpenHelper {
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
-		return c.moveToFirst();
+		if (c.moveToFirst()) {
+			c.close();
+			return true;
+		} else {
+			c.close();
+			return false;
+		}
 	}
 
 	public int getCountBlockNumber() {
@@ -505,16 +488,19 @@ public class DataBase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 		if (c.moveToFirst()) {
-			i+=c.getInt(c.getColumnIndex(COUNT_BLACK));
+			do {
+				i += c.getInt(c.getColumnIndex(COUNT_BLACK));
+			} while (c.moveToNext());
 		} else {
-			Log.d("myLogs", "getCount_black null");
+			
+			c.close();
 			return 0;
 		}
 		c.close();
 
 		return i;
 	}
-	
+
 	public int getCountBlockSms() {
 		int i = 0;
 		String selectQuery = "SELECT  * FROM " + TABLE_SMS;
@@ -522,14 +508,83 @@ public class DataBase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 		if (c.moveToFirst()) {
-			i+=c.getInt(c.getColumnIndex(COUNT_BLACK));
+			do {
+				i += c.getInt(c.getColumnIndex(COUNT_BLACK));
+			} while (c.moveToNext());
 		} else {
-			Log.d("myLogs", "getCount_black null");
+			
 			return 0;
 		}
 		c.close();
 
 		return i;
+	}
+
+	public void updateCountBlackSmsAndNumbers() {
+		ContentValues values;
+		List<NumberModel> numbers = new ArrayList<NumberModel>();
+		List<SmsModel> smski = new ArrayList<SmsModel>();
+		String selectQuery1 = "SELECT * FROM " + TABLE_NUMBERS + " WHERE "
+				+ COUNT_BLACK + " > 0";
+		String selectQuery2 = "SELECT * FROM " + TABLE_SMS + " WHERE "
+				+ COUNT_BLACK + " > 0";
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery(selectQuery1, null);
+		if (c.moveToFirst()) {
+			do {
+
+				NumberModel number = new NumberModel();
+				number.setNum(c.getString(c.getColumnIndex(NUM)));
+				number.setBool(c.getInt(c.getColumnIndex(BOOL)));
+				number.setName(c.getString(c.getColumnIndex(NAME)));
+				number.setCount_black(0);
+				// adding to todo list
+				numbers.add(number);
+			} while (c.moveToNext());
+		}
+
+		for (NumberModel number : numbers) {
+			values = new ContentValues();
+			
+			values.put(NUM, number.getNum());
+			values.put(BOOL, number.getBool());
+			values.put(NAME, number.getName());
+			values.put(COUNT_BLACK, number.getCount_black());
+
+			// updating row
+			db.update(TABLE_NUMBERS, values, NUM + " = ?",
+					new String[] { String.valueOf(number.getNum()) });
+		}
+
+		c = db.rawQuery(selectQuery2, null);
+		// looping through all rows and adding to list
+		if (c.moveToFirst()) {
+			do {
+				SmsModel smsm = new SmsModel();
+
+				smsm.setNum(c.getString(c.getColumnIndex(NUM)));
+				smsm.setBool(c.getInt(c.getColumnIndex(BOOL)));
+				smsm.setText(c.getString(c.getColumnIndex(TEXT)));
+				smsm.setCount_black(0);
+				// adding to todo list
+				smski.add(smsm);
+			} while (c.moveToNext());
+		}
+		c.close();
+
+		for (SmsModel sms : smski) {
+			values = new ContentValues();
+			values.put(NUM, sms.getNum());
+			values.put(TEXT, sms.getText());
+			values.put(COUNT_BLACK, sms.getCount_black());
+			values.put(BOOL, sms.getBool());
+
+			// updating row
+			db.update(TABLE_SMS, values, NUM + " = ?",
+					new String[] { String.valueOf(sms.getNum()) });
+		}
+
 	}
 
 	public boolean TableIsEmpty(String table) {
@@ -542,7 +597,6 @@ public class DataBase extends SQLiteOpenHelper {
 			return false;
 		else
 			return true;
-
 	}
 
 }

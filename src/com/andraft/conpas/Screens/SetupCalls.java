@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -34,7 +33,7 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 		this.rectshow = new ArrayList<MenuList>();
 		this.numModel = new NumberOptionsModel(1, Constants.BLOCK_ALL_CALLS?1:0, Constants.BLOCK_HIDDEN_CALLS?1:0, Constants.BLOCK_NOTIFICATION_CALLS?1:0, Constants.SILENT_MODE?1:0, Constants.BUSY_MODE?1:0);
 		this.checking = Checking.getInstance(Constants.context);
-		Log.d("myLogs", "sdk:" + android.os.Build.VERSION.SDK_INT + "");
+		
 
 		text[0] = Constants.Res.getString(R.string.block_all_calls);
 		text[1] = Constants.Res.getString(R.string.block_hidden_numbers);
@@ -110,10 +109,10 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 					if (rect.getMain().equals(text[3])) {
 						if (rect.isBlock()) {
 							show = true;
-							Log.d("myLogs", "show:" + show);
+							
 						} else {
 							show = false;
-							Log.d("myLogs", "show:" + show);
+							
 						}
 					}
 				}
@@ -125,13 +124,13 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 					rectshow.get(1).setBlock(false);
 					numModel.setSilent_mode(1);
 					numModel.setBusy_mode(0);
-					Log.d("myLogs","contains:"+rectshow.get(0).getMain());
+					
 				} else if(rectshow.get(1).contains(event.getX(),event.getY())) {
 					rectshow.get(0).setBlock(false);
 					rectshow.get(1).setBlock(true);
 					numModel.setSilent_mode(0);
 					numModel.setBusy_mode(1);
-					Log.d("myLogs","contains:"+rectshow.get(1).getMain());
+					
 				}
 
 			}
@@ -144,11 +143,7 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 	public void onBack() {
 		checking.getDb().updateNumbersOptions(numModel);
 		Constants.initNumberOptions();
-		Log.d("myLogs", "Back");
-		Log.d("myLogs",
-				"smsModel.blockallcalls" + numModel.isBlock_all_calls()
-						+ ",nummodel.blockhiddennumbers:"
-						+ numModel.isBlock_hidden_numbers_calls()+",SILENT_MODE: "+numModel.isSilent_mode()+", BUSY_MODE:"+numModel.isBusy_mode());
+	
 	}
 
 	class MenuList extends SmallListPanel {

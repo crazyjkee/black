@@ -7,7 +7,6 @@ import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -104,11 +103,11 @@ public class SetupSms extends Screen implements Screen.Back {
 						rect.setBlock(false);
 						if (rect.getMain().equals(text[0])) {
 							smsModel.setBlock_all_sms(0);
-							Log.d("myLogs",text[0]+ " false");
+							
 						}
 						if (rect.getMain().equals(text[1])) {
 							smsModel.setBlock_hidden_numbers_sms(0);
-							Log.d("myLogs",text[1] + " false");
+							
 						}
 						if (rect.getMain().equals(text[2])
 								&& android.os.Build.VERSION.SDK_INT > 12)
@@ -117,11 +116,11 @@ public class SetupSms extends Screen implements Screen.Back {
 						rect.setBlock(true);
 						if (rect.getMain().equals(text[0])) {
 							smsModel.setBlock_all_sms(1);
-							Log.d("myLogs",text[0]+ " true");
+							
 						}
 						if (rect.getMain().equals(text[1])) {
 							smsModel.setBlock_hidden_numbers_sms(1);
-							Log.d("myLogs",text[1]+ " true");
+							
 						}
 						if (rect.getMain().equals(text[2])
 								&& android.os.Build.VERSION.SDK_INT > 12)
@@ -140,11 +139,7 @@ public class SetupSms extends Screen implements Screen.Back {
 	public void onBack() {
 		checking.getDb().updateSmsOptions(smsModel);
 		Constants.initSmsOptions();
-		Log.d("myLogs", "back");
-		Log.d("myLogs",
-				"smsModel.blockallcalls" + smsModel.isBlock_all_sms()
-						+ ",smsmodel.blockhiddennumbers:"
-						+ smsModel.isBlock_hidden_numbers_sms());
+		
 	}
 
 	class SmallListPanel extends RectF {

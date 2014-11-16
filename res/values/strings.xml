@@ -26,6 +26,8 @@
     <string name="busy">Busy mode</string>
     <string name="block_all_sms">Block all sms</string>
     <string name="spam_filter">Filter keywords</string>
+    <string name="license">Time trial came</string>
+    <string name="download">Download Pro version</string>
 
     <item name="fon_blue" type="color">#85d3e7</item>
     <item name="fon_white" type="color">#ffffff</item>

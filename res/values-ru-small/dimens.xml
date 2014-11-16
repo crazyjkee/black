@@ -1,5 +1,5 @@
 <resources>
-  <integer name="fontsize">14</integer>
+  <integer name="fontsize">13</integer>
   <integer name="stokewidth">2</integer>
   <integer name="smallIconWidth">15</integer>
   <integer name="largeIconWidth">25</integer>

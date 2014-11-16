@@ -25,6 +25,8 @@
     <string name="busy">Занятой режим</string>
     <string name="block_all_sms">Блок всех входящих</string>
     <string name="spam_filter">Фильтр по совпадению</string>
+        <string name="license">Время пробной версии истекло</string>
+    <string name="download">Скачать версию PRO</string>
 
     <item name="fon_blue" type="color">#85d3e7</item>
     <item name="fon_white" type="color">#ffffff</item>

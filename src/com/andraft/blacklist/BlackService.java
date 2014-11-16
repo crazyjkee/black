@@ -36,7 +36,7 @@ public class BlackService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d("myLogs", "onCreate service");
+		
 		calls = new CallLogUtils(this);
 		this.getApplicationContext()
 				.getContentResolver()
@@ -71,7 +71,7 @@ public class BlackService extends Service {
 		// Журнал
 		@Override
 		public void onChange(boolean selfChange) {
-			Log.d("myLogs", "MyContentObserver.onChange(" + selfChange + ")");
+			
 			calls.DeleteNumFromCallLog("+79507638332");
 			super.onChange(selfChange);
 
@@ -86,7 +86,6 @@ public class BlackService extends Service {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.equals("android.intent.action.PHONE_STATE")) {
-				Log.d("myLogs", "PHONE_STATE");
 				try {
 					tmgr = (TelephonyManager) context
 							.getSystemService(Context.TELEPHONY_SERVICE);

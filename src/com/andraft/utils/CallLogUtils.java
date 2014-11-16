@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.andraft.blacklist.Checking;
 
@@ -37,7 +36,7 @@ public class CallLogUtils {
 
 	public HashMap<String, String> readAllContacts() {
 		contacts = new HashMap<String, String>();
-		Cursor phones = resolver.query(
+		/*Cursor phones = resolver.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
 				null, null);
 		while (phones.moveToNext()) {
@@ -52,15 +51,13 @@ public class CallLogUtils {
 			// Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
 		}
 		phones.close();
-	
+		*/
 		return contacts;
 	}
 
 	public HashMap<String, String> readAllCalls() {
 		all = new HashMap<String, String>();
-		all.put("212121", "OIIIII");
-		all.put("122121", "NE MOGY");
-		
+		/*
 		Cursor cursor = context.getContentResolver().query(
 				CallLog.Calls.CONTENT_URI, null, null, null, null);// CallLog.Calls.NUMBER
 																	// + "," +
@@ -79,7 +76,7 @@ public class CallLogUtils {
 				all.put(phoneNumber, name);
 		}
 		cursor.close();
-		
+		*/
 		return all;
 	}
 
@@ -95,7 +92,7 @@ public class CallLogUtils {
 			String strUriCalls = "content://call_log/calls";
 			Uri UriCalls = Uri.parse(strUriCalls);
 
-			Log.d("myLogs", "moveToFirst:" + cursor.moveToFirst());
+			
 
 			if (null != resolver && cursor.moveToFirst()) {
 
@@ -103,10 +100,8 @@ public class CallLogUtils {
 						new String[] { strNum });
 				markCallLogRead();
 
-				Log.d("myLogs", "delete:" + strNum + "bool:" + i);
-			} else {
-				Log.d("myLogs", "null");
-			}
+			
+			} 
 		} catch (Exception e) {
 			e.getMessage();
 		}

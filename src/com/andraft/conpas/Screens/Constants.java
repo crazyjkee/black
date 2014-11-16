@@ -42,6 +42,10 @@ public class Constants {
 			BLOCK_NOTIFICATION_CALLS, SILENT_MODE, BUSY_MODE;
 	public static int Silence[][][] = new int[7][2][2];
 	private static colors colorka = colors.blue;
+	public static boolean license = true;
+	private static long may2015 = 1430506800000l;
+	
+	//1430506800000 May 1 15:00
 
 	static {
 
@@ -79,6 +83,15 @@ public class Constants {
 		initNumberOptions();
 		initSmsOptions();
 		initSchedule();
+		initLicense();
+	}
+
+	private static void initLicense() {
+		if(System.currentTimeMillis()>may2015)
+			license = false;
+		else
+			license = true;
+		
 	}
 
 	public static void initSchedule() {

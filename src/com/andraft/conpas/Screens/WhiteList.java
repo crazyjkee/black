@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -25,7 +24,7 @@ private Checking checking;
 			i++;
 		}
 		CheckISEmtyMessages();
-		Log.d("myLogs","size:"+allMessagesOrCalls.size());
+		
 		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
 		v = (Centr.centerY() - toched.centerY()) / 40;
 		

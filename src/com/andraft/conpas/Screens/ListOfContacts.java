@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.andraft.blacklist.Checking;
@@ -33,7 +32,6 @@ public class ListOfContacts extends ListOfNumbers {
 			allMessagesOrCalls.add(new SmallListPanel(i, number.getNum(),number.getName()));
 			i++;
 		}
-		checking.getDb().closeDB();
 		CheckISEmtyMessages();
 		toched = allMessagesOrCalls.get(allMessagesOrCalls.size() / 2);
 		v = (Centr.centerY() - toched.centerY()) / 40;
@@ -90,7 +88,7 @@ public class ListOfContacts extends ListOfNumbers {
 					}
 
 				}
-				Log.d("myLogs", "whiteButton");
+				
 			}
 			if (blackButton.contains(event.getX(), event.getY())) {
 				for (NumberModel num : checking.getCalls(2)) {
@@ -112,13 +110,13 @@ public class ListOfContacts extends ListOfNumbers {
 					}
 
 				}
-				Log.d("myLogs", "blackButton");
+				
 			}
 			
 
 			if (Centr.contains(event.getX(), event.getY())) {
                 if(messageRect.contains(event.getX(),event.getY())&&!active){
-                	Log.d("myLogs", "popal:" + this.getFull_message());
+                	
 					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
 					builder
 							.setMessage(this.getFull_message())
@@ -139,7 +137,7 @@ public class ListOfContacts extends ListOfNumbers {
 					round = ico.roundMinus;
 
 					menu.setShow(active);
-					Log.d("myLogs", "plus contains");
+				
 
 				} else if (plus.contains(event.getX(), event.getY()) && active) {
 					active = false;
