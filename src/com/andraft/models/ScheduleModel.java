@@ -7,8 +7,8 @@ public class ScheduleModel {
 	private int toHour;
 	private int toMinute;
 
-	public ScheduleModel(int day, int fromHour, int fromMinute,
-			int toHour, int toMinute) {
+	public ScheduleModel(int day, int fromHour, int fromMinute, int toHour,
+			int toMinute) {
 		super();
 		this.day = day;
 		this.fromHour = fromHour;
@@ -60,7 +60,5 @@ public class ScheduleModel {
 	public void setToMinute(int toMinute) {
 		this.toMinute = toMinute;
 	}
-	
-	
 
 }

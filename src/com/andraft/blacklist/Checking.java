@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.andraft.models.NumberModel;
 import com.andraft.models.SmsModel;
@@ -39,6 +40,7 @@ public class Checking {
 	}
 
 	private Checking(Context context) {
+		Log.d("myLogs","checking construct");
 		this.context = context;
 		db = new DataBase(context);
 		calllog = new CallLogUtils(context);
@@ -47,7 +49,7 @@ public class Checking {
 	}
 
 	public void init() {
-		
+
 		SQLiteDatabase db1 = db.getWritableDatabase();
 		contacts = calllog.readAllCalls();
 		if (db.TableIsEmpty(DataBase.TABLE_NUMBERS))
@@ -83,7 +85,7 @@ public class Checking {
 	}
 
 	private void addNumberValues(SQLiteDatabase db1, String number, String name) {
-	
+
 		ContentValues values = new ContentValues();
 		values.put(DataBase.NUM, number);
 		values.put(DataBase.BOOL, 2);
@@ -94,7 +96,7 @@ public class Checking {
 	}
 
 	private void addSmsValues(SQLiteDatabase db1, String number, String text) {
-		
+
 		ContentValues values = new ContentValues();
 		values.put(DataBase.BOOL, 2);
 		values.put(DataBase.TEXT, text);
@@ -112,28 +114,31 @@ public class Checking {
 		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
 		values.put(DataBase.SILENT_MODE, 0);
 		values.put(DataBase.BUSY_MODE, 1);
-		}
+		db1.insert(DataBase.TABLE_NUMBERS_OPTIONS, null, values);
+	}
 
 	private void addSmsOptionsValues(SQLiteDatabase db1) {
-		
+
 		ContentValues values = new ContentValues();
 		values.put(DataBase.KEY_ID, 1);
 		values.put(DataBase.BLOCK_ALL_SMS, 0);
 		values.put(DataBase.BLOCK_HIDDEN_NUMBERS, 0);
 		values.put(DataBase.BLOCK_NOTIFICATIONS, 0);
-		
+		db1.insert(DataBase.TABLE_SMS_OPTIONS, null,values);
+
 	}
-	
-	private void addScheduleValues(SQLiteDatabase db1){
+
+	private void addScheduleValues(SQLiteDatabase db1) {
 		ContentValues values;
-		for(int i=0;i<7;i++){
+		for (int i = 0; i < 7; i++) {
 			values = new ContentValues();
 			values.put(DataBase.DAY, i);
 			values.put(DataBase.FROMHOURS, 0);
 			values.put(DataBase.FROMMINUTES, 0);
 			values.put(DataBase.TOHOURS, 0);
 			values.put(DataBase.TOMINUTES, 0);
-		
+			db1.insert(DataBase.TABLE_SCHEDULE, null, values);
+
 		}
 	}
 
@@ -145,22 +150,23 @@ public class Checking {
 		minus_number = calllog.readAllCalls();
 		contacts = calllog.readAllContacts();
 		for (Entry<String, String> num : contacts.entrySet()) {
-			String plus7 = "+7"+num.getKey().substring(1,num.getKey().length());
-			if (!minus_number.containsKey(num.getKey())&&!minus_number.containsKey(plus7))
+			String plus7 = "+7"
+					+ num.getKey().substring(1, num.getKey().length());
+			if (!minus_number.containsKey(num.getKey())
+					&& !minus_number.containsKey(plus7))
 				minus_number.put(num.getKey(), num.getValue());
 		}
 
 		return minus_number;
 	}
 
-
-
 	private HashMap<String, String> sms_minus_contacts() {
 		minus_sms = smslog.readAllSms();
 		contacts = calllog.readAllContacts();
 		for (Entry<String, String> c : contacts.entrySet()) {
-			String plus7 = "+7"+c.getKey().substring(1,c.getKey().length());
-			if (minus_sms.containsKey(c.getKey())||minus_sms.containsKey(plus7)) {
+			String plus7 = "+7" + c.getKey().substring(1, c.getKey().length());
+			if (minus_sms.containsKey(c.getKey())
+					|| minus_sms.containsKey(plus7)) {
 				minus_sms.remove(c.getKey());
 			}
 		}

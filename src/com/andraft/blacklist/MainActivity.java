@@ -64,26 +64,26 @@ public class MainActivity extends Activity {
 
 		switch (screen) {
 		case blackList:
-				blackList = new BlackList();
+			blackList = new BlackList();
 			activeScreen = blackList;
 			break;
 		case whiteList:
-				whiteList = new WhiteList();
+			whiteList = new WhiteList();
 			activeScreen = whiteList;
 			break;
 
 		case main:
-               main = new Main();
+			main = new Main();
 			activeScreen = main;
 			break;
 		case listOfContacts:
-			//if (listOfContacts == null)
-				listOfContacts = new ListOfContacts();
+			// if (listOfContacts == null)
+			listOfContacts = new ListOfContacts();
 			activeScreen = listOfContacts;
 			break;
 		case listOfNumbers:
-			//if (listOfNumbers == null)
-				listOfNumbers = new ListOfNumbers();
+			// if (listOfNumbers == null)
+			listOfNumbers = new ListOfNumbers();
 			activeScreen = listOfNumbers;
 			break;
 		case schedule:
@@ -97,13 +97,13 @@ public class MainActivity extends Activity {
 			activeScreen = setup;
 			break;
 		case setupCalls:
-			//if (setupCalls == null)
-				setupCalls = new SetupCalls();
+			// if (setupCalls == null)
+			setupCalls = new SetupCalls();
 			activeScreen = setupCalls;
 			break;
 		case setupSMS:
-			//if (setupSMS == null)
-				setupSMS = new SetupSms();
+			// if (setupSMS == null)
+			setupSMS = new SetupSms();
 			activeScreen = setupSMS;
 			break;
 

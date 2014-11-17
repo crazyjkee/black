@@ -85,16 +85,16 @@ public abstract class Screen {
 	public void OnDraw(Canvas canvas) {
 		canvas.drawPaint(fon);
 		canvas.drawRect(0, 0, w, BannerHeight(), WhiteText);
-		if(iconca!=null)
-		Constants.DrowIcon(canvas, iconca, BannerIcon.centerX(),
-				BannerIcon.centerY(), true);
+		if (iconca != null)
+			Constants.DrowIcon(canvas, iconca, BannerIcon.centerX(),
+					BannerIcon.centerY(), true);
 		if (ShieldIcon != null) {
 			Constants.DrowIcon(canvas, ico.shield, ShieldIcon.centerX(),
 					ShieldIcon.centerY(), true);
 		}
 		if (label != R.string.app_name)
-			canvas.drawText(Res.getString(label), w / 2,
-					Res.getInteger(R.integer.fontsize) * 1.2f, FONfill);
+			canvas.drawText(Res.getString(label), w / 2, BannerHeight() / 2
+					+ (WhiteText.descent() - WhiteText.ascent()) / 4, FONfill);
 		canvas.clipRect(0, BannerHeight(), w, h);
 	}
 }

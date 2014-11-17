@@ -47,7 +47,7 @@ public class Schedule extends Screen implements Screen.Back {
 		super(R.string.schedule);
 		this.setBackReadyCb(this);
 		Silense = Constants.Silence;
-		checking = Checking.getInstance(Constants.context);		
+		checking = Checking.getInstance(Constants.context);
 
 		final Integer StrokeWidth = (int) Res.getInteger(R.integer.stokewidth);
 
@@ -193,8 +193,8 @@ public class Schedule extends Screen implements Screen.Back {
 				pressedRectf = r;
 				int rect = Arrays.asList(buttonsDownRectf).indexOf(r);
 				if (rect > 1) {
-					//Log.d("dd" + Silense[getDayOfWeek()][rect - 2][1], "dd"
-						//	+ Silense[getDayOfWeek()][rect - 2][0]);
+					// Log.d("dd" + Silense[getDayOfWeek()][rect - 2][1], "dd"
+					// + Silense[getDayOfWeek()][rect - 2][0]);
 					if (Silense[getDayOfWeek()][rect - 2][1] == 0)
 						Silense[getDayOfWeek()][rect - 2][1] = 59;
 					else

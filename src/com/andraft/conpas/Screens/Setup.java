@@ -33,7 +33,7 @@ public class Setup extends Screen {
 
 	private void init() {
 		checking = Checking.getInstance(Constants.context);
-		switcher = new RectF(w / 5, h - HEIGHT, 4 * w / 5, h);
+		switcher = new RectF(w / 5, h - (2 * w / 5) / 3 - 20, 4 * w / 5, h);
 		switchp = new Paint();
 		switchp.set(Constants.FONfill);
 		switchp.setAntiAlias(true);

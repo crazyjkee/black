@@ -54,7 +54,7 @@ public class ListOfNumbers extends Screen {
 
 	public ListOfNumbers() {
 		super(R.string.list_of_numbers);
-	
+
 		this.twoIconsTrueOneIconFalse = false;
 		checking = Checking.getInstance(Constants.context);
 		checking.init();
@@ -99,13 +99,13 @@ public class ListOfNumbers extends Screen {
 	protected void CheckISEmtyMessages() {
 		// проверка, удаление или добавление R.string.no_data
 		if (allMessagesOrCalls.isEmpty()) {
-			
+
 			NoData = new SmallListPanel(0, Res.getString(R.string.no_data),
 					Res.getString(R.string.no_data));
 			allMessagesOrCalls.add(NoData);
 		} else if (allMessagesOrCalls.size() > 1
 				&& allMessagesOrCalls.contains(NoData)) {
-			
+
 			allMessagesOrCalls.remove(NoData);
 		}
 	};
@@ -147,14 +147,15 @@ public class ListOfNumbers extends Screen {
 			}
 			if (Centr.contains(event.getX(), event.getY())) {
 				if (messageRect.contains(event.getX(), event.getY()) && !active) {
-					
-					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
-					builder
-							.setMessage(full_message)
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							Constants.context);
+					builder.setMessage(full_message)
 							.setCancelable(false)
 							.setNegativeButton("OK",
 									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int id) {
+										public void onClick(
+												DialogInterface dialog, int id) {
 											dialog.cancel();
 										}
 									});
@@ -168,7 +169,6 @@ public class ListOfNumbers extends Screen {
 					round = ico.roundMinus;
 
 					menu.setShow(active);
-				
 
 				} else if (plus.contains(event.getX(), event.getY()) && active) {
 					active = false;
@@ -225,7 +225,7 @@ public class ListOfNumbers extends Screen {
 								.centerY()) / 40;
 					} catch (IndexOutOfBoundsException ex1) {
 						toched = null;
-						
+
 					}
 				}
 	}
@@ -258,8 +258,9 @@ public class ListOfNumbers extends Screen {
 							tr.getMessSplit(),
 							tr.centerX(),
 							tr.centerY()
-									+ 3*(Math.abs(WhiteText.ascent()
-											+ Math.abs(WhiteText.descent()))/2),
+									+ 3
+									* (Math.abs(WhiteText.ascent()
+											+ Math.abs(WhiteText.descent())) / 2),
 							WhiteText);
 					if (bmenu) {
 						menu.move();
@@ -282,8 +283,8 @@ public class ListOfNumbers extends Screen {
 														.getInteger(R.integer.largeIconWidth)
 												/ 2);
 						canvas.drawRect(menu, Constants.FONfill);
-						canvas.drawRoundRect(menu,6,6, Constants.WhiteRamca);
-						
+						canvas.drawRoundRect(menu, 6, 6, Constants.WhiteRamca);
+
 						Constants.DrowIcon(canvas, ico.blackList,
 								blackButton.centerX(), blackButton.centerY(),
 								false);
@@ -338,10 +339,10 @@ public class ListOfNumbers extends Screen {
 		}
 
 		public String getMessSplit() {
-			if(mess.split(" ")[0].length()>8)
-				return mess.split(" ")[0].substring(0, 6)+"...";
+			if (mess.split(" ")[0].length() > 8)
+				return mess.split(" ")[0].substring(0, 6) + "...";
 			else
-			return mess.split(" ")[0];
+				return mess.split(" ")[0];
 		}
 
 		protected void setMess(String mess) {

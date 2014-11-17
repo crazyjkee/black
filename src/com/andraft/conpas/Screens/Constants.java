@@ -44,8 +44,8 @@ public class Constants {
 	private static colors colorka = colors.blue;
 	public static boolean license = true;
 	private static long may2015 = 1430506800000l;
-	
-	//1430506800000 May 1 15:00
+
+	// 1430506800000 May 1 15:00
 
 	static {
 
@@ -87,11 +87,11 @@ public class Constants {
 	}
 
 	private static void initLicense() {
-		if(System.currentTimeMillis()>may2015)
+		if (System.currentTimeMillis() > may2015)
 			license = false;
 		else
 			license = true;
-		
+
 	}
 
 	public static void initSchedule() {
@@ -120,24 +120,24 @@ public class Constants {
 		SmsOptionsModel sms = checking.getDb().getSmsOptionsModel(1);
 		if (sms.isBlock_all_sms() == 1) {
 			BLOCK_ALL_SMS = true;
-			//Log.d("myLogs", "BLOCK_ALL_SMS true");
+			// Log.d("myLogs", "BLOCK_ALL_SMS true");
 		} else {
 			BLOCK_ALL_SMS = false;
-			//Log.d("myLogs", "BLOCK_ALL_SMS false");
+			// Log.d("myLogs", "BLOCK_ALL_SMS false");
 		}
 		if (sms.isBlock_hidden_numbers_sms() == 1) {
 			BLOCK_HIDDEN_SMS = true;
-			//Log.d("myLogs", "BLOCK_HIDDEN_SMS true");
+			// Log.d("myLogs", "BLOCK_HIDDEN_SMS true");
 		} else {
 			BLOCK_HIDDEN_SMS = false;
-			//Log.d("myLogs", "BLOCK_HIDDEN_SMS false");
+			// Log.d("myLogs", "BLOCK_HIDDEN_SMS false");
 		}
 		if (sms.isBlock_notifications_sms() == 1) {
 			BLOCK_NOTIFICATIONS_SMS = true;
-			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS true");
+			// Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS true");
 		} else {
 			BLOCK_NOTIFICATIONS_SMS = false;
-			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS false");
+			// Log.d("myLogs", "BLOCK_NOTIFICATIONS_SMS false");
 		}
 		checking.getDb().close();
 	}
@@ -147,38 +147,38 @@ public class Constants {
 
 		if (num.isBlock_all_calls() == 1) {
 			BLOCK_ALL_CALLS = true;
-			//Log.d("myLogs", "BLOCK_ALL_CALLS true");
+			// Log.d("myLogs", "BLOCK_ALL_CALLS true");
 		} else {
 			BLOCK_ALL_CALLS = false;
-			//Log.d("myLogs", "BLOCK_ALL_CALLS false");
+			// Log.d("myLogs", "BLOCK_ALL_CALLS false");
 		}
 		if (num.isBlock_hidden_numbers_calls() == 1) {
 			BLOCK_HIDDEN_CALLS = true;
-			//Log.d("myLogs", "BLOCK_HIDDEN_CALLS true");
+			// Log.d("myLogs", "BLOCK_HIDDEN_CALLS true");
 		} else {
 			BLOCK_HIDDEN_CALLS = false;
-			//Log.d("myLogs", "BLOCK_HIDDEN_CALLS false");
+			// Log.d("myLogs", "BLOCK_HIDDEN_CALLS false");
 		}
 		if (num.isBlock_notifications_calls() == 1) {
 			BLOCK_NOTIFICATION_CALLS = true;
-			//Log.d("myLogs", "BLOCK_NOTIFICATIONS_CALLS true");
+			// Log.d("myLogs", "BLOCK_NOTIFICATIONS_CALLS true");
 		} else {
 			BLOCK_NOTIFICATION_CALLS = false;
-			//Log.d("myLogs", "BLOCK_NOTIFICATION_CALLS false");
+			// Log.d("myLogs", "BLOCK_NOTIFICATION_CALLS false");
 		}
 		if (num.isSilent_mode() == 1) {
 			SILENT_MODE = true;
-			//Log.d("myLogs", "SILENT_MODE true");
+			// Log.d("myLogs", "SILENT_MODE true");
 		} else {
 			SILENT_MODE = false;
-			//Log.d("myLogs", "SILENT_MODE false");
+			// Log.d("myLogs", "SILENT_MODE false");
 		}
 		if (num.isBusy_mode() == 1) {
 			BUSY_MODE = true;
-			//Log.d("myLogs", "BUSY_MODE true");
+			// Log.d("myLogs", "BUSY_MODE true");
 		} else {
 			BUSY_MODE = false;
-			//Log.d("myLogs", "BUSY_MODE false");
+			// Log.d("myLogs", "BUSY_MODE false");
 		}
 		checking.getDb().close();
 	}
@@ -195,9 +195,9 @@ public class Constants {
 		case gray:
 			colorka = colors.gray;
 			FONfill.setColor(Res.getColor(R.color.fon_gray));
-			if(ICONS != null)
-			ICONS = changeColor(ICONS, colors.gray);
-			else{
+			if (ICONS != null)
+				ICONS = changeColor(ICONS, colors.gray);
+			else {
 				ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
 				ICONS = changeColor(ICONS, colors.gray);
 			}
@@ -205,9 +205,9 @@ public class Constants {
 		case green:
 			colorka = colors.green;
 			FONfill.setColor(Res.getColor(R.color.fon_green));
-			if(ICONS !=null)
-			ICONS = changeColor(ICONS, colors.green);
-			else{
+			if (ICONS != null)
+				ICONS = changeColor(ICONS, colors.green);
+			else {
 				ICONS = BitmapFactory.decodeResource(Res, R.drawable.icons);
 				ICONS = changeColor(ICONS, colors.green);
 			}
@@ -236,9 +236,9 @@ public class Constants {
 	}
 
 	public static void destroy() {
-		if(ICONS!=null){
-		ICONS.recycle();
-		ICONS = null;
+		if (ICONS != null) {
+			ICONS.recycle();
+			ICONS = null;
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.andraft.utils;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -11,8 +10,7 @@ import android.net.Uri;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.provider.ContactsContract;
-
-import com.andraft.blacklist.Checking;
+import android.util.Log;
 
 public class CallLogUtils {
 	private ContentResolver resolver;
@@ -36,7 +34,8 @@ public class CallLogUtils {
 
 	public HashMap<String, String> readAllContacts() {
 		contacts = new HashMap<String, String>();
-		/*Cursor phones = resolver.query(
+
+		Cursor phones = resolver.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
 				null, null);
 		while (phones.moveToNext()) {
@@ -47,36 +46,34 @@ public class CallLogUtils {
 					.getString(phones
 							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-			contacts.put(phoneNumber, name);
-			// Log.d("myLogs","name:"+name+" phoneNumber:"+phoneNumber);
+			contacts.put(phoneNumber, name); //
+			Log.d("myLogs", "name:" + name + " phoneNumber:" + phoneNumber);
 		}
 		phones.close();
-		*/
+
 		return contacts;
 	}
 
 	public HashMap<String, String> readAllCalls() {
 		all = new HashMap<String, String>();
-		/*
+
 		Cursor cursor = context.getContentResolver().query(
-				CallLog.Calls.CONTENT_URI, null, null, null, null);// CallLog.Calls.NUMBER
-																	// + "," +
-																	// CallLog.Calls.DATE
-																	// +
-																	// " DESC");
+				CallLog.Calls.CONTENT_URI, null, null, null, null);//
+		// CallLog.Calls.NUMBER // + "," + // CallLog.Calls.DATE // + //
+		// " DESC");
 		int number = cursor.getColumnIndex(CallLog.Calls.NUMBER);
 		int iname = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
 		while (cursor.moveToNext()) {
 			String name = cursor.getString(iname);
 			String phoneNumber = cursor.getString(number);
-			if (name == null) {
-				// Log.d("myLogs","name==null");
+			if (name == null) { //
+				Log.d("myLogs", "name==null");
 				all.put(phoneNumber, "unknown");
 			} else
 				all.put(phoneNumber, name);
 		}
 		cursor.close();
-		*/
+
 		return all;
 	}
 
@@ -92,16 +89,13 @@ public class CallLogUtils {
 			String strUriCalls = "content://call_log/calls";
 			Uri UriCalls = Uri.parse(strUriCalls);
 
-			
-
 			if (null != resolver && cursor.moveToFirst()) {
 
 				i = resolver.delete(UriCalls, CallLog.Calls.NUMBER + "=?",
 						new String[] { strNum });
 				markCallLogRead();
 
-			
-			} 
+			}
 		} catch (Exception e) {
 			e.getMessage();
 		}

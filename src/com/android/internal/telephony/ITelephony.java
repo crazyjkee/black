@@ -2,11 +2,9 @@ package com.android.internal.telephony;
 
 public interface ITelephony {
 
-    boolean endCall();
+	boolean endCall();
 
-    
-    void answerRingingCall();
+	void answerRingingCall();
 
-   
-    void silenceRinger();
+	void silenceRinger();
 }

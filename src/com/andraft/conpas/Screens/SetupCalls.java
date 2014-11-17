@@ -31,9 +31,11 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 		this.setBackReadyCb(this);
 		this.rects = new ArrayList<SmallListPanel>();
 		this.rectshow = new ArrayList<MenuList>();
-		this.numModel = new NumberOptionsModel(1, Constants.BLOCK_ALL_CALLS?1:0, Constants.BLOCK_HIDDEN_CALLS?1:0, Constants.BLOCK_NOTIFICATION_CALLS?1:0, Constants.SILENT_MODE?1:0, Constants.BUSY_MODE?1:0);
+		this.numModel = new NumberOptionsModel(1, Constants.BLOCK_ALL_CALLS ? 1
+				: 0, Constants.BLOCK_HIDDEN_CALLS ? 1 : 0,
+				Constants.BLOCK_NOTIFICATION_CALLS ? 1 : 0,
+				Constants.SILENT_MODE ? 1 : 0, Constants.BUSY_MODE ? 1 : 0);
 		this.checking = Checking.getInstance(Constants.context);
-		
 
 		text[0] = Constants.Res.getString(R.string.block_all_calls);
 		text[1] = Constants.Res.getString(R.string.block_hidden_numbers);
@@ -69,7 +71,8 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 			if (show) {
 				canvas.drawRect(menu, Constants.FONfill);
 				menu.draw(canvas);
-				canvas.drawText(menu.getMain(), menu.centerX(), menu.centerY()+(WhiteText.descent()-WhiteText.ascent())/4,
+				canvas.drawText(menu.getMain(), menu.centerX(), menu.centerY()
+						+ (WhiteText.descent() - WhiteText.ascent()) / 4,
 						this.WhiteText);
 				canvas.drawLine(0, menu.bottom, w, menu.bottom,
 						Constants.WhiteRamca);
@@ -109,31 +112,32 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 					if (rect.getMain().equals(text[3])) {
 						if (rect.isBlock()) {
 							show = true;
-							
+
 						} else {
 							show = false;
-							
+
 						}
 					}
 				}
 			}
-            if(show)
-			for (int i = 0; i < rectshow.size(); i++) {
-				if (rectshow.get(0).contains(event.getX(), event.getY())) {
-					rectshow.get(0).setBlock(true);
-					rectshow.get(1).setBlock(false);
-					numModel.setSilent_mode(1);
-					numModel.setBusy_mode(0);
-					
-				} else if(rectshow.get(1).contains(event.getX(),event.getY())) {
-					rectshow.get(0).setBlock(false);
-					rectshow.get(1).setBlock(true);
-					numModel.setSilent_mode(0);
-					numModel.setBusy_mode(1);
-					
-				}
+			if (show)
+				for (int i = 0; i < rectshow.size(); i++) {
+					if (rectshow.get(0).contains(event.getX(), event.getY())) {
+						rectshow.get(0).setBlock(true);
+						rectshow.get(1).setBlock(false);
+						numModel.setSilent_mode(1);
+						numModel.setBusy_mode(0);
 
-			}
+					} else if (rectshow.get(1).contains(event.getX(),
+							event.getY())) {
+						rectshow.get(0).setBlock(false);
+						rectshow.get(1).setBlock(true);
+						numModel.setSilent_mode(0);
+						numModel.setBusy_mode(1);
+
+					}
+
+				}
 			return false;
 		}
 		return false;
@@ -143,7 +147,7 @@ public class SetupCalls extends SetupSms implements Screen.Back {
 	public void onBack() {
 		checking.getDb().updateNumbersOptions(numModel);
 		Constants.initNumberOptions();
-	
+
 	}
 
 	class MenuList extends SmallListPanel {

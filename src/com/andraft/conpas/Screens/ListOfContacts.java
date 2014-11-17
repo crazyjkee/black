@@ -29,7 +29,8 @@ public class ListOfContacts extends ListOfNumbers {
 		Messages = new String[checking.getCalls(2).size()];
 		for (NumberModel number : checking.getCalls(2)) {
 			// Log.d("myLogs","num:"+number.getNum()+" ,text:"+number.getText());
-			allMessagesOrCalls.add(new SmallListPanel(i, number.getNum(),number.getName()));
+			allMessagesOrCalls.add(new SmallListPanel(i, number.getNum(),
+					number.getName()));
 			i++;
 		}
 		CheckISEmtyMessages();
@@ -37,10 +38,6 @@ public class ListOfContacts extends ListOfNumbers {
 		v = (Centr.centerY() - toched.centerY()) / 40;
 
 	}
-	
-
-	
-
 
 	@Override
 	public void OnDraw(Canvas canvas) {
@@ -70,7 +67,8 @@ public class ListOfContacts extends ListOfNumbers {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if (whiteButton.contains(event.getX(), event.getY())) {
 				for (NumberModel num : checking.getCalls(2)) {
-					if (num.getNum().equals(this.getCenter_nomer())&&!allMessagesOrCalls.contains(NoData)) {
+					if (num.getNum().equals(this.getCenter_nomer())
+							&& !allMessagesOrCalls.contains(NoData)) {
 						active = false;
 						menu.setShow(active);
 						round = ico.roundPlus;
@@ -88,7 +86,7 @@ public class ListOfContacts extends ListOfNumbers {
 					}
 
 				}
-				
+
 			}
 			if (blackButton.contains(event.getX(), event.getY())) {
 				for (NumberModel num : checking.getCalls(2)) {
@@ -110,34 +108,33 @@ public class ListOfContacts extends ListOfNumbers {
 					}
 
 				}
-				
+
 			}
-			
 
 			if (Centr.contains(event.getX(), event.getY())) {
-                if(messageRect.contains(event.getX(),event.getY())&&!active){
-                	
-					AlertDialog.Builder builder = new AlertDialog.Builder(Constants.context);
-					builder
-							.setMessage(this.getFull_message())
+				if (messageRect.contains(event.getX(), event.getY()) && !active) {
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							Constants.context);
+					builder.setMessage(this.getFull_message())
 							.setCancelable(false)
 							.setNegativeButton("OK",
 									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int id) {
+										public void onClick(
+												DialogInterface dialog, int id) {
 											dialog.cancel();
 										}
 									});
 					AlertDialog alert = builder.create();
 					alert.show();
 
-                }
+				}
 
 				if (plus.contains(event.getX(), event.getY()) && !active) {
 					active = true;
 					round = ico.roundMinus;
 
 					menu.setShow(active);
-				
 
 				} else if (plus.contains(event.getX(), event.getY()) && active) {
 					active = false;

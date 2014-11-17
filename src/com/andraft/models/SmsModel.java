@@ -19,15 +19,13 @@ public class SmsModel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SmsModel(String num, String text, int bool,int count_black) {
+	public SmsModel(String num, String text, int bool, int count_black) {
 		super();
 		this.num = num;
 		this.text = text;
 		this.bool = bool;
-		this.count_black= count_black;
+		this.count_black = count_black;
 	}
-
-
 
 	public SmsModel(int id, String num, String text, int bool) {
 		super();

@@ -16,8 +16,8 @@ public class SmsOptionsModel {
 		this.block_notifications_sms = block_notifications_sms;
 	}
 
-	public SmsOptionsModel(int block_all_sms,
-			int block_hidden_numbers_sms, int block_notifications_sms) {
+	public SmsOptionsModel(int block_all_sms, int block_hidden_numbers_sms,
+			int block_notifications_sms) {
 		super();
 		this.block_all_sms = block_all_sms;
 		this.block_hidden_numbers_sms = block_hidden_numbers_sms;
@@ -37,7 +37,7 @@ public class SmsOptionsModel {
 	}
 
 	public int isBlock_all_sms() {
-		return(block_all_sms);
+		return (block_all_sms);
 	}
 
 	public void setBlock_all_sms(int block_all_sms) {
@@ -45,7 +45,7 @@ public class SmsOptionsModel {
 	}
 
 	public int isBlock_hidden_numbers_sms() {
-		return(block_hidden_numbers_sms);
+		return (block_hidden_numbers_sms);
 	}
 
 	public void setBlock_hidden_numbers_sms(int block_hidden_numbers_sms) {
@@ -53,7 +53,7 @@ public class SmsOptionsModel {
 	}
 
 	public int isBlock_notifications_sms() {
-		return( block_notifications_sms);
+		return (block_notifications_sms);
 	}
 
 	public void setBlock_notifications_sms(int block_notifications_sms) {

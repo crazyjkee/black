@@ -110,7 +110,7 @@ public class DataBase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
+
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUMBERS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SMS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCHEDULE);
@@ -128,7 +128,7 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(COUNT_BLACK, number.getCount_black());
 		// insert row
 		long number_id = db.insert(TABLE_NUMBERS, null, values);
-		
+
 		return number_id;
 	}
 
@@ -173,8 +173,6 @@ public class DataBase extends SQLiteOpenHelper {
 		List<NumberModel> numbers = new ArrayList<NumberModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS;
 
-	
-
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -199,8 +197,6 @@ public class DataBase extends SQLiteOpenHelper {
 	public List<SmsModel> getAllSms() {
 		List<SmsModel> sms = new ArrayList<SmsModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_SMS;
-
-	
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -285,9 +281,8 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(BLOCK_NOTIFICATIONS, num.isBlock_notifications_calls());
 		values.put(SILENT_MODE, num.isSilent_mode());
 		values.put(BUSY_MODE, num.isBusy_mode());
-		db.update(TABLE_NUMBERS_OPTIONS, values, KEY_ID
-								+ " = ?",
-								new String[] { String.valueOf(num.getId()) });
+		db.update(TABLE_NUMBERS_OPTIONS, values, KEY_ID + " = ?",
+				new String[] { String.valueOf(num.getId()) });
 
 	}
 
@@ -301,7 +296,7 @@ public class DataBase extends SQLiteOpenHelper {
 		values.put(BLOCK_HIDDEN_NUMBERS, sms.isBlock_hidden_numbers_sms());
 		values.put(BLOCK_NOTIFICATIONS, sms.isBlock_notifications_sms());
 		db.update(TABLE_SMS_OPTIONS, values, KEY_ID + " = ?",
-								new String[] { String.valueOf(sms.getId()) });
+				new String[] { String.valueOf(sms.getId()) });
 
 	}
 
@@ -316,8 +311,7 @@ public class DataBase extends SQLiteOpenHelper {
 			values.put(TOHOURS, sched.getToHour());
 			values.put(TOMINUTES, sched.getToMinute());
 			db.update(TABLE_SCHEDULE, values, DAY + " = ?",
-									new String[] { String.valueOf(sched
-											.getDay()) });
+					new String[] { String.valueOf(sched.getDay()) });
 		}
 	}
 
@@ -348,8 +342,6 @@ public class DataBase extends SQLiteOpenHelper {
 		String selectQuery = "SELECT  * FROM " + TABLE_NUMBERS + " WHERE "
 				+ BOOL + "=" + bool + " ORDER BY " + NAME + " ASC";
 
-		
-
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
 
@@ -374,8 +366,6 @@ public class DataBase extends SQLiteOpenHelper {
 		List<SmsModel> sms = new ArrayList<SmsModel>();
 		String selectQuery = "SELECT  * FROM " + TABLE_SMS + " WHERE " + BOOL
 				+ "=" + bool + " ORDER BY " + NUM + " ASC";
-
-		
 
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery(selectQuery, null);
@@ -406,22 +396,22 @@ public class DataBase extends SQLiteOpenHelper {
 			NumberOptionsModel num = new NumberOptionsModel();
 			num.setId(c.getInt(c.getColumnIndex(KEY_ID)));
 			num.setBlock_all_calls(c.getInt(c.getColumnIndex(BLOCK_ALL_CALLS)));
-			
+
 			num.setBlock_hidden_numbers_calls(c.getInt(c
 					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
-			
+
 			num.setBlock_notifications_calls(c.getInt(c
 					.getColumnIndex(BLOCK_NOTIFICATIONS)));
 			num.setSilent_mode(c.getInt(c.getColumnIndex(SILENT_MODE)));
-			
+
 			num.setBusy_mode(c.getInt(c.getColumnIndex(BUSY_MODE)));
-		
+
 			c.close();
 
 			return num;
 		} else {
 			c.close();
-			
+
 			return null;
 		}
 	}
@@ -436,17 +426,17 @@ public class DataBase extends SQLiteOpenHelper {
 			SmsOptionsModel sms = new SmsOptionsModel();
 			sms.setId(c.getInt(c.getColumnIndex(KEY_ID)));
 			sms.setBlock_all_sms(c.getInt(c.getColumnIndex(BLOCK_ALL_SMS)));
-			
+
 			sms.setBlock_hidden_numbers_sms(c.getInt(c
 					.getColumnIndex(BLOCK_HIDDEN_NUMBERS)));
-			
+
 			sms.setBlock_notifications_sms(c.getInt(c
 					.getColumnIndex(BLOCK_NOTIFICATIONS)));
 			c.close();
 			return sms;
 		} else {
 			c.close();
-			
+
 			return null;
 		}
 
@@ -492,7 +482,7 @@ public class DataBase extends SQLiteOpenHelper {
 				i += c.getInt(c.getColumnIndex(COUNT_BLACK));
 			} while (c.moveToNext());
 		} else {
-			
+
 			c.close();
 			return 0;
 		}
@@ -512,7 +502,7 @@ public class DataBase extends SQLiteOpenHelper {
 				i += c.getInt(c.getColumnIndex(COUNT_BLACK));
 			} while (c.moveToNext());
 		} else {
-			
+
 			return 0;
 		}
 		c.close();
@@ -546,7 +536,7 @@ public class DataBase extends SQLiteOpenHelper {
 
 		for (NumberModel number : numbers) {
 			values = new ContentValues();
-			
+
 			values.put(NUM, number.getNum());
 			values.put(BOOL, number.getBool());
 			values.put(NAME, number.getName());

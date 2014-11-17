@@ -69,7 +69,7 @@ public class SetupSms extends Screen implements Screen.Back {
 			canvas.drawRect(rect, Constants.FONfill);
 			canvas.drawLine(0, rect.bottom, w, rect.bottom,
 					Constants.WhiteRamca);
-			
+
 			if (rect.getSecond() != null) {
 				canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY(),
 						this.WhiteText);
@@ -81,8 +81,9 @@ public class SetupSms extends Screen implements Screen.Back {
 								- (Math.abs(WhiteTextSmall.ascent()
 										+ Math.abs(WhiteTextSmall.descent()))),
 						this.WhiteTextSmall);
-			}else{
-				canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY()+(WhiteText.descent()-WhiteText.ascent())/4,//(Math.abs(WhiteText.descent())-Math.abs(WhiteText.ascent()))/2,
+			} else {
+				canvas.drawText(rect.getMain(), rect.centerX(), rect.centerY()
+						+ (WhiteText.descent() - WhiteText.ascent()) / 4,// (Math.abs(WhiteText.descent())-Math.abs(WhiteText.ascent()))/2,
 						this.WhiteText);
 			}
 			rect.draw(canvas);
@@ -103,11 +104,11 @@ public class SetupSms extends Screen implements Screen.Back {
 						rect.setBlock(false);
 						if (rect.getMain().equals(text[0])) {
 							smsModel.setBlock_all_sms(0);
-							
+
 						}
 						if (rect.getMain().equals(text[1])) {
 							smsModel.setBlock_hidden_numbers_sms(0);
-							
+
 						}
 						if (rect.getMain().equals(text[2])
 								&& android.os.Build.VERSION.SDK_INT > 12)
@@ -116,11 +117,11 @@ public class SetupSms extends Screen implements Screen.Back {
 						rect.setBlock(true);
 						if (rect.getMain().equals(text[0])) {
 							smsModel.setBlock_all_sms(1);
-							
+
 						}
 						if (rect.getMain().equals(text[1])) {
 							smsModel.setBlock_hidden_numbers_sms(1);
-							
+
 						}
 						if (rect.getMain().equals(text[2])
 								&& android.os.Build.VERSION.SDK_INT > 12)
@@ -139,7 +140,7 @@ public class SetupSms extends Screen implements Screen.Back {
 	public void onBack() {
 		checking.getDb().updateSmsOptions(smsModel);
 		Constants.initSmsOptions();
-		
+
 	}
 
 	class SmallListPanel extends RectF {
@@ -166,13 +167,21 @@ public class SetupSms extends Screen implements Screen.Back {
 
 		public void draw(Canvas canvas) {
 			if (isBlock() && drawCheck)
-				Constants.DrowIcon(canvas, icon, this.width()-
-						Constants.Res.getInteger(R.integer.smallIconWidth)
-						, this.centerY(), true);
+				Constants.DrowIcon(
+						canvas,
+						icon,
+						this.width()
+								- Constants.Res
+										.getInteger(R.integer.smallIconWidth),
+						this.centerY(), true);
 			else if (drawCheck)
-				Constants.DrowIcon(canvas, icoff, this.width() - 
-						Constants.Res.getInteger(R.integer.smallIconWidth)
-						, this.centerY(), true);
+				Constants.DrowIcon(
+						canvas,
+						icoff,
+						this.width()
+								- Constants.Res
+										.getInteger(R.integer.smallIconWidth),
+						this.centerY(), true);
 		}
 
 		public boolean isBlock() {
