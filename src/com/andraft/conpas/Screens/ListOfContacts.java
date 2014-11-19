@@ -42,7 +42,8 @@ public class ListOfContacts extends ListOfNumbers {
 	@Override
 	public void OnDraw(Canvas canvas) {
 		super.OnDraw(canvas);
-		whiteButton.set(
+		
+			whiteButton.set(
 				menu.right - 4
 						* Constants.Res.getInteger(R.integer.largeIconWidth)
 						/ 3,
@@ -54,8 +55,11 @@ public class ListOfContacts extends ListOfNumbers {
 				menu.centerY()
 						+ Constants.Res.getInteger(R.integer.largeIconWidth)
 						/ 2);
+			
 		Constants.DrowIcon(canvas, ico.whiteList, whiteButton.centerX(),
 				whiteButton.centerY(), false);
+		
+
 
 	}
 
@@ -65,7 +69,7 @@ public class ListOfContacts extends ListOfNumbers {
 			return true;
 		}
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			if (whiteButton.contains(event.getX(), event.getY())) {
+			if (whiteButton.contains(event.getX(), event.getY())&&active) {
 				for (NumberModel num : checking.getCalls(2)) {
 					if (num.getNum().equals(this.getCenter_nomer())
 							&& !allMessagesOrCalls.contains(NoData)) {
@@ -112,7 +116,7 @@ public class ListOfContacts extends ListOfNumbers {
 			}
 
 			if (Centr.contains(event.getX(), event.getY())) {
-				if (messageRect.contains(event.getX(), event.getY()) && !active) {
+				if (messageRect.contains(event.getX(), event.getY()) && !active&&menuRightZero) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							Constants.context);

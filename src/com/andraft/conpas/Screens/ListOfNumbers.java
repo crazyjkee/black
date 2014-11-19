@@ -51,6 +51,7 @@ public class ListOfNumbers extends Screen {
 
 	protected ico round = ico.roundPlus;
 	protected boolean bmenu = true;
+	protected boolean menuRightZero=true;
 
 	public ListOfNumbers() {
 		super(R.string.list_of_numbers);
@@ -121,7 +122,7 @@ public class ListOfNumbers extends Screen {
 			return true;
 		}
 		if (event.getAction() == MotionEvent.ACTION_UP) {
-			if (blackButton.contains(event.getX(), event.getY())) {
+			if (blackButton.contains(event.getX(), event.getY())&&active) {
 				for (SmsModel sms : checking.getSms(2)) {
 					if (sms.getNum().equals(center_nomer)
 							&& !allMessagesOrCalls.contains(NoData)) {
@@ -146,7 +147,7 @@ public class ListOfNumbers extends Screen {
 				}
 			}
 			if (Centr.contains(event.getX(), event.getY())) {
-				if (messageRect.contains(event.getX(), event.getY()) && !active) {
+				if (messageRect.contains(event.getX(), event.getY()) && !active&&menuRightZero) {
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							Constants.context);
@@ -262,33 +263,7 @@ public class ListOfNumbers extends Screen {
 									* (Math.abs(WhiteText.ascent()
 											+ Math.abs(WhiteText.descent())) / 2),
 							WhiteText);
-					if (bmenu) {
-						menu.move();
-						blackButton
-								.set(menu.left
-										+ Constants.Res
-												.getInteger(R.integer.largeIconWidth)
-										/ 3,
-										menu.centerY()
-												- Constants.Res
-														.getInteger(R.integer.largeIconWidth)
-												/ 2,
-										menu.left
-												+ 4
-												* Constants.Res
-														.getInteger(R.integer.largeIconWidth)
-												/ 3,
-										menu.centerY()
-												+ Constants.Res
-														.getInteger(R.integer.largeIconWidth)
-												/ 2);
-						canvas.drawRect(menu, Constants.FONfill);
-						canvas.drawRoundRect(menu, 6, 6, Constants.WhiteRamca);
-
-						Constants.DrowIcon(canvas, ico.blackList,
-								blackButton.centerX(), blackButton.centerY(),
-								false);
-					}
+					
 					// canvas.drawRect(blackButton, WhiteText);
 
 				} else {
@@ -300,6 +275,33 @@ public class ListOfNumbers extends Screen {
 						canvas.drawLine(0, tr.top, w, tr.top, WhiteRamca);
 
 				}
+			}
+			if (bmenu) {
+				menu.move();
+				blackButton
+						.set(menu.left
+								+ Constants.Res
+										.getInteger(R.integer.largeIconWidth)
+								/ 3,
+								menu.centerY()
+										- Constants.Res
+												.getInteger(R.integer.largeIconWidth)
+										/ 2,
+								menu.left
+										+ 4
+										* Constants.Res
+												.getInteger(R.integer.largeIconWidth)
+										/ 3,
+								menu.centerY()
+										+ Constants.Res
+												.getInteger(R.integer.largeIconWidth)
+										/ 2);
+				canvas.drawRect(menu, Constants.FONfill);
+				canvas.drawRoundRect(menu, 6, 6, Constants.WhiteRamca);
+
+				Constants.DrowIcon(canvas, ico.blackList,
+						blackButton.centerX(), blackButton.centerY(),
+						false);
 			}
 
 			canvas.drawRect(Centr, WhiteRamca);
@@ -355,6 +357,7 @@ public class ListOfNumbers extends Screen {
 		private int show = 0;
 		private int maxRight;
 
+
 		public MenuRect(boolean twoIconsTrueOneIconFalse, RectF centr) {
 			super();
 			if (twoIconsTrueOneIconFalse)
@@ -376,16 +379,20 @@ public class ListOfNumbers extends Screen {
 			else
 				this.show = -2;
 		}
+		
 
 		boolean move() {
 			// Log.d("myLogs","show:"+show+",maxRight:"+maxRight);
-
-			if (this.right < 0 && show != 2)
-				return false;
+           
+			if (this.right <= 0 && show != 2){
+				menuRightZero = true;
+				return true;
+			}
 			if (this.right > maxRight && show != -2)
 				return false;
 			this.offset(show, 0);
 			// Log.d("myLogs","this.right:"+this.right);
+			menuRightZero = false;
 			return true;
 		}
 

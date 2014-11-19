@@ -16,9 +16,9 @@ public class SmsLogUtils {
 	public HashMap<String, String> readAllSms() {
 		sms = new HashMap<String, String>();
 		sms.put("LALKAASA", "SOS");
-		sms.put("BEELINE", "ZAPLATI");
+		sms.put("22222", "ZAPLATI");
 		
-		  Uri inboxURI = Uri.parse("content://sms/inbox");
+		 /* Uri inboxURI = Uri.parse("content://sms/inbox");
 		  
 		  // List required columns 
 		  String[] reqCols = new String[] { "_id",
@@ -37,7 +37,7 @@ public class SmsLogUtils {
 		  body);
 		  
 		  } c.close();
-
+*/
 		return sms;
 
 	}

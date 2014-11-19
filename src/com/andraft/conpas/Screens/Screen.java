@@ -45,7 +45,7 @@ public abstract class Screen {
 
 	public void setBackReadyCb(Back backReadyCb) {
 		this.backReadyCb = backReadyCb;
-	}
+	} 
 
 	private void init() {
 		BannerIcon = new RectF(0, 0, Res.getInteger(R.integer.fontsize) * 2f,
@@ -53,7 +53,7 @@ public abstract class Screen {
 		if (label == R.string.app_name) {
 			ShieldIcon = new RectF(0, 0, w, BannerIcon.bottom);
 			BannerIcon.offsetTo(
-					w - Constants.Res.getInteger(R.integer.smallIconWidth) - 5,
+					w - Res.getInteger(R.integer.fontsize) * 2f,
 					0);
 
 		}
@@ -92,6 +92,7 @@ public abstract class Screen {
 			Constants.DrowIcon(canvas, ico.shield, ShieldIcon.centerX(),
 					ShieldIcon.centerY(), true);
 		}
+		WhiteText.setTextSize(Res.getInteger(R.integer.fontsize));
 		if (label != R.string.app_name)
 			canvas.drawText(Res.getString(label), w / 2, BannerHeight() / 2
 					+ (WhiteText.descent() - WhiteText.ascent()) / 4, FONfill);

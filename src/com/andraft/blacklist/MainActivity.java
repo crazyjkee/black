@@ -2,6 +2,7 @@ package com.andraft.blacklist;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -49,6 +50,11 @@ public class MainActivity extends Activity {
 		Constants.Res = this.getResources();
 		Constants.context = this;
 		checking = Checking.getInstance(this);
+		if(!Constants.service){
+			Intent service = new Intent(this, BlackService.class);
+			this.startService(service);
+		}
+		
 	}
 
 	@Override

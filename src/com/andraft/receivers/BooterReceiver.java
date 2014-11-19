@@ -7,13 +7,15 @@ import android.util.Log;
 
 import com.andraft.blacklist.BlackService;
 
-public class BootReceiver extends BroadcastReceiver {
+public class BooterReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		 if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+		Log.d("myLogs","BOOT SERVICE");
 		Intent service = new Intent(context, BlackService.class);
 		context.startService(service);
-
+		 }
 	}
 
 }

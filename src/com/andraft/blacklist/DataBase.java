@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.andraft.models.NumberModel;
 import com.andraft.models.NumberOptionsModel;
@@ -546,22 +547,22 @@ public class DataBase extends SQLiteOpenHelper {
 			db.update(TABLE_NUMBERS, values, NUM + " = ?",
 					new String[] { String.valueOf(number.getNum()) });
 		}
-
-		c = db.rawQuery(selectQuery2, null);
+		c.close();
+		Cursor c1 = db.rawQuery(selectQuery2, null);
 		// looping through all rows and adding to list
-		if (c.moveToFirst()) {
+		if (c1.moveToFirst()) {
 			do {
 				SmsModel smsm = new SmsModel();
 
-				smsm.setNum(c.getString(c.getColumnIndex(NUM)));
-				smsm.setBool(c.getInt(c.getColumnIndex(BOOL)));
-				smsm.setText(c.getString(c.getColumnIndex(TEXT)));
+				smsm.setNum(c1.getString(c1.getColumnIndex(NUM)));
+				smsm.setBool(c1.getInt(c1.getColumnIndex(BOOL)));
+				smsm.setText(c1.getString(c1.getColumnIndex(TEXT)));
 				smsm.setCount_black(0);
 				// adding to todo list
 				smski.add(smsm);
-			} while (c.moveToNext());
+			} while (c1.moveToNext());
 		}
-		c.close();
+		c1.close();
 
 		for (SmsModel sms : smski) {
 			values = new ContentValues();
@@ -577,6 +578,95 @@ public class DataBase extends SQLiteOpenHelper {
 
 	}
 
+	public void isNumberPlusCountBlack(String num) {
+		if (num == null)
+			return;
+		String selectQuery = "SELECT * FROM " + TABLE_NUMBERS + " WHERE " + NUM
+				+ "=" + "\"" + num + "\"";
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			ContentValues values = new ContentValues();
+
+			values.put(NUM, c.getString(c.getColumnIndex(NUM)));
+			values.put(BOOL, c.getInt(c.getColumnIndex(BOOL)));
+			values.put(NAME, c.getString(c.getColumnIndex(NAME)));
+			values.put(COUNT_BLACK, c.getInt(c.getColumnIndex(COUNT_BLACK)) + 1);
+			db.update(TABLE_NUMBERS, values, NUM + " = ?",
+					new String[] { String.valueOf(c.getString(c
+							.getColumnIndex(NUM))) });
+		}
+		c.close();
+
+	}
+
+	public boolean isNumberBlackTrueWhiteFalse(String num, boolean black) {
+		if (num == null)
+			return false;
+		int bool;
+		SQLiteDatabase db;
+		if (black) {
+			bool = 1;
+			db = this.getWritableDatabase();
+		} else {
+			bool = 0;
+			db = this.getReadableDatabase();
+		}
+		String selectQuery = "SELECT * FROM " + TABLE_NUMBERS + " WHERE " + NUM
+				+ "=" + "\"" + num + "\"" + " AND " + BOOL + "=" + bool;
+		;
+
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			Log.d("myLogs", "NUMBER:" + c.getString(c.getColumnIndex(NUM))
+					+ ", BOOL:" + c.getInt(c.getColumnIndex(BOOL)));
+			if (black) {
+				ContentValues values = new ContentValues();
+
+				values.put(NUM, c.getString(c.getColumnIndex(NUM)));
+				values.put(BOOL, c.getInt(c.getColumnIndex(BOOL)));
+				values.put(NAME, c.getString(c.getColumnIndex(NAME)));
+				values.put(COUNT_BLACK,
+						c.getInt(c.getColumnIndex(COUNT_BLACK)) + 1);
+				db.update(TABLE_NUMBERS, values, NUM + " = ?",
+						new String[] { String.valueOf(c.getString(c
+								.getColumnIndex(NUM))) });
+			}
+			c.close();
+			return true;
+		} else {
+			c.close();
+			return false;
+		}
+	}
+
+	public boolean isSmsBlack(String num) {
+		if (num == null)
+			return false;
+
+		String selectQuery = "SELECT * FROM " + TABLE_SMS + " WHERE " + NUM
+				+ "=" + "\"" + num + "\"" + " AND " + BOOL + "=" + 1;
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			ContentValues values = new ContentValues();
+
+			values.put(NUM, c.getString(c.getColumnIndex(NUM)));
+			values.put(TEXT, c.getString(c.getColumnIndex(TEXT)));
+			values.put(COUNT_BLACK, c.getInt(c.getColumnIndex(COUNT_BLACK)) + 1);
+			values.put(BOOL, c.getInt(c.getColumnIndex(BOOL)));
+
+			// updating row
+			db.update(TABLE_SMS, values, NUM + " = ?",
+					new String[] { String.valueOf(c.getColumnIndex(NUM)) });
+			c.close();
+			return true;
+		} else {
+			c.close();
+			return false;
+		}
+	}
+
 	public boolean TableIsEmpty(String table) {
 		String countQuery = "SELECT  * FROM " + table;
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -587,6 +677,29 @@ public class DataBase extends SQLiteOpenHelper {
 			return false;
 		else
 			return true;
+	}
+
+	public boolean isNumberUnknown(String num) {
+		if (num == null)
+			return false;
+
+		String selectQuery = "SELECT * FROM " + TABLE_NUMBERS + " WHERE " + NUM
+				+ "=" + "\"" + num + "\"" ;
+		;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor c = db.rawQuery(selectQuery, null);
+		if (c.moveToFirst()) {
+			if (c.getString(c.getColumnIndex(NAME)).equals("unknown")&&c.getInt(c.getColumnIndex(BOOL))==2) {
+				c.close();
+				return true;
+			}else{
+				Log.d("myLogs","EEEEEEEEEEEEEE");
+				c.close();
+				return false;
+			}
+		}
+		c.close();
+		return true;
 	}
 
 }

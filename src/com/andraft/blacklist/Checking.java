@@ -40,7 +40,6 @@ public class Checking {
 	}
 
 	private Checking(Context context) {
-		Log.d("myLogs","checking construct");
 		this.context = context;
 		db = new DataBase(context);
 		calllog = new CallLogUtils(context);

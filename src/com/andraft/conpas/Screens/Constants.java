@@ -42,6 +42,7 @@ public class Constants {
 			BLOCK_NOTIFICATION_CALLS, SILENT_MODE, BUSY_MODE;
 	public static int Silence[][][] = new int[7][2][2];
 	private static colors colorka = colors.blue;
+	public static boolean service = false;
 	public static boolean license = true;
 	private static long may2015 = 1430506800000l;
 

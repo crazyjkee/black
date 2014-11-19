@@ -2,6 +2,8 @@ package com.andraft.utils;
 
 import java.util.HashMap;
 
+import com.andraft.conpas.Screens.Constants;
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,7 +22,7 @@ public class CallLogUtils {
 
 	public CallLogUtils(Context context) {
 		super();
-		this.resolver = context.getContentResolver();
+		this.resolver = Constants.context.getContentResolver();
 		this.context = context;
 	}
 
@@ -34,7 +36,10 @@ public class CallLogUtils {
 
 	public HashMap<String, String> readAllContacts() {
 		contacts = new HashMap<String, String>();
-
+		contacts.put("922", "SANEKLALKA");
+		contacts.put("276301", "ASSAAS");
+		contacts.put("777", "unknown");
+/*
 		Cursor phones = resolver.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
 				null, null);
@@ -50,14 +55,17 @@ public class CallLogUtils {
 			Log.d("myLogs", "name:" + name + " phoneNumber:" + phoneNumber);
 		}
 		phones.close();
-
+*/
 		return contacts;
 	}
 
 	public HashMap<String, String> readAllCalls() {
 		all = new HashMap<String, String>();
+		all.put("711", "proba");
+		all.put("911", "AAA");
+		all.put("89507638332", "artem");
 
-		Cursor cursor = context.getContentResolver().query(
+		/*Cursor cursor = context.getContentResolver().query(
 				CallLog.Calls.CONTENT_URI, null, null, null, null);//
 		// CallLog.Calls.NUMBER // + "," + // CallLog.Calls.DATE // + //
 		// " DESC");
@@ -73,7 +81,7 @@ public class CallLogUtils {
 				all.put(phoneNumber, name);
 		}
 		cursor.close();
-
+*/
 		return all;
 	}
 

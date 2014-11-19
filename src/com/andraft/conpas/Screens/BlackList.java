@@ -153,7 +153,7 @@ public class BlackList extends ListOfNumbers {
 											- 5
 											- Constants.Res
 													.getInteger(R.integer.smallIconWidth)
-											/ 2, WhiteTextSmall);
+											/ 2+ (WhiteTextSmall.descent() - WhiteTextSmall.ascent()) / 4, WhiteTextSmall);
 						} else {
 
 							Constants
@@ -182,7 +182,7 @@ public class BlackList extends ListOfNumbers {
 											- 5
 											- Constants.Res
 													.getInteger(R.integer.smallIconWidth)
-											/ 2, WhiteTextSmall);
+											/ 2+(WhiteTextSmall.descent() - WhiteTextSmall.ascent()) / 4, WhiteTextSmall);
 						}
 				}
 			}
